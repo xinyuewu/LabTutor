@@ -1,0 +1,88 @@
+﻿@model LabTutor.Student
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<div>
+
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.email)
+        </dd>
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.matricNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.matricNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.lName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.lName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.degree)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.degree)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.year)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.year)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.paymentRate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.paymentRate)
+        </dd>
+
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.studentId }) |
+    @Html.ActionLink("Delete", "Delete", new { id = Model.studentId }) |
+    @Html.ActionLink("Apply", "Create", "Application", new { id = Model.studentId })
+
+</p>
