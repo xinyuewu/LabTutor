@@ -1,10 +1,14 @@
-﻿using System;
+﻿using LabTutor.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using LabTutor.Filters;
+using Newtonsoft.Json;
+using System.Web.Script.Serialization;
 
 namespace LabTutor.Controllers
 {
@@ -13,45 +17,182 @@ namespace LabTutor.Controllers
         xinyuedbEntities db = new xinyuedbEntities();
 
         // GET: Application
+        [StudentFilter]
         public ActionResult Index()
         {
+            int x = Int32.Parse(Session["userId"].ToString());
+            Application app = new Application();
 
-            int x = 0;
-            Int32.TryParse(Session["userId"].ToString(), out x);
-
-            Student student = new Student();
             try
             {
-                student = db.Students.First(s => s.userId == x);
+                app.student = db.Students.First(s => s.userId == x);
+                app.readApplication(x);
             }
             catch (InvalidOperationException dbEx)
             {
                 Debug.WriteLine(dbEx.ToString());
             }
 
-            return View(student);
+            return View(app);
         }
 
 
         [HttpGet]
+        [StudentFilter]
         public ActionResult Create()
         {
-            return View();
+            Application app = new Application();
+            int x = Int32.Parse(Session["userId"].ToString());
+            app.getAllClasses(x);
+            return View(app);
         }
-
         [HttpPost]
-        public ActionResult Create(Student student)
+        [StudentFilter]
+        public ActionResult Create(Application app)
         {
             if (ModelState.IsValid)
             {
-                db.Students.Add(student);
-                db.SaveChanges();
+                int x = Int32.Parse(Session["userId"].ToString());
+                app.addApplication(x);
                 return RedirectToAction("Index");
+
             }
             else
             {
-                return View(student);
+                return View(app);
             }
         }
+        [HttpPost]
+        public void Create1(IEnumerable<string> likedList)
+        {
+            if (likedList != null)
+            {
+                foreach (var a in likedList)
+                {
+                    System.Diagnostics.Debug.WriteLine("liked: " + a);
+                    Preference p = new Preference();
+                    p.prefered = true;
+                    p.classId = Int32.Parse(a);
+
+                    var userId = Int32.Parse(Session["userId"].ToString());
+                    var studentId = db.Students.Where(s => s.userId == userId).FirstOrDefault().studentId;
+                    p.studentId = studentId;
+
+                    db.Preferences.Add(p);
+                    db.SaveChanges();
+                }
+            }
+
+        }
+        [HttpPost]
+        public void Create2(IEnumerable<string> dislikedList)
+        {
+            if (dislikedList != null)
+            {
+                foreach (var a in dislikedList)
+                {
+                    System.Diagnostics.Debug.WriteLine("disliked: " + a);
+
+                    Preference p = new Preference();
+                    p.prefered = false;
+                    p.classId = Int32.Parse(a);
+
+                    var userId = Int32.Parse(Session["userId"].ToString());
+                    var studentId = db.Students.Where(s => s.userId == userId).FirstOrDefault().studentId;
+                    p.studentId = studentId;
+
+                    db.Preferences.Add(p);
+                    db.SaveChanges();
+                }
+            }
+        }
+
+
+        [HttpGet]
+        [StudentFilter]
+        public ActionResult Edit()
+        {
+            int x = Int32.Parse(Session["userId"].ToString());
+            Application app = new Application();
+            app.readApplication(x);
+            return View(app);
+        }
+        [HttpPost]
+        [StudentFilter]
+        public ActionResult Edit(Application app)
+        {
+            if (ModelState.IsValid)
+            {
+                int x = Int32.Parse(Session["userId"].ToString());
+                app.updateApplication(x);
+                return RedirectToAction("Index", "Application");
+            }
+            else
+            {
+                return View(app);
+            }
+        }
+        [HttpPost]
+        public void Edit1(IEnumerable<string> likedList)
+        {
+            var userId = Int32.Parse(Session["userId"].ToString());
+            var studentId = db.Students.Where(s => s.userId == userId).FirstOrDefault().studentId;
+            var pref = db.Preferences.Where(p => p.studentId == studentId).Where(p => p.prefered == true);
+            db.Preferences.RemoveRange(pref);
+
+            if (likedList != null)
+            {
+                foreach (var a in likedList)
+                {
+                    System.Diagnostics.Debug.WriteLine("liked: " + a);
+
+                    Preference p = new Preference();
+                    p.prefered = true;
+                    p.classId = Int32.Parse(a);
+                    p.studentId = studentId;
+
+                    db.Preferences.Add(p);
+                }
+            }
+            
+            db.SaveChanges();
+        }
+        [HttpPost]
+        public void Edit2(IEnumerable<string> dislikedList)
+        {
+            var userId = Int32.Parse(Session["userId"].ToString());
+            var studentId = db.Students.Where(s => s.userId == userId).FirstOrDefault().studentId;
+            var pref = db.Preferences.Where(p => p.studentId == studentId).Where(p => p.prefered == false);
+            db.Preferences.RemoveRange(pref);
+
+            if (dislikedList != null)
+            {
+                foreach (var a in dislikedList)
+                {
+                    System.Diagnostics.Debug.WriteLine("disliked: " + a);
+
+                    Preference p = new Preference();
+                    p.prefered = false;
+                    p.classId = Int32.Parse(a);
+                    p.studentId = studentId;
+
+                    db.Preferences.Add(p);
+                }
+            }
+            System.Diagnostics.Debug.WriteLine("-----------------");
+            db.SaveChanges();
+        }
+
+
+        [HttpGet]
+        [StudentFilter]
+        public ActionResult Delete()
+        {
+            int x = Int32.Parse(Session["userId"].ToString());
+            Application app = new Application();
+            app.deleteApplication(x);
+            return RedirectToAction("Index", "Application", new { area = "" });
+        }
+
     }
 }

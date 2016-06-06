@@ -21,11 +21,25 @@ namespace LabTutor
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
+                      "~/Scripts/bootstrap-select.js", //for multidropdown list
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/bootstrap-select.css", //for multidropdown list
                       "~/Content/site.css"));
+
+            bundles.Add(new StyleBundle("~/fullcalendar/css").Include(
+                      "~/fullcalendar-2.7.2/fullcalendar.css"));
+
+
+
+            bundles.Add(new ScriptBundle("~/fullcalendar/script").Include(
+                         
+                      "~/fullcalendar-2.7.2/lib/moment.min.js",
+                      
+                      "~/fullcalendar-2.7.2/fullcalendar.js"));
+
         }
     }
 }

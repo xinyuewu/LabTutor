@@ -1,4 +1,4 @@
-﻿@model LabTutor.Student
+﻿@model LabTutor.Models.Application
 
 @{
     ViewBag.Title = "Index";
@@ -13,76 +13,109 @@
     <dl class="dl-horizontal">
 
         <dt>
-            @Html.DisplayNameFor(model => model.User.email)
+            @Html.DisplayNameFor(model => model.student.User.email)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.User.email)
+            @Html.DisplayFor(model => model.student.User.email)
         </dd>
 
 
         <dt>
-            @Html.DisplayNameFor(model => model.matricNumber)
+            @Html.DisplayNameFor(model => model.student.matricNumber)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.matricNumber)
+            @Html.DisplayFor(model => model.student.matricNumber)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.fName)
+            @Html.DisplayNameFor(model => model.student.fName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.fName)
+            @Html.DisplayFor(model => model.student.fName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.lName)
+            @Html.DisplayNameFor(model => model.student.lName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.lName)
+            @Html.DisplayFor(model => model.student.lName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.degree)
+            @Html.DisplayNameFor(model => model.student.degree)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.degree)
+            @Html.DisplayFor(model => model.student.degree)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.year)
+            @Html.DisplayNameFor(model => model.student.year)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.year)
+            @Html.DisplayFor(model => model.student.year)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.NI)
+            @Html.DisplayNameFor(model => model.student.NI)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.NI)
+            @Html.DisplayFor(model => model.student.NI)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.paymentRate)
+            @Html.DisplayNameFor(model => model.student.maxHour)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.paymentRate)
+            @Html.DisplayFor(model => model.student.maxHour)
         </dd>
 
+        @*@if(Model.likedModule.Count != 0)
+        { 
+            <dt>
+                @Html.DisplayNameFor(model => model.likedModule)
+            </dt>
+        }
+        @foreach (KeyValuePair<int, string> kvp in Model.likedModule)
+        { 
+            <dd>
+                @Html.DisplayFor(model => kvp.Value)
+            </dd>
+        }
+
+        @if (Model.dislikedModule.Count != 0)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.dislikedModule)
+            </dt>
+        }
+        @foreach (KeyValuePair<int, string> kvp in Model.dislikedModule)
+        {
+            <dd>
+                @Html.DisplayFor(model => kvp.Value)
+            </dd>
+        }*@
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.studentId }) |
-    @Html.ActionLink("Delete", "Delete", new { id = Model.studentId }) |
-    @Html.ActionLink("Apply", "Create", "Application", new { id = Model.studentId })
+
+    @if (Model.student.applied)
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.student.studentId }) <text>|</text>
+        @Html.ActionLink("Delete", "Delete", new { id = Model.student.studentId })
+    }
+
+    else
+    {
+        @Html.ActionLink("Apply", "Create", "Application", new { id = Model.student.studentId })
+    }
 
 </p>

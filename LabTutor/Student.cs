@@ -32,7 +32,7 @@ namespace LabTutor
         public string degree { get; set; }
         public int year { get; set; }
         public Nullable<int> maxHour { get; set; }
-        public Nullable<int> minHour { get; set; }
+        public bool applied { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Allocation> Allocations { get; set; }

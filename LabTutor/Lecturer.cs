@@ -11,11 +11,9 @@ namespace LabTutor
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     
     public partial class Lecturer
     {
-        [Key]
         public int staffId { get; set; }
         public string fName { get; set; }
         public string lName { get; set; }

@@ -21,7 +21,6 @@
           <Property Name="moduleId" Type="int" Nullable="false" />
           <Property Name="startTime" Type="datetime" Nullable="false" />
           <Property Name="endTime" Type="datetime" Nullable="false" />
-          <Property Name="labTutor" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Grade">
           <Key>
@@ -37,8 +36,8 @@
             <PropertyRef Name="staffId" />
           </Key>
           <Property Name="staffId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="fName" Type="nchar" MaxLength="10" Nullable="false" />
-          <Property Name="lName" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="fName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="lName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="userId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Module">
@@ -46,17 +45,18 @@
             <PropertyRef Name="moduleId" />
           </Key>
           <Property Name="moduleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="name" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="year" Type="int" Nullable="false" />
-          <Property Name="degree" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="degree" Type="nvarchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="Preference">
           <Key>
             <PropertyRef Name="prefId" />
           </Key>
           <Property Name="prefId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="moduleId" Type="int" Nullable="false" />
+          <Property Name="classId" Type="int" Nullable="false" />
           <Property Name="studentId" Type="int" Nullable="false" />
+          <Property Name="prefered" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Student">
           <Key>
@@ -65,14 +65,14 @@
           <Property Name="studentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="userId" Type="int" />
           <Property Name="matricNumber" Type="int" Nullable="false" />
-          <Property Name="fName" Type="nchar" MaxLength="10" Nullable="false" />
-          <Property Name="lName" Type="nchar" MaxLength="10" Nullable="false" />
-          <Property Name="degree" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="fName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="lName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="degree" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="year" Type="int" Nullable="false" />
-          <Property Name="NI" Type="nchar" MaxLength="10" />
+          <Property Name="NI" Type="nvarchar" MaxLength="20" />
           <Property Name="paymentRate" Type="float" />
           <Property Name="maxHour" Type="int" />
-          <Property Name="minHour" Type="int" />
+          <Property Name="applied" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -81,7 +81,7 @@
           <Property Name="userId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="email" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="password" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="accountType" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="accountType" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <Association Name="FK_Allocation_Class">
           <End Role="Class" Type="Self.Class" Multiplicity="1" />
@@ -155,15 +155,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Preference_Module">
-          <End Role="Module" Type="Self.Module" Multiplicity="1" />
+        <Association Name="FK_Preference_Class">
+          <End Role="Class" Type="Self.Class" Multiplicity="1" />
           <End Role="Preference" Type="Self.Preference" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Module">
-              <PropertyRef Name="moduleId" />
+            <Principal Role="Class">
+              <PropertyRef Name="classId" />
             </Principal>
             <Dependent Role="Preference">
-              <PropertyRef Name="moduleId" />
+              <PropertyRef Name="classId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -224,8 +224,8 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Lecturer" EntitySet="Lecturer" />
           </AssociationSet>
-          <AssociationSet Name="FK_Preference_Module" Association="Self.FK_Preference_Module">
-            <End Role="Module" EntitySet="Module" />
+          <AssociationSet Name="FK_Preference_Class" Association="Self.FK_Preference_Class">
+            <End Role="Class" EntitySet="Class" />
             <End Role="Preference" EntitySet="Preference" />
           </AssociationSet>
           <AssociationSet Name="FK_Preference_Student" Association="Self.FK_Preference_Student">
@@ -259,9 +259,9 @@
           <Property Name="moduleId" Type="Int32" Nullable="false" />
           <Property Name="startTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="endTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="labTutor" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Allocations" Relationship="Self.FK_Allocation_Class" FromRole="Class" ToRole="Allocation" />
           <NavigationProperty Name="Module" Relationship="Self.FK_Class_Module" FromRole="Class" ToRole="Module" />
+          <NavigationProperty Name="Preferences" Relationship="xinyuedbModel.FK_Preference_Class" FromRole="Class" ToRole="Preference" />
         </EntityType>
         <EntityType Name="Grade">
           <Key>
@@ -279,8 +279,8 @@
             <PropertyRef Name="staffId" />
           </Key>
           <Property Name="staffId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="fName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="lName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="fName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="lName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="userId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="User" Relationship="Self.FK_Lecturer_Account1" FromRole="Lecturer" ToRole="Users" />
         </EntityType>
@@ -289,12 +289,11 @@
             <PropertyRef Name="moduleId" />
           </Key>
           <Property Name="moduleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="year" Type="Int32" Nullable="false" />
-          <Property Name="degree" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="degree" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Classes" Relationship="Self.FK_Class_Module" FromRole="Module" ToRole="Class" />
           <NavigationProperty Name="Grades" Relationship="Self.FK_Grade_Module" FromRole="Module" ToRole="Grade" />
-          <NavigationProperty Name="Preferences" Relationship="xinyuedbModel.FK_Preference_Module" FromRole="Module" ToRole="Preference" />
         </EntityType>
         <EntityType Name="Preference">
           <Key>
@@ -303,8 +302,9 @@
           <Property Name="prefId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="studentId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Student" Relationship="xinyuedbModel.FK_Preference_Student" FromRole="Preference" ToRole="Student" />
-          <Property Name="moduleId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Module" Relationship="xinyuedbModel.FK_Preference_Module" FromRole="Preference" ToRole="Module" />
+          <Property Name="prefered" Type="Boolean" Nullable="false" />
+          <Property Name="classId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Class" Relationship="xinyuedbModel.FK_Preference_Class" FromRole="Preference" ToRole="Class" />
         </EntityType>
         <EntityType Name="Student">
           <Key>
@@ -313,18 +313,18 @@
           <Property Name="studentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="userId" Type="Int32" />
           <Property Name="matricNumber" Type="Int32" Nullable="false" />
-          <Property Name="fName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="lName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="NI" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="fName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="lName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="NI" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="paymentRate" Type="Double" />
           <NavigationProperty Name="Allocations" Relationship="xinyuedbModel.FK_Allocation_Student" FromRole="Student" ToRole="Allocation" />
           <NavigationProperty Name="Grades" Relationship="xinyuedbModel.FK_Grade_Student" FromRole="Student" ToRole="Grade" />
           <NavigationProperty Name="Preferences" Relationship="xinyuedbModel.FK_Preference_Student" FromRole="Student" ToRole="Preference" />
           <NavigationProperty Name="User" Relationship="xinyuedbModel.FK_Student_Users" FromRole="Student" ToRole="User" />
-          <Property Name="degree" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="degree" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="year" Type="Int32" Nullable="false" />
           <Property Name="maxHour" Type="Int32" />
-          <Property Name="minHour" Type="Int32" />
+          <Property Name="applied" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -333,7 +333,7 @@
           <Property Name="userId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="accountType" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="accountType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Lecturers" Relationship="Self.FK_Lecturer_Account1" FromRole="Users" ToRole="Lecturer" />
           <NavigationProperty Name="Students" Relationship="xinyuedbModel.FK_Student_Users" FromRole="User" ToRole="Student" />
         </EntityType>
@@ -426,8 +426,8 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Student" EntitySet="Students" />
           </AssociationSet>
-          <AssociationSet Name="FK_Preference_Module" Association="xinyuedbModel.FK_Preference_Module">
-            <End Role="Module" EntitySet="Modules" />
+          <AssociationSet Name="FK_Preference_Class" Association="xinyuedbModel.FK_Preference_Class">
+            <End Role="Class" EntitySet="Classes" />
             <End Role="Preference" EntitySet="Preferences" />
           </AssociationSet>
         </EntityContainer>
@@ -479,15 +479,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Preference_Module">
-          <End Type="xinyuedbModel.Module" Role="Module" Multiplicity="1" />
+        <Association Name="FK_Preference_Class">
+          <End Type="xinyuedbModel.Class" Role="Class" Multiplicity="1" />
           <End Type="xinyuedbModel.Preference" Role="Preference" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Module">
-              <PropertyRef Name="moduleId" />
+            <Principal Role="Class">
+              <PropertyRef Name="classId" />
             </Principal>
             <Dependent Role="Preference">
-              <PropertyRef Name="moduleId" />
+              <PropertyRef Name="classId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -513,7 +513,6 @@
                 <ScalarProperty Name="moduleId" ColumnName="moduleId" />
                 <ScalarProperty Name="startTime" ColumnName="startTime" />
                 <ScalarProperty Name="endTime" ColumnName="endTime" />
-                <ScalarProperty Name="labTutor" ColumnName="labTutor" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -550,7 +549,8 @@
           <EntitySetMapping Name="Preferences">
             <EntityTypeMapping TypeName="xinyuedbModel.Preference">
               <MappingFragment StoreEntitySet="Preference">
-                <ScalarProperty Name="moduleId" ColumnName="moduleId" />
+                <ScalarProperty Name="classId" ColumnName="classId" />
+                <ScalarProperty Name="prefered" ColumnName="prefered" />
                 <ScalarProperty Name="prefId" ColumnName="prefId" />
                 <ScalarProperty Name="studentId" ColumnName="studentId" />
               </MappingFragment>
@@ -559,7 +559,7 @@
           <EntitySetMapping Name="Students">
             <EntityTypeMapping TypeName="xinyuedbModel.Student">
               <MappingFragment StoreEntitySet="Student">
-                <ScalarProperty Name="minHour" ColumnName="minHour" />
+                <ScalarProperty Name="applied" ColumnName="applied" />
                 <ScalarProperty Name="maxHour" ColumnName="maxHour" />
                 <ScalarProperty Name="year" ColumnName="year" />
                 <ScalarProperty Name="degree" ColumnName="degree" />

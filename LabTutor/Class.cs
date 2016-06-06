@@ -18,16 +18,18 @@ namespace LabTutor
         public Class()
         {
             this.Allocations = new HashSet<Allocation>();
+            this.Preferences = new HashSet<Preference>();
         }
     
         public int classId { get; set; }
         public int moduleId { get; set; }
         public System.DateTime startTime { get; set; }
         public System.DateTime endTime { get; set; }
-        public int labTutor { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Allocation> Allocations { get; set; }
         public virtual Module Module { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Preference> Preferences { get; set; }
     }
 }

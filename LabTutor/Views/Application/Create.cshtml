@@ -4,7 +4,21 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Application</h2>
+<style>
+	body {
+		margin: 40px 10px;
+		padding: 0;
+		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+		font-size: 14px;
+	}
+
+	#calendar {
+		max-width: 900px;
+		margin: 0 auto;
+	}
+</style>
+
+<h2>Create my application</h2>
 
 @using (Html.BeginForm())
 {
@@ -13,10 +27,10 @@
     <div class="form-horizontal">
 
         <div class="form-group">
-            @Html.LabelFor(model => model.student.minHour, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.student.NI, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.student.minHour, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.student.minHour, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.student.NI, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.student.NI, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -27,24 +41,107 @@
                 @Html.ValidationMessageFor(model => model.student.maxHour, "", new { @class = "text-danger" })
             </div>
         </div>
-    
-        <div class="form-group">
-            @Html.LabelFor(model => model.moduleList, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.moduleList, new SelectList(model.selectedModule, "Key", "Value"))
-                @Html.ValidationMessageFor(model => model.moduleList, "", new { @class = "text-danger" })
-            </div>
-        </div>
+
+        <div id='calendar'></div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Submit" class="btn btn-default" />
+                <button type="button" id="submitAjax" class="btn btn-default">Submit</button>
             </div>
         </div>
     </div>
+    
 }
 
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+
+<script>
+    var likedList = new Array();
+    var dislikedList = new Array();
+
+    $(document).ready(function () {
+
+        //  $('form').submit(function(e){
+        $("#submitAjax").click(function () {
+            // e.pre.preventDefault();
+            $.ajax({
+                url: "/Application/Create1",
+                data:{ likedList: likedList },
+                type: "POST",
+                traditional: true,
+                success: function (data) {
+
+                    $.ajax({
+                        url: "/Application/Create2",
+                        data: { dislikedList: dislikedList },
+                        type: "POST",
+                        traditional: true,
+                        success: function (data) {
+                            $('form').submit();
+                        }
+                    })  
+                },
+                error: function (data) {
+                    alert("error");
+                }
+            })
+        });
+
+        //  $('#submitAjax1').bind("click", submitAjax);
+        $('#calendar').fullCalendar({
+            editable: false,
+            weekends: false,
+            weekNumbers: false,
+            minTime: "09:00:00",
+            maxTime: "18:00:00",
+            firstDay: 1,
+            contentHeight: 420,
+            defaultView: 'agendaWeek',
+            eventLimit: true, // allow "more" link when too many events
+
+            events: [
+                @for (int i = 0; i < @Model.classInfo.Count; i++)
+				{
+                    <text>{</text>
+				   <text>title: '</text>@Model.classInfo[i].title<text>',</text>
+				    <text>start: '</text>@Model.classInfo[i].startTime<text>',</text>
+				    <text>end: '</text>@Model.classInfo[i].endTime<text>',</text>
+                    <text>id: '</text>@Model.classInfo[i].classId<text>',</text>
+				    <text>selected: 'no'</text>
+                     <text> }</text>
+                    if (i != @Model.classInfo.Count - 1)
+                    {<text>,</text>}
+                }
+            ],
+
+            eventClick: function (calEvent, jsEvent, view) {
+
+                if (calEvent.selected === 'no') {
+                    $(this).css('background-color', 'green');
+                    calEvent.selected = 'liked';               
+                    likedList.push(calEvent.id);
+                }
+                else if (calEvent.selected === 'liked') {
+                    $(this).css('background-color', 'red');
+                    calEvent.selected = 'disliked';                                     
+                    delete likedList.splice([likedList.indexOf(calEvent.id)], 1);
+                    dislikedList.push(calEvent.id);
+        }
+        else if (calEvent.selected === 'disliked') {
+            $(this).css('background-color', '#3a87ad');
+            calEvent.selected = 'no';
+            delete dislikedList.splice([dislikedList.indexOf(calEvent.id)], 1);            
+        }
+    }
+    });
+
+    });
+
+    </script>
+
+
+    
 }

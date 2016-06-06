@@ -11,16 +11,15 @@ namespace LabTutor
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     
     public partial class Preference
     {
-        [Key]
         public int prefId { get; set; }
         public int studentId { get; set; }
-        public int moduleId { get; set; }
+        public bool prefered { get; set; }
+        public int classId { get; set; }
     
         public virtual Student Student { get; set; }
-        public virtual Module Module { get; set; }
+        public virtual Class Class { get; set; }
     }
 }
