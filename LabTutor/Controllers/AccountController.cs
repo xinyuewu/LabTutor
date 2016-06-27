@@ -99,7 +99,7 @@ namespace LabTutor.Controllers
                 }
                 else if (Session["account"].Equals("coordinator"))
                 {
-                    return RedirectToAction("Index", "LabClass"); 
+                    return RedirectToAction("Index", "Allocation"); 
                 }
             }
             return RedirectToAction("Login"); 

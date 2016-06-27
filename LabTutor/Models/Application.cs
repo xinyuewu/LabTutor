@@ -12,21 +12,19 @@ namespace LabTutor.Models
         public Grade grade { get; set; }
  
         public List<ClassInfo> classInfo { get; set; }
+        public List<ClassInfo> timeClashClass { get; set; }
 
-        public SortedDictionary<int, string> moduleList { get; set; }
+     
         public List<object> likedClass { get; set; }
         public List<object> dislikedClass { get; set; }
-        
-        public List<int> selectedLike { get; set; }
-        public List<int> selectedDislike { get; set; }
 
         public Application()
         {
             student = new Student();
             classInfo = new List<ClassInfo>();
+            timeClashClass = new List<ClassInfo>();
             likedClass = new List<object>();
             dislikedClass = new List<object>();
-            moduleList = new SortedDictionary<int, string>();
         }
 
 
@@ -38,30 +36,97 @@ namespace LabTutor.Models
 
                 student = db.Students.Where(s => s.userId == usr.userId).FirstOrDefault();
 
-                var grades = db.Grades.Where(g => g.studentId == student.studentId);
-              
-                foreach (var item in grades)
-                {
-                    if(item.Module.year < student.year)
-                    {
-                        moduleList.Add(item.Module.moduleId,item.Module.name.ToString());
+                List<ClassInfo> myClass = getMyClass();
 
-                        var result = db.Classes.Where(c => c.moduleId == item.Module.moduleId);
+                getLabClass(myClass);
 
-                        foreach (var i in result)
-                        {                           
-                            ClassInfo cla = new ClassInfo();
-                            cla.title = item.Module.name;
-                            cla.classId = i.classId;
-                            cla.startTime = i.startTime.ToString("yyyy-MM-ddTHH:mm:ss");
-                            cla.endTime = i.endTime.ToString("yyyy-MM-ddTHH:mm:ss");
-                            classInfo.Add(cla);
-                        }
-                    }
-                                          
-                }           
             }
 
+        }
+
+        public List<ClassInfo> getMyClass()
+        {
+            using (xinyuedbEntities db = new xinyuedbEntities())
+            {
+                var myModules = db.Modules.Where(m => m.degree.Contains(student.degree) && m.year == student.year);
+
+                List<ClassInfo> myClass = new List<ClassInfo>();
+                foreach (var m in myModules)
+                {
+                    var myCla = db.Classes.Where(c => c.moduleId == m.moduleId);
+                    foreach (var c in myCla)
+                    {
+                        ClassInfo cla = new ClassInfo();
+                        cla.moduleId = m.moduleId;
+                        cla.title = m.name;
+                        cla.classId = c.classId;
+
+                        cla.startTime = c.startTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                        cla.endTime = c.endTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                        myClass.Add(cla);//add to a list which contains only the classes this applicant is studying
+
+                        cla.myclass = true;
+                        classInfo.Add(cla);//add to a list which contains all classes presented on the view timetable, including classes that can be selected and classes that this applicant is studying
+                    }
+                }
+
+                return myClass;
+            }
+            
+        }
+
+        public void getLabClass(List<ClassInfo> myClass)
+        {
+            using (xinyuedbEntities db = new xinyuedbEntities())
+            {
+                var grades = db.Grades.Where(g => g.studentId == student.studentId); // only get classes that the applicant has studied (have grades for it)
+
+                foreach (var g in grades)
+                {
+                    if (g.Module.year < student.year) //choose from classes that are lower year classes
+                    {
+                        var classes = db.Classes.Where(c => c.moduleId == g.Module.moduleId).Where(c => c.type == "lab");
+
+                        foreach (var c in classes)
+                        {
+
+
+                            bool noTimeClash = true;
+                            for (int i = 0; i < myClass.Count(); i++)
+                            {
+                                // (myClass[i] ends before this class starts) || (myClass[i] starts after this class ends)
+                                if (!((DateTime.Compare(DateTime.Parse(myClass[i].endTime), c.startTime) <= 0) || (DateTime.Compare(DateTime.Parse(myClass[i].startTime), c.endTime) >= 0)))
+                                {
+                                    noTimeClash = false;
+
+                                    ClassInfo cla = new ClassInfo();
+                                    cla.title = g.Module.name;
+                                    cla.classId = c.classId;
+                                    cla.startTime = c.startTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                                    cla.endTime = c.endTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                                    cla.myclass = false;
+                                    cla.moduleId = g.moduleId;
+                                    timeClashClass.Add(cla);
+                                    break;
+                                }
+                            }
+
+                            if (noTimeClash)
+                            {
+                                ClassInfo cla = new ClassInfo();
+                                cla.title = g.Module.name;
+                                cla.classId = c.classId;
+                                cla.startTime = c.startTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                                cla.endTime = c.endTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                                cla.myclass = false;
+                                cla.moduleId = g.moduleId;
+                                classInfo.Add(cla);
+                            }
+
+                        }
+                    }
+                }
+            }
         }
 
 
@@ -143,7 +208,7 @@ namespace LabTutor.Models
                         {
                             ClassInfo cla = new ClassInfo();
                             cla.title = item.Module.name;
-                            cla.classId = i.classId;
+                            cla.classId = i.classId;  
                             cla.startTime = i.startTime.ToString("yyyy-MM-ddTHH:mm:ss");
                             cla.endTime = i.endTime.ToString("yyyy-MM-ddTHH:mm:ss");
                             cla.prefered = "neutral";
@@ -151,8 +216,9 @@ namespace LabTutor.Models
                             {
                                 if (p.classId == cla.classId)
                                 {
-                                    if (p.prefered) { cla.prefered = "liked"; }
-                                    else { cla.prefered = "disliked"; }
+                                    if (p.prefered.Equals("like")) { cla.prefered = "liked"; }
+                                    else if (p.prefered.Equals("disliked")) { cla.prefered = "disliked"; }
+                                    else if (p.prefered.Equals("neutral")) { cla.prefered = "neutral"; }
                                 }
                             }
                             classInfo.Add(cla);
@@ -161,18 +227,6 @@ namespace LabTutor.Models
 
                 }
 
-                
-                //foreach (var item in result)
-                //{
-                //    if (item.prefered == true)
-                //    {
-                //        likedClass.Add(item);
-                //    }
-                //    else
-                //    {
-                //        dislikedClass.Add(item);
-                //    }                    
-                //} 
             }
         }
 

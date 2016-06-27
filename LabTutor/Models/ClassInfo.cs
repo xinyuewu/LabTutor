@@ -11,9 +11,12 @@ namespace LabTutor.Models
         public int moduleId { get; set; }
         public string startTime { get; set; }
         public string endTime { get; set; }
+        public string type { get; set; }
+        public int tutorNumber { get; set; }
 
         public string title { get; set; }
         public string prefered { get; set; }
+        public bool myclass { get; set; }
     }
 
 

@@ -53,9 +53,20 @@ namespace LabTutor.Controllers
             if (ModelState.IsValid)
             {
                 int x = Int32.Parse(Session["userId"].ToString());
-                app.addApplication(x);
-                return RedirectToAction("Index");
+                app.addApplication(x); //add "NI" and "maxhour", "applied" = true
 
+                app.getAllClasses(x);
+                List<ClassInfo> timeClashClass = app.timeClashClass;
+                foreach (var item in timeClashClass)
+                {
+                    Preference p = new Preference();
+                    p.prefered = "timeClash";
+                    p.classId = item.classId;
+                    p.studentId = db.Students.Where(s => s.userId == x).FirstOrDefault().studentId;
+                    db.Preferences.Add(p);
+                    db.SaveChanges();
+                }
+                return RedirectToAction("Index");
             }
             else
             {
@@ -71,7 +82,7 @@ namespace LabTutor.Controllers
                 {
                     System.Diagnostics.Debug.WriteLine("liked: " + a);
                     Preference p = new Preference();
-                    p.prefered = true;
+                    p.prefered = "like";
                     p.classId = Int32.Parse(a);
 
                     var userId = Int32.Parse(Session["userId"].ToString());
@@ -94,7 +105,29 @@ namespace LabTutor.Controllers
                     System.Diagnostics.Debug.WriteLine("disliked: " + a);
 
                     Preference p = new Preference();
-                    p.prefered = false;
+                    p.prefered = "dislike";
+                    p.classId = Int32.Parse(a);
+
+                    var userId = Int32.Parse(Session["userId"].ToString());
+                    var studentId = db.Students.Where(s => s.userId == userId).FirstOrDefault().studentId;
+                    p.studentId = studentId;
+
+                    db.Preferences.Add(p);
+                    db.SaveChanges();
+                }
+            }
+        }
+        [HttpPost]
+        public void Create3(IEnumerable<string> neutralList)
+        {
+            if (neutralList != null)
+            {
+                foreach (var a in neutralList)
+                {
+                    System.Diagnostics.Debug.WriteLine("neutral: " + a);
+
+                    Preference p = new Preference();
+                    p.prefered = "neutral";
                     p.classId = Int32.Parse(a);
 
                     var userId = Int32.Parse(Session["userId"].ToString());
@@ -137,7 +170,7 @@ namespace LabTutor.Controllers
         {
             var userId = Int32.Parse(Session["userId"].ToString());
             var studentId = db.Students.Where(s => s.userId == userId).FirstOrDefault().studentId;
-            var pref = db.Preferences.Where(p => p.studentId == studentId).Where(p => p.prefered == true);
+            var pref = db.Preferences.Where(p => p.studentId == studentId).Where(p => p.prefered.Equals("liked"));
             db.Preferences.RemoveRange(pref);
 
             if (likedList != null)
@@ -147,7 +180,7 @@ namespace LabTutor.Controllers
                     System.Diagnostics.Debug.WriteLine("liked: " + a);
 
                     Preference p = new Preference();
-                    p.prefered = true;
+                    p.prefered = "liked";
                     p.classId = Int32.Parse(a);
                     p.studentId = studentId;
 
@@ -162,7 +195,7 @@ namespace LabTutor.Controllers
         {
             var userId = Int32.Parse(Session["userId"].ToString());
             var studentId = db.Students.Where(s => s.userId == userId).FirstOrDefault().studentId;
-            var pref = db.Preferences.Where(p => p.studentId == studentId).Where(p => p.prefered == false);
+            var pref = db.Preferences.Where(p => p.studentId == studentId).Where(p => p.prefered.Equals("disliked"));
             db.Preferences.RemoveRange(pref);
 
             if (dislikedList != null)
@@ -172,7 +205,7 @@ namespace LabTutor.Controllers
                     System.Diagnostics.Debug.WriteLine("disliked: " + a);
 
                     Preference p = new Preference();
-                    p.prefered = false;
+                    p.prefered = "disliked";
                     p.classId = Int32.Parse(a);
                     p.studentId = studentId;
 
@@ -188,6 +221,7 @@ namespace LabTutor.Controllers
         [StudentFilter]
         public ActionResult Delete()
         {
+
             int x = Int32.Parse(Session["userId"].ToString());
             Application app = new Application();
             app.deleteApplication(x);

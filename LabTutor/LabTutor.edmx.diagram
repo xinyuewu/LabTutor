@@ -10,7 +10,6 @@
         <EntityTypeShape EntityType="xinyuedbModel.Grade" Width="1.5" PointX="3" PointY="4.25" IsExpanded="true" />
         <EntityTypeShape EntityType="xinyuedbModel.Lecturer" Width="1.5" PointX="10.5" PointY="4.875" IsExpanded="true" />
         <EntityTypeShape EntityType="xinyuedbModel.Module" Width="1.5" PointX="1.125" PointY="2" IsExpanded="true" />
-        <EntityTypeShape EntityType="xinyuedbModel.Preference" Width="1.5" PointX="10" PointY="1.75" IsExpanded="true" />
         <EntityTypeShape EntityType="xinyuedbModel.Student" Width="1.5" PointX="5.25" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="xinyuedbModel.User" Width="1.5" PointX="8.25" PointY="4.875" IsExpanded="true" />
         <AssociationConnector Association="xinyuedbModel.FK_Allocation_Class" ManuallyRouted="false" />
@@ -21,10 +20,11 @@
         <AssociationConnector Association="xinyuedbModel.StudentPreference" />
         <AssociationConnector Association="xinyuedbModel.FK_Allocation_Student" />
         <AssociationConnector Association="xinyuedbModel.FK_Grade_Student" />
-        <AssociationConnector Association="xinyuedbModel.FK_Preference_Student" />
         <AssociationConnector Association="xinyuedbModel.FK_Student_Users" />
+        <EntityTypeShape EntityType="xinyuedbModel.Preference" Width="1.5" PointX="8.5" PointY="1.75" />
         <AssociationConnector Association="xinyuedbModel.FK_Preference_Class" />
-      </Diagram>
+        <AssociationConnector Association="xinyuedbModel.FK_Preference_Student" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

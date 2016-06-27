@@ -30,8 +30,8 @@ namespace LabTutor
         public virtual DbSet<Grade> Grades { get; set; }
         public virtual DbSet<Lecturer> Lecturers { get; set; }
         public virtual DbSet<Module> Modules { get; set; }
-        public virtual DbSet<Preference> Preferences { get; set; }
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Preference> Preferences { get; set; }
     }
 }

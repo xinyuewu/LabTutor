@@ -5,17 +5,17 @@
 }
 
 <style>
-	body {
-		margin: 40px 10px;
-		padding: 0;
-		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-		font-size: 14px;
-	}
+    body {
+        margin: 40px 10px;
+        padding: 0;
+        font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+        font-size: 14px;
+    }
 
-	#calendar {
-		max-width: 900px;
-		margin: 0 auto;
-	}
+    #calendar {
+        max-width: 900px;
+        margin: 0 auto;
+    }
 </style>
 
 <h2>Create my application</h2>
@@ -50,60 +50,80 @@
             </div>
         </div>
     </div>
-    
+
 }
 
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
 
+    <script>
+        var likedList = new Array();
+        var dislikedList = new Array();
+        var neutralList = new Array();
 
-<script>
-    var likedList = new Array();
-    var dislikedList = new Array();
+        @for (int i = 0; i < @Model.classInfo.Count; i++)
+        {
+            if (!@Model.classInfo[i].myclass)
+            {
+                @:neutralList.push(@Model.classInfo[i].classId);
+            }
+        }
 
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        //  $('form').submit(function(e){
-        $("#submitAjax").click(function () {
-            // e.pre.preventDefault();
-            $.ajax({
-                url: "/Application/Create1",
-                data:{ likedList: likedList },
-                type: "POST",
-                traditional: true,
-                success: function (data) {
+            //  $('form').submit(function(e){
+            $("#submitAjax").click(function () {
+                // e.pre.preventDefault();
+                $.ajax({
+                    url: "/Application/Create1",
+                    data: { likedList: likedList },
+                    type: "POST",
+                    traditional: true,
+                    success: function (data) {
 
-                    $.ajax({
-                        url: "/Application/Create2",
-                        data: { dislikedList: dislikedList },
-                        type: "POST",
-                        traditional: true,
-                        success: function (data) {
-                            $('form').submit();
-                        }
-                    })  
-                },
-                error: function (data) {
-                    alert("error");
-                }
-            })
-        });
+                        $.ajax({
+                            url: "/Application/Create2",
+                            data: { dislikedList: dislikedList },
+                            type: "POST",
+                            traditional: true,
+                            success: function (data) {
 
-        //  $('#submitAjax1').bind("click", submitAjax);
-        $('#calendar').fullCalendar({
-            editable: false,
-            weekends: false,
-            weekNumbers: false,
-            minTime: "09:00:00",
-            maxTime: "18:00:00",
-            firstDay: 1,
-            contentHeight: 420,
-            defaultView: 'agendaWeek',
-            eventLimit: true, // allow "more" link when too many events
+                                $.ajax({
+                                    url: "/Application/Create3",
+                                    data: { neutralList: neutralList },
+                                    type: "POST",
+                                    traditional: true,
+                                    success: function (data) {
 
-            events: [
-                @for (int i = 0; i < @Model.classInfo.Count; i++)
+                                        $('form').submit();
+                                    }
+                                })
+
+                            }
+                        })
+
+                    },
+                    error: function (data) {
+                        alert("error");
+                    }
+                })
+            });
+
+            //  $('#submitAjax1').bind("click", submitAjax);
+            $('#calendar').fullCalendar({
+                editable: false,
+                weekends: false,
+                weekNumbers: false,
+                minTime: "09:00:00",
+                maxTime: "18:00:00",
+                firstDay: 1,
+                contentHeight: 420,
+                defaultView: 'agendaWeek',
+                eventLimit: true, // allow "more" link when too many events
+                defaultDate: "2016-06-06",
+
+                events: [
+                    @for (int i = 0; i < @Model.classInfo.Count; i++)
 				{
                     <text>{</text>
 				   <text>title: '</text>@Model.classInfo[i].title<text>',</text>
@@ -111,37 +131,44 @@
 				    <text>end: '</text>@Model.classInfo[i].endTime<text>',</text>
                     <text>id: '</text>@Model.classInfo[i].classId<text>',</text>
 				    <text>selected: 'no'</text>
+
+                    if (@Model.classInfo[i].myclass)
+                        {
+                            <text>, backgroundColor: '#8c8c8c'</text>
+                            <text>, myClass: '</text>@Model.classInfo[i].myclass<text>'</text>
+                        }
+
                      <text> }</text>
                     if (i != @Model.classInfo.Count - 1)
                     {<text>,</text>}
                 }
-            ],
+                ],
 
-            eventClick: function (calEvent, jsEvent, view) {
-
-                if (calEvent.selected === 'no') {
-                    $(this).css('background-color', 'green');
-                    calEvent.selected = 'liked';               
-                    likedList.push(calEvent.id);
+                eventClick: function (calEvent, jsEvent, view) {
+                    if (!calEvent.myClass) {
+                        if (calEvent.selected === 'no') {
+                            $(this).css('background-color', '#86b300');
+                            calEvent.selected = 'liked';
+                            delete neutralList.splice([neutralList.indexOf(calEvent.id)], 1);
+                            likedList.push(calEvent.id);
+                        }
+                        else if (calEvent.selected === 'liked') {
+                            $(this).css('background-color', '#ff9933');
+                            calEvent.selected = 'disliked';
+                            delete likedList.splice([likedList.indexOf(calEvent.id)], 1);
+                            dislikedList.push(calEvent.id);
+                        }
+                        else if (calEvent.selected === 'disliked') {
+                            $(this).css('background-color', '#3a87ad');
+                            calEvent.selected = 'no';
+                            delete dislikedList.splice([dislikedList.indexOf(calEvent.id)], 1);
+                            neutralList.push(calEvent.id);
+                        }
+                    }
                 }
-                else if (calEvent.selected === 'liked') {
-                    $(this).css('background-color', 'red');
-                    calEvent.selected = 'disliked';                                     
-                    delete likedList.splice([likedList.indexOf(calEvent.id)], 1);
-                    dislikedList.push(calEvent.id);
-        }
-        else if (calEvent.selected === 'disliked') {
-            $(this).css('background-color', '#3a87ad');
-            calEvent.selected = 'no';
-            delete dislikedList.splice([dislikedList.indexOf(calEvent.id)], 1);            
-        }
-    }
-    });
+            });
 
-    });
+        });
 
     </script>
-
-
-    
 }

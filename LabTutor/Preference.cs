@@ -15,11 +15,11 @@ namespace LabTutor
     public partial class Preference
     {
         public int prefId { get; set; }
-        public int studentId { get; set; }
-        public bool prefered { get; set; }
         public int classId { get; set; }
+        public int studentId { get; set; }
+        public string prefered { get; set; }
     
-        public virtual Student Student { get; set; }
         public virtual Class Class { get; set; }
+        public virtual Student Student { get; set; }
     }
 }

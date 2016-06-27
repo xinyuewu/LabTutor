@@ -131,8 +131,9 @@
       <DependentUpon>LabTutor.tt</DependentUpon>
     </Compile>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AllocationController.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
-    <Compile Include="Controllers\CalendarController.cs" />
+    <Compile Include="Controllers\TimetableController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Filters\CoordinatorFilter.cs" />
@@ -162,10 +163,12 @@
     <Compile Include="Lecturer.cs">
       <DependentUpon>LabTutor.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Allocate.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\ClassInfo.cs" />
     <Compile Include="Models\Register.cs" />
-    <Compile Include="Models\SchedulerModel.cs" />
+    <Compile Include="Models\Timetable.cs" />
+    <Compile Include="Models\Weight.cs" />
     <Compile Include="Module.cs">
       <DependentUpon>LabTutor.tt</DependentUpon>
     </Compile>
@@ -277,6 +280,10 @@
     <Content Include="fullcalendar-2.7.2\lib\cupertino\jquery-ui.min.css" />
     <Content Include="fullcalendar-2.7.2\lib\jquery-ui.custom.min.js" />
     <Content Include="fullcalendar-2.7.2\lib\jquery.min.js" />
+    <Content Include="fullcalendar-2.7.2\lib\jqueryui\jquery-ui-1.10.3.min.css" />
+    <Content Include="fullcalendar-2.7.2\lib\jqueryui\jquery-ui-1.11.1.js" />
+    <Content Include="fullcalendar-2.7.2\lib\qtip\jquery.qtip-2.2.0.css" />
+    <Content Include="fullcalendar-2.7.2\lib\qtip\jquery.qtip-2.2.0.js" />
     <Content Include="fullcalendar-2.7.2\lib\moment.min.js" />
     <Content Include="fullcalendar-2.7.2\LICENSE.txt" />
     <Content Include="Global.asax" />
@@ -556,6 +563,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <None Include="Properties\PublishProfiles\test.pubxml" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />
@@ -595,7 +603,8 @@
     <Content Include="Views\Application\Edit.cshtml" />
     <Content Include="Views\Error\PageDoesntExist.cshtml" />
     <Content Include="Views\Error\RestrictedPage.cshtml" />
-    <Content Include="Views\Calendar\Index.cshtml" />
+    <Content Include="Views\Allocation\Index.cshtml" />
+    <Content Include="Views\Timetable\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

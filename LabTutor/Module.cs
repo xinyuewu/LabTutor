@@ -25,6 +25,7 @@ namespace LabTutor
         public string name { get; set; }
         public int year { get; set; }
         public string degree { get; set; }
+        public int semester { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Class> Classes { get; set; }

@@ -25,6 +25,8 @@ namespace LabTutor
         public int moduleId { get; set; }
         public System.DateTime startTime { get; set; }
         public System.DateTime endTime { get; set; }
+        public string type { get; set; }
+        public int tutorNumber { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Allocation> Allocations { get; set; }
