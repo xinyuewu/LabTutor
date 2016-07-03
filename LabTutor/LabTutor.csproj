@@ -131,7 +131,7 @@
       <DependentUpon>LabTutor.tt</DependentUpon>
     </Compile>
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AllocationController.cs" />
+    <Compile Include="Controllers\AllocateController.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
     <Compile Include="Controllers\TimetableController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
@@ -603,7 +603,7 @@
     <Content Include="Views\Application\Edit.cshtml" />
     <Content Include="Views\Error\PageDoesntExist.cshtml" />
     <Content Include="Views\Error\RestrictedPage.cshtml" />
-    <Content Include="Views\Allocation\Index.cshtml" />
+    <Content Include="Views\Allocate\Index.cshtml" />
     <Content Include="Views\Timetable\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>

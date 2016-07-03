@@ -15,9 +15,9 @@ namespace LabTutor
     public partial class Grade
     {
         public int gradeId { get; set; }
-        public Nullable<double> grade1 { get; set; }
         public int moduleId { get; set; }
         public int studentId { get; set; }
+        public double finalGrade { get; set; }
     
         public virtual Module Module { get; set; }
         public virtual Student Student { get; set; }

@@ -216,7 +216,7 @@ namespace LabTutor.Models
                             {
                                 if (p.classId == cla.classId)
                                 {
-                                    if (p.prefered.Equals("like")) { cla.prefered = "liked"; }
+                                    if (p.prefered.Equals("liked")) { cla.prefered = "liked"; }
                                     else if (p.prefered.Equals("disliked")) { cla.prefered = "disliked"; }
                                     else if (p.prefered.Equals("neutral")) { cla.prefered = "neutral"; }
                                 }

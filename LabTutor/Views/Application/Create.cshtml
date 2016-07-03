@@ -146,20 +146,23 @@
 
                 eventClick: function (calEvent, jsEvent, view) {
                     if (!calEvent.myClass) {
+                        //click to like a class
                         if (calEvent.selected === 'no') {
-                            $(this).css('background-color', '#86b300');
+                            $(this).css('background-color', '#86b300');//green
                             calEvent.selected = 'liked';
                             delete neutralList.splice([neutralList.indexOf(calEvent.id)], 1);
                             likedList.push(calEvent.id);
                         }
+                        //click to dislike
                         else if (calEvent.selected === 'liked') {
-                            $(this).css('background-color', '#ff9933');
+                            $(this).css('background-color', '#ff9933');//orange
                             calEvent.selected = 'disliked';
                             delete likedList.splice([likedList.indexOf(calEvent.id)], 1);
                             dislikedList.push(calEvent.id);
                         }
+                        //click to be netural
                         else if (calEvent.selected === 'disliked') {
-                            $(this).css('background-color', '#3a87ad');
+                            $(this).css('background-color', '#3a87ad');//blue
                             calEvent.selected = 'no';
                             delete dislikedList.splice([dislikedList.indexOf(calEvent.id)], 1);
                             neutralList.push(calEvent.id);

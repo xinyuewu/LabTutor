@@ -1,0 +1,188 @@
+﻿@model List<LabTutor.Student>
+@{int rowNo = 0;}
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+    body {
+        margin-top: 40px;
+        padding: 0;
+        font-size: 14px;
+        font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+    }
+
+    #calendar {
+        width: 900px;
+        margin: 0 auto;
+    }
+
+    /* css for timepicker */
+    .ui-timepicker-div dl {
+        text-align: left;
+    }
+
+        .ui-timepicker-div dl dt {
+            height: 25px;
+        }
+
+        .ui-timepicker-div dl dd {
+            margin: -25px 0 10px 65px;
+        }
+
+    .style1 {
+        width: 100%;
+    }
+
+    /* table fields alignment*/
+    .alignRight {
+        text-align: right;
+        padding-right: 10px;
+        padding-bottom: 10px;
+    }
+
+    .alignLeft {
+        text-align: left;
+        padding-bottom: 10px;
+    }
+
+    .dialog-input {
+        width: 60%;
+    }
+
+    #moduleList, option {
+        font-size: 90%;
+    }
+
+    .breadcrumb{
+        background-color: transparent;
+        margin-top: 35px;
+        font-size: 20px;
+    }
+
+    thead{
+         background-color: #deedf7;
+    }
+
+    tutorName {
+        color:black;
+    }
+
+</style>
+
+<ol class="breadcrumb">
+    <li class="active">Allocation</li>
+</ol>
+
+<div class="form-horizontal">
+
+    <ul class="nav nav-tabs" style="margin-bottom: 15px;">
+        <li class="active tabHand" data-toggle="tab" onclick="tabChange(1)"><a>Semester 1 </a></li>
+        <li class="tabHand" data-toggle="tab" onclick="tabChange(2)"><a>Semester 2 </a></li>
+    </ul>
+
+    <div id='calendar'></div>
+
+</div>
+
+<br />
+
+<button class="btn btn-default" onclick="location.href='@Url.Action("Edit", "Timetable")'">Edit Timetable</button>
+<button class="btn btn-default" onclick="location.href='@Url.Action("populateDatabase", "Allocate")'">Populate Datebase</button>
+<button class="btn btn-default" onclick="location.href='@Url.Action("Create", "Allocate")'">Create Allocation Scheme</button>
+<button class="btn btn-default" onclick="location.href='@Url.Action("Delete", "Allocate")'">Delete Allocation Scheme</button>
+
+<br /><br /><br />
+
+<table id="myTable"class="table table-hover table-bordered table-responsive">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Degree</th>
+            <th>Year</th>
+            <th>Max Hours</th>
+            <th>Working Hours</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            if (item.workingHour == null || item.workingHour == 0)
+            {
+                @:<tr class="danger">
+                    }
+                    else{
+                @:<tr>
+                    }
+                    <td>@(rowNo += 1)</td>
+                    <td>@item.fName @item.lName</td>
+                    <td>@item.degree</td>
+                    <td>@item.year</td>
+                    <td>@item.maxHour</td>
+                    <td>@item.workingHour</td>
+                @:</tr>        
+                
+        }
+            </tbody>
+        </table>
+
+                @section Scripts {
+
+                    <link rel="stylesheet" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+                    <script type="text/javascript" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
+                    <script>
+                        $(document).ready(function () {
+
+                            $('#myTable').DataTable();
+
+                            $('#calendar').fullCalendar({
+
+                                weekends: false,
+                                weekNumbers: false,
+                                minTime: "09:00:00",
+                                maxTime: "18:00:00",
+                                firstDay: 1,
+                                contentHeight: 420,
+                                defaultView: 'agendaWeek',
+                                defaultDate: "2016-06-06",
+                                theme: true,
+                                allDaySlot: false,
+                                events: {
+                                    url: '/Allocate/getAllocation/',
+                                    data: {
+                                        semester: 1
+                                    },
+                                },
+                                eventRender: function (event, element) {                                  
+                                    element.find('.fc-content').append("<tutorName>" + event.tutorName + "</tutorName>");
+                                }
+
+                            });
+
+                        });
+
+                        $("tr").each(function () {
+                            if (this.workingHour != null) {
+                                alert("workingHour null!");
+                                $(this).addClass("danger");
+                            }
+
+
+                        });
+
+                        function tabChange(semester) {
+                            $('#calendar').fullCalendar('removeEventSource', '/Allocate/getAllocation/')
+                            $('#calendar').fullCalendar('addEventSource', {
+                                url: '/Allocate/getAllocation/',
+                                data: {
+                                    semester: semester
+                                }
+                            })
+                        };
+
+                    </script>
+                }

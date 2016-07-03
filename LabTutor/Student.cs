@@ -27,19 +27,20 @@ namespace LabTutor
         public int matricNumber { get; set; }
         public string fName { get; set; }
         public string lName { get; set; }
-        public string NI { get; set; }
-        public Nullable<double> paymentRate { get; set; }
         public string degree { get; set; }
         public int year { get; set; }
+        public string NI { get; set; }
+        public Nullable<double> paymentRate { get; set; }
         public Nullable<int> maxHour { get; set; }
         public bool applied { get; set; }
+        public Nullable<double> workingHour { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Allocation> Allocations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Grade> Grades { get; set; }
-        public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Preference> Preferences { get; set; }
+        public virtual User User { get; set; }
     }
 }

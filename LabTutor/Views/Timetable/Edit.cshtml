@@ -4,8 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit Timetable</h2>
-
 <style>
     body {
         margin-top: 40px;
@@ -48,24 +46,31 @@
         padding-bottom: 10px;
     }
 
-    .dialog-input{
+    .dialog-input {
         width: 60%;
     }
 
-    #moduleList, option{
+    #moduleList, option {
         font-size: 90%;
     }
+
+    .breadcrumb{
+        background-color: transparent;
+        margin-top: 35px;
+        font-size: 20px;
+    }
+
 </style>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index", "Allocate")">Allocation</a></li>
+    <li class="active">Edit timetable</li>
+</ol>
 
     <div class="form-horizontal">
 
-        <div class="container" style="margin-top: 50px;">
 
-            <ul class="nav nav-tabs" style="margin-bottom: 15px;">                      
+            <ul class="nav nav-tabs" style="margin-bottom: 15px;">
                 <li class="dropdown active">
                     <a class="dropdown-toggle tabHand" data-toggle="dropdown">Year 1 <span class="caret"></span></a>
                     <ul class="dropdown-menu">
@@ -107,7 +112,7 @@
         </div>
 
         <div id='calendar'></div>
-       
+
 
         <div id="addDialog" style=" margin: 50px;" title="Add Class">
             <div class="row form-group">
@@ -133,42 +138,31 @@
         </div>
 
 
-
-
-        @*<div id="addDialog" class="modal hide" style="display: none;">
-
-            <div class="modal-header"><h3>Add new class</h3></div>
-
-            <div class="modal-body">
-
-
-                    <label>Time:</label>
-                    <div class="alignLeft "><span id="eventTime"></span></div><br />
-
-                    <label>Module:</label>
-                    <select class="alignLeft" id="moduleList"></select><br />
-
-                    <label>Type:</label>
-                    <label class="radio-inline"><input type="radio" name="optradio">Lab</label>
-                    <label class="radio-inline"><input type="radio" name="optradio">Lecture</label><br />
-
-                    <label>Number of tutors:</label>
-                    <input type="text" id="tutorNumner"><br />
-
+        <div id="editDialog" style=" margin: 50px;" title="Edit Class">
+            <div class="row form-group">
+                <input type="hidden" id="editEventId" />
+                <label class="col-sm-4">Time:</label>
+                <div class="alignLeft "><span id="editEventTime"></span></div>
             </div>
 
-            <div class="modal-footer">
-                <button type="button" id="btnPopupCancel" data-dismiss="modal" class="btn">Cancel</button>
-                <button type="button" id="btnPopupSave" data-dismiss="modal" class="btn btn-primary">Save event</button>
+            <div class="row form-group">
+                <label class="col-sm-4 ">Module:</label>
+                <select class="form-control dialog-input" id="editModuleList"></select>
             </div>
-        </div>*@
+
+            <div class="row form-group">
+                <label class="col-sm-4 ">Type:</label>
+                <label class="radio-inline"><input type="radio" id="type" name="editType" value="lab" checked>Lab</label>
+                <label class="radio-inline"><input type="radio" id="type" name="editType" value="lecture">Lecture</label>
+            </div>
+
+            <div class="row form-group">
+                <label class="col-sm-4">Number of tutors:</label>
+                <input class="form-control dialog-input " type="number" min="0" id="editTutorNumber" value="0" required>
+            </div>
+        </div>
 
 
-
-
-    </div>
-
-}
 
 
 @section Scripts {
@@ -176,12 +170,12 @@
     <script>
 
         var startTime;
-        var endTime;       
+        var endTime;
 
         $(document).ready(function () {
 
-            $('#defaultTab').tab('show') 
-            getModules(1,1);
+            $('#defaultTab').tab('show')
+            getModules(1, 1);
 
             //initialize the calendar
             $('#calendar').fullCalendar({
@@ -196,7 +190,7 @@
                 defaultDate: "2016-06-06",
                 theme: true,
                 allDaySlot: false,
-                events:{
+                events: {
                     url: '/Timetable/getClasses/',
                     data: {
                         year: 1,
@@ -208,16 +202,17 @@
                 select: selectDate,
                 editable: true,
                 droppable: true,
-                eventDrop: updateEvent,
-                eventResize: updateEvent
+                eventDrop: updateEventTime,
+                eventResize: updateEventTime,
+                eventClick: editEvent
 
             });
 
         });
 
-        function tabChange(year,semester) {
+        function tabChange(year, semester) {
             $('#calendar').fullCalendar('removeEventSource', '/Timetable/getClasses/')
-            $('#calendar').fullCalendar('addEventSource',{
+            $('#calendar').fullCalendar('addEventSource', {
                 url: '/Timetable/getClasses/',
                 data: {
                     year: year,
@@ -226,14 +221,14 @@
             })
 
             $('#moduleList').empty();
+            $('#editModuleList').empty();
             getModules(year, semester);
         };
-     
+
         function selectDate(start, end) {
 
             $('#addDialog').dialog('open');
             $("#eventTime").text("" + start.format("dddd HH:mm") + " ~ " + end.format("HH:mm"));
-
             startTime = start;
             endTime = end;
         }
@@ -250,8 +245,10 @@
                 success: function (json) {
                     $('#moduleList').attr('enabled', 'true');
                     $.each(json, function () {
-                        console.debug(json+"ff");
                         $('#moduleList').append(
+                             $("<option></option>").text(this.title).val(this.moduleId)
+                        );
+                        $('#editModuleList').append(
                              $("<option></option>").text(this.title).val(this.moduleId)
                         );
                     });
@@ -259,10 +256,10 @@
             });
         }
 
-        function updateEvent(Event) {
+        function updateEventTime(Event) {
             $.ajax({
                 type: 'POST',
-                url: "/Timetable/Update",
+                url: "/Timetable/updateEventTime",
                 traditional: true,
                 data: {
                     'classId': Event.id,
@@ -271,6 +268,25 @@
                 }
             });
         };
+
+        function editEvent(Event) {
+            Event.st
+
+            $('#editEventId').val(Event.id);
+            $("#editEventTime").text("" + Event.start.format("dddd HH:mm") + " ~ " + Event.end.format("HH:mm"));
+            $("#editModuleList").val(Event.moduleId);
+
+            $('input[value=' + Event.type + ']').prop("checked", true);
+            $('input[value=lab]').click(function () {
+                $('input[value=lab]').prop("checked", true);
+            });
+            $('input[value=lecture]').click(function () {
+                $('input[value=lecture]').prop("checked", true);
+            });
+
+            $("#editTutorNumber").val(Event.tutorNumber);
+            $('#editDialog').dialog('open');
+        }
 
         //add dialog
         $('#addDialog').dialog({
@@ -287,22 +303,68 @@
                             'startTime': startTime,
                             'endTime': endTime,
                             'moduleId': $('#moduleList').val(),
-                            'type': $('#type').val(),
+                            'type': $('input[name=type]:checked').val(),
                             'tutorNumber': $('#tutorNumber').val()
                         },
-                        success: function() {                           
+                        success: function () {
                             $('#addDialog').dialog("close");
-                            ClearPopupFormValues();
                             $('#calendar').fullCalendar('refetchEvents');
                         }
                     })
 
+                },
 
+                "Cancel": function () {
+                    $('#addDialog').dialog('close');
                 }
             }
         });
 
-        
+        $('#editDialog').dialog({
+            autoOpen: false,
+            width: 470,
+            buttons: {
+                "update": function () {
+
+                    $.ajax({
+                        url: "/Timetable/Update",
+                        type: "POST",
+                        traditional: true,
+                        data: {
+                            'eventId': $("#editEventId").val(),
+                            'moduleId': $("#editModuleList").val(),
+                            'type': $('input[name=type]:checked').val(),
+                            'tutorNumber': $("#editTutorNumber").val()
+                        },
+                        success: function () {
+                            $('#calendar').fullCalendar('refetchEvents');
+                            $('#editDialog').dialog("close");
+                        }
+                    })
+
+                },
+
+                "delete": function () {
+                    if (confirm("do you really want to delete this event?")) {
+
+                        $.ajax({
+                            url: "/Timetable/Delete",
+                            type: "POST",
+                            traditional: true,
+                            data: {
+                                'eventId': $("#editEventId").val()
+                            },
+                            success: function () {
+                                $('#editDialog').dialog("close");
+                                $('#calendar').fullCalendar('removeEvents', $("#editEventId").val());
+                            }
+                        })
+
+                    }
+                }
+
+            }
+        });
 
     </script>
 }
