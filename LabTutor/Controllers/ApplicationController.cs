@@ -36,6 +36,10 @@ namespace LabTutor.Controllers
             return View(app);
         }
 
+        public JsonResult getPreference(int semester, int studentId)
+        {
+            return Json(Application.getPreference(semester, studentId), JsonRequestBehavior.AllowGet);
+        }
 
         [HttpGet]
         [StudentFilter]
@@ -221,11 +225,12 @@ namespace LabTutor.Controllers
         [StudentFilter]
         public ActionResult Delete()
         {
-
             int x = Int32.Parse(Session["userId"].ToString());
             Application app = new Application();
             app.deleteApplication(x);
-            return RedirectToAction("Index", "Application", new { area = "" });
+            Session.Clear();
+            Session.Abandon();
+            return RedirectToAction("Login", "Account");
         }
 
     }

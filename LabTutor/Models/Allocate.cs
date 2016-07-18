@@ -48,7 +48,7 @@ namespace LabTutor.Models
                     workingHours.Add(s.studentId, 0);
                 }
 
-
+                //create matric and set weight according to "preferences" and "1-year-approach" 
                 List<List<Weight>> weight = new List<List<Weight>>();
                 for (var i = 0; i < labs.Count(); i++)
                 {
@@ -126,22 +126,30 @@ namespace LabTutor.Models
                         {
                             int? maxHour = db.Students.Where(s => s.studentId == studentId).FirstOrDefault().maxHour;
 
-                            if ((maxHour == null) || (workingHours[sortedStudents[j].studentId] + (endTime - startTime).TotalHours <= maxHour))
+                            if ((maxHour == null) || (workingHours[sortedStudents[j].studentId] + (endTime - startTime).TotalHours <= maxHour)) //maxHour
                             {
-                                System.Diagnostics.Debug.WriteLine("maxHour " + maxHour);
-                                System.Diagnostics.Debug.WriteLine("(endTime - startTime).TotalHours " + (endTime - startTime).TotalHours);
-
                                 Allocation allo = new Allocation();
                                 allo.classId = sortedStudents[j].classId;
                                 allo.studentId = sortedStudents[j].studentId;
                                 db.Allocations.Add(allo);
 
                                 workingHours[sortedStudents[j].studentId] += (endTime - startTime).TotalHours;
-                                System.Diagnostics.Debug.WriteLine("sortedStudents[j].studentId " + sortedStudents[j].studentId + ", workingHours " + workingHours[sortedStudents[j].studentId]);
+
+                                //more applicants assigned 
+                                for (var k = i + 1; k < weight.Count(); k++)
+                                {
+                                    foreach (var w in weight[k])
+                                    {
+                                        if (w.studentId == sortedStudents[j].studentId)
+                                        {
+                                            w.weight -= minusWeight;
+                                        }
+                                    }
+                                }
                             }
                             else
                             {
-                                //maxHour
+                                //set weight in other following classes to be null
                                 for (var k = i; k < weight.Count(); k++)
                                 {
                                     foreach (var w in weight[k])
@@ -152,37 +160,34 @@ namespace LabTutor.Models
                                         }
                                     }
                                 }
+
                             }
+
+                            //add applicant's allocated working hours to the "student" table
                             var st = db.Students.Where(s => s.studentId == studentId).FirstOrDefault();
-                            st.workingHour = workingHours[sortedStudents[j].studentId];
-                        }
-                        else
-                        {
-                            break;
+                            if (semester == 1)
+                            {
+                                st.workingHour1 = workingHours[sortedStudents[j].studentId];
+                            }
+                            else
+                            {
+                                st.workingHour2 = workingHours[sortedStudents[j].studentId];
+                            }
+
                         }
                     }
 
-                    //everyone assigned 
-                    for (var k = i + 1; k < weight.Count(); k++)
-                    {
-                        foreach (var w in weight[k])
-                        {
-                            if (w.studentId == sortedStudents[0].studentId)
-                            {
-                                w.weight -= minusWeight;
-                            }
-                        }
-                    }
+
                 }
 
                 db.SaveChanges();
 
-                System.Diagnostics.Debug.WriteLine("after sorted:");
-                // printList(sortedWeight);
+                //System.Diagnostics.Debug.WriteLine("after sorted:");
+                //printList(sortedWeight);
             }
         }
 
-        public static List<Object> getAllocation(int semester)
+        public static List<Object> getAllocation(int semester, int studentId)
         {
             using (xinyuedbEntities db = new xinyuedbEntities())
             {
@@ -192,15 +197,28 @@ namespace LabTutor.Models
                 var labs = db.Classes.Where(c => c.type.Equals("lab") && c.Module.semester == semester && c.Module.year <= 3);
                 foreach (var lab in labs)
                 {
-                    string tutorName = "";
-                    var tutors = db.Allocations.Where(a => a.classId == lab.classId);
+                    string color = "";
 
-                    foreach(var tutor in tutors)
+                    var tutorName = new List<Object>();
+                    var tutors = db.Allocations.Where(a => a.classId == lab.classId);
+                    foreach (var tutor in tutors)
                     {
                         allocatedTutorNumber++;
-                        tutorName += tutor.Student.fName + tutor.Student.lName + ", ";                        
+                        tutorName.Add(new
+                        {
+                            studentId = tutor.studentId,
+                            name = tutor.Student.fName + " " + tutor.Student.lName
+                        });
+                        if (tutor.studentId == studentId)
+                        {
+                            color = "#ff9933";
+                        }
                     }
 
+                    if (studentId == -1)
+                    {
+                        color = allocatedTutorNumber < lab.tutorNumber ? "#ff9933" : "#3a87ad";
+                    }
 
                     eventList.Add(new
                         {
@@ -208,13 +226,14 @@ namespace LabTutor.Models
                             title = lab.Module.name,
                             start = lab.startTime.ToString("yyyy-MM-ddTHH:mm:ss"),
                             end = lab.endTime.ToString("yyyy-MM-ddTHH:mm:ss"),
-                            tutorName = String.IsNullOrEmpty(tutorName) ? tutorName: tutorName.Remove(tutorName.Length - 2),
                             type = lab.type,
                             tutorNumber = lab.tutorNumber,
                             moduleId = lab.moduleId,
-                            tutors = tutorName,
-                            borderColor = allocatedTutorNumber < lab.tutorNumber ? "#ff9933" : "#3a87ad",
-                            backgroundColor = allocatedTutorNumber < lab.tutorNumber ? "#ff9933" : "#3a87ad"
+                            year = lab.Module.year,
+                            degree = lab.Module.degree,
+                            tutorName = tutorName,
+                            borderColor = color,
+                            backgroundColor = color
                         });
                 }
                 return eventList;
@@ -238,6 +257,8 @@ namespace LabTutor.Models
             using (xinyuedbEntities db = new xinyuedbEntities())
             {
                 db.Allocations.RemoveRange(db.Allocations);
+                var config = db.Configs.FirstOrDefault();
+                config.published = false;
                 db.SaveChanges();
             }
         }
@@ -255,10 +276,12 @@ namespace LabTutor.Models
                     Student stu = new Student();
                     stu.matricNumber = i;
                     stu.fName = "Applicant";
-                    stu.lName = i.ToString();
+                    stu.lName = (i + 1).ToString();
                     stu.degree = degrees[rnd.Next(0, 2)];
                     stu.year = rnd.Next(2, 5);
                     stu.maxHour = rnd.Next(2, 20);
+                    stu.workingHour1 = 0;
+                    stu.workingHour2 = 0;
                     stu.applied = true;
                     db.Students.Add(stu);//add student[i] to "student" table
 
@@ -281,7 +304,7 @@ namespace LabTutor.Models
 
 
                     List<ClassInfo> availableLabs = new List<ClassInfo>();
-                    var modules = db.Modules.Where(m => m.year <= stu.year && m.degree.Contains(stu.degree));
+                    var modules = db.Modules.Where(m => m.year < stu.year && m.degree.Contains(stu.degree));
                     foreach (var module in modules)
                     {
                         Grade finalGrade = new Grade();
@@ -355,6 +378,8 @@ namespace LabTutor.Models
                 db.Preferences.RemoveRange(db.Preferences);
                 db.Grades.RemoveRange(db.Grades);
                 db.Allocations.RemoveRange(db.Allocations);
+                var config = db.Configs.FirstOrDefault();
+                config.published = false;
 
                 db.SaveChanges();
             }
@@ -367,17 +392,103 @@ namespace LabTutor.Models
                 List<Student> stuList = new List<Student>();
                 var students = db.Students;
                 foreach (var item in students)
-                {  
+                {
                     Student stu = new Student();
+                    stu.studentId = item.studentId;
                     stu.fName = item.fName;
                     stu.lName = item.lName;
                     stu.degree = item.degree;
                     stu.year = item.year;
                     stu.maxHour = item.maxHour;
-                    stu.workingHour = item.workingHour;
+                    stu.workingHour1 = item.workingHour1;
+                    stu.workingHour2 = item.workingHour2;
                     stuList.Add(stu);
                 }
                 return stuList;
+            }
+        }
+
+        public static Object getStudentInfo(int studentId)
+        {
+            using (xinyuedbEntities db = new xinyuedbEntities())
+            {
+                var studentInfo = new Object();
+                var student = db.Students.Where(s => s.studentId == studentId).FirstOrDefault();
+
+                var allocatedLabs = new List<Object>();
+                var labs = db.Allocations.Where(a => a.studentId == studentId);
+                foreach (var lab in labs)
+                {
+                    allocatedLabs.Add(new
+                    {
+                        year = lab.Class.Module.year,
+                        degree = lab.Class.Module.degree,
+                        module = lab.Class.Module.name,
+                        semester = lab.Class.Module.semester,
+                        time = lab.Class.startTime.ToString("dddd HH:mm") + " ~ " + lab.Class.endTime.ToString("HH:mm"),
+
+                        //grades = db.Grades.Where(g => g.studentId == studentId && g.moduleId == lab.Class.moduleId).FirstOrDefault().finalGrade,
+                        //prefered = db.Preferences.Where(p => p.studentId == studentId && p.classId == lab.classId).FirstOrDefault().prefered
+                    });
+                }
+
+                var preferences = new List<Object>();
+                var classes = db.Preferences.Where(p => p.studentId == studentId);
+                string liked = "";
+                string disliked = "";
+                foreach (var cla in classes)
+                {
+                    if (cla.prefered.Equals("liked"))
+                    {
+                        liked += cla.Class.Module.name + ", ";
+                    }
+                    else
+                    {
+                        disliked += cla.Class.Module.name + ", ";
+                    }
+                }
+                preferences.Add(new
+                {
+                    liked = String.IsNullOrEmpty(liked) ? liked : liked.Remove(liked.Length - 2),
+                    disliked = String.IsNullOrEmpty(disliked) ? disliked : disliked.Remove(disliked.Length - 2)
+                });
+
+
+                studentInfo = (new
+                    {
+                        name = student.fName + " " + student.lName,
+                        matricNumber = student.matricNumber,
+                        degree = student.degree,
+                        year = student.year,
+                        NI = student.NI,
+                        paymentRate = student.paymentRate,
+                        maxHour = student.maxHour,
+                        workingHour1 = student.workingHour1,
+                        workingHour2 = student.workingHour2,
+                        allocatedLabs = allocatedLabs,
+                        preferences = preferences
+                    });
+
+                return studentInfo;
+            }
+        }
+
+        public static bool getPublishState()
+        {
+            using (xinyuedbEntities db = new xinyuedbEntities())
+            {
+                bool published = db.Configs.FirstOrDefault().published;
+                return published;
+            }
+        }
+
+        public void changePublishState()
+        {
+            using (xinyuedbEntities db = new xinyuedbEntities())
+            {
+                var config = db.Configs.FirstOrDefault();
+                config.published = !config.published;
+                db.SaveChanges();
             }
         }
     }

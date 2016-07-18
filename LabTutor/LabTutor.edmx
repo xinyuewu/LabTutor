@@ -24,6 +24,14 @@
           <Property Name="type" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="tutorNumber" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Config">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="published" Type="bit" Nullable="false" />
+          <Property Name="timestamp" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="Grade">
           <Key>
             <PropertyRef Name="gradeId" />
@@ -76,7 +84,8 @@
           <Property Name="paymentRate" Type="float" />
           <Property Name="maxHour" Type="int" />
           <Property Name="applied" Type="bit" Nullable="false" />
-          <Property Name="workingHour" Type="float" />
+          <Property Name="workingHour1" Type="float" Nullable="false" />
+          <Property Name="workingHour2" Type="float" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -198,6 +207,7 @@
         <EntityContainer Name="xinyuedbModelStoreContainer">
           <EntitySet Name="Allocation" EntityType="Self.Allocation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Class" EntityType="Self.Class" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Config" EntityType="Self.Config" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Grade" EntityType="Self.Grade" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Lecturer" EntityType="Self.Lecturer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Module" EntityType="Self.Module" Schema="dbo" store:Type="Tables" />
@@ -383,6 +393,7 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Student" EntitySet="Students" />
           </AssociationSet>
+          <EntitySet Name="Configs" EntityType="xinyuedbModel.Config" />
           </EntityContainer>
         <EntityType Name="Preference">
           <Key>
@@ -445,11 +456,12 @@
           <Property Name="paymentRate" Type="Double" />
           <Property Name="maxHour" Type="Int32" />
           <Property Name="applied" Type="Boolean" Nullable="false" />
-          <Property Name="workingHour" Type="Double" />
           <NavigationProperty Name="Allocations" Relationship="xinyuedbModel.FK_Allocation_Student" FromRole="Student" ToRole="Allocation" />
           <NavigationProperty Name="Grades" Relationship="xinyuedbModel.FK_Grade_Student" FromRole="Student" ToRole="Grade" />
           <NavigationProperty Name="Preferences" Relationship="xinyuedbModel.FK_Preference_Student" FromRole="Student" ToRole="Preference" />
           <NavigationProperty Name="User" Relationship="xinyuedbModel.FK_Student_Users" FromRole="Student" ToRole="User" />
+          <Property Name="workingHour1" Type="Double" Nullable="false" />
+          <Property Name="workingHour2" Type="Double" Nullable="false" />
         </EntityType>
         <Association Name="FK_Allocation_Student">
           <End Type="xinyuedbModel.Student" Role="Student" Multiplicity="1" />
@@ -499,6 +511,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Config">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="published" Type="Boolean" Nullable="false" />
+          <Property Name="timestamp" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -580,7 +600,8 @@
           <EntitySetMapping Name="Students">
             <EntityTypeMapping TypeName="xinyuedbModel.Student">
               <MappingFragment StoreEntitySet="Student">
-                <ScalarProperty Name="workingHour" ColumnName="workingHour" />
+                <ScalarProperty Name="workingHour2" ColumnName="workingHour2" />
+                <ScalarProperty Name="workingHour1" ColumnName="workingHour1" />
                 <ScalarProperty Name="applied" ColumnName="applied" />
                 <ScalarProperty Name="maxHour" ColumnName="maxHour" />
                 <ScalarProperty Name="paymentRate" ColumnName="paymentRate" />
@@ -592,6 +613,15 @@
                 <ScalarProperty Name="matricNumber" ColumnName="matricNumber" />
                 <ScalarProperty Name="userId" ColumnName="userId" />
                 <ScalarProperty Name="studentId" ColumnName="studentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Configs">
+            <EntityTypeMapping TypeName="xinyuedbModel.Config">
+              <MappingFragment StoreEntitySet="Config">
+                <ScalarProperty Name="timestamp" ColumnName="timestamp" />
+                <ScalarProperty Name="published" ColumnName="published" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

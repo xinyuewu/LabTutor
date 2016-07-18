@@ -5,117 +5,153 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
-
-<div>
-
-    <hr />
-    <dl class="dl-horizontal">
-
-        <dt>
-            @Html.DisplayNameFor(model => model.student.User.email)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.student.User.email)
-        </dd>
+<!-- Page Title -->
+<h2 class="unpublished pageTitle">Application</h2>
+<h2 class="published pageTitle">Allocation</h2>
 
 
-        <dt>
-            @Html.DisplayNameFor(model => model.student.matricNumber)
-        </dt>
+<!-- "Basic Information" panel -->
+<div class="panel panel-info">
+    <div class="panel-heading">Basic Information</div>
 
-        <dd>
-            @Html.DisplayFor(model => model.student.matricNumber)
-        </dd>
+    @Html.HiddenFor(model => model.student.studentId, new { id = "studentId" })
+    <table class="table table-bordered" id="basicInfo">
+        <tbody>
+            <tr>
+                <td><strong>First Name</strong></td>
+                <td>@Html.DisplayFor(model => model.student.fName)</td>
+                <td><strong>Last Name</strong></td>
+                <td>@Html.DisplayFor(model => model.student.lName)</td>
+            </tr>
+            <tr>
+                <td class="tableLabel"><strong>Matriculation Number</strong></td>
+                <td>@Html.DisplayFor(model => model.student.matricNumber)</td>
+                <td class="tableLabel"><strong>Dundee Email</strong></td>
+                <td>@Html.DisplayFor(model => model.student.User.email)</td>
+            </tr>
+            <tr>
+                <td class="tableLabel"><strong>Degree</strong></td>
+                <td>@Html.DisplayFor(model => model.student.degree)</td>
+                <td class="tableLabel"><strong>Year</strong></td>
+                <td>@Html.DisplayFor(model => model.student.year)</td>
+            </tr>
+            <tr>
+                <td class="tableLabel"><strong>NI Number</strong></td>
+                <td>@Html.DisplayFor(model => model.student.NI)</td>
+                <td class="tableLabel"><strong>Max Working Hour</strong></td>
+                <td>@Html.DisplayFor(model => model.student.maxHour)</td>
+            </tr>
+        </tbody>
+    </table>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.student.fName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.student.fName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.student.lName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.student.lName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.student.degree)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.student.degree)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.student.year)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.student.year)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.student.NI)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.student.NI)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.student.maxHour)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.student.maxHour)
-        </dd>
-
-        @*@if(Model.likedModule.Count != 0)
-        { 
-            <dt>
-                @Html.DisplayNameFor(model => model.likedModule)
-            </dt>
-        }
-        @foreach (KeyValuePair<int, string> kvp in Model.likedModule)
-        { 
-            <dd>
-                @Html.DisplayFor(model => kvp.Value)
-            </dd>
-        }
-
-        @if (Model.dislikedModule.Count != 0)
-        {
-            <dt>
-                @Html.DisplayNameFor(model => model.dislikedModule)
-            </dt>
-        }
-        @foreach (KeyValuePair<int, string> kvp in Model.dislikedModule)
-        {
-            <dd>
-                @Html.DisplayFor(model => kvp.Value)
-            </dd>
-        }*@
-
-    </dl>
 </div>
-<p>
 
-    @if (Model.student.applied)
-    {
-        @Html.ActionLink("Edit", "Edit", new { id = Model.student.studentId }) <text>|</text>
-        @Html.ActionLink("Delete", "Delete", new { id = Model.student.studentId })
-    }
 
-    else
-    {
-        @Html.ActionLink("Apply", "Create", "Application", new { id = Model.student.studentId })
-    }
 
-</p>
+<!-- Semester Tabs -->
+<ul class="nav nav-tabs published" style="margin-bottom: 15px;">
+    <li class="active cursorPointer" data-toggle="tab" onclick="allocationTabChange(1)"><a>Semester 1 </a></li>
+    <li class="cursorPointer" data-toggle="tab" onclick="allocationTabChange(2)"><a>Semester 2 </a></li>
+</ul>
+
+<ul class="nav nav-tabs unpublished" style="margin-bottom: 15px;">
+    <li class="active cursorPointer" data-toggle="tab" onclick="preferenceTabChange(1)"><a>Semester 1 </a></li>
+    <li class="cursorPointer" data-toggle="tab" onclick="preferenceTabChange(2)"><a>Semester 2 </a></li>
+</ul>
+
+<!-- Calendars -->
+<div id="allocationCalendar"></div>
+<div id="preferenceCalendar"></div>
+
+<!-- Legend -->
+<div class='legend row'>
+    <div class="col-sm-3">
+        <label>Favoured</label>
+        <span class="green"></span>
+    </div>
+    <div class="col-sm-3">
+        <label>Unfavoured</label>
+        <span class="orange"></span>
+    </div>
+    <div class="col-sm-3">
+        <label>Neutural</label>
+        <span class="blue"></span>
+    </div>
+    <div class="col-sm-3">
+        <label>My Classes</label>
+        <span class="grey"></span>
+    </div>
+</div>
+
+
+
+<!-- Class Info Modal -->
+<div class="modal fade" id="classDetailModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="col-sm-6">Year: </label>
+                            <year></year>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-6">Degree: </label>
+                            <degree></degree>
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <label class="col-sm-5">Time: </label>
+                            <time></time>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-5">Tutors: </label>
+                            <tutors></tutors>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Operational buttons -->
+<div class="row operationalButtons">
+    <button class="btn btn-default left unpublished" onclick="location.href='@Url.Action("Edit", "Application", new { id = Model.student.studentId })'">Edit Application</button>
+    <button class="btn btn-default right unpublished" data-toggle="modal" data-target="#deleteModal">Delete Account</button>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Delete</h4>
+            </div>
+            <div class="modal-body">
+                <p><strong>Your information stored in this account can not be recovered after deletion.</strong><br> Are you sure you wish to delete this account?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("Delete", "Application", new { id = Model.student.studentId })'">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Scripts/CustomJS/Application_Index.js"></script>
+}

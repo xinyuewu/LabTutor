@@ -18,9 +18,14 @@ namespace LabTutor.Controllers
             return View(stuList); 
         }
 
-        public JsonResult getAllocation(int semester)
+        public JsonResult getAllocation(int semester, int studentId)
         {
-            return Json(Allocate.getAllocation(semester), JsonRequestBehavior.AllowGet);
+            return Json(Allocate.getAllocation(semester, studentId), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult getStudentInfo(int studentId)
+        {
+            return Json(Allocate.getStudentInfo(studentId), JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Create()
@@ -38,6 +43,18 @@ namespace LabTutor.Controllers
             return RedirectToAction("Index");
         }
 
+        public JsonResult getPublishState()
+        {
+            return Json(Allocate.getPublishState(), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult changePublishState()
+        {
+            Allocate allo = new Allocate();
+            allo.changePublishState();
+            return RedirectToAction("Index");
+        }
+
         public ActionResult populateDatabase()
         {
             Allocate allo = new Allocate();
@@ -45,5 +62,6 @@ namespace LabTutor.Controllers
             allo.populateDatabase();
             return RedirectToAction("Index");
         }
+      
     }
 }

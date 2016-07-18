@@ -30,24 +30,15 @@ namespace LabTutor.Controllers
             {
                 using (xinyuedbEntities db = new xinyuedbEntities())
                 {
-                   // StringComparison comp = StringComparison.OrdinalIgnoreCase;
-                   // if (r.user.email.Contains("dundee.ac.uk"))
-                   // {
-                        r.user.accountType = "student";
-                        db.Users.Add(r.user);
-                        db.SaveChanges();
+                    r.user.accountType = "student";
+                    db.Users.Add(r.user);
+                    db.SaveChanges();
 
-                        var usr = db.Users.Where(u => u.email == r.user.email).FirstOrDefault();
-                        r.student.userId = usr.userId;
-                        db.Students.Add(r.student);
-                        db.SaveChanges();
-                  //  }
-  
-                    //else
-                    //{
-                    //    ModelState.AddModelError("email", "Universtity of Dundee email required.");
-                    //}
-                    
+                    var usr = db.Users.Where(u => u.email == r.user.email).FirstOrDefault();
+                    r.student.userId = usr.userId;
+                    db.Students.Add(r.student);
+                    db.SaveChanges();
+
                 }
             }
             Session["account"] = r.user.accountType.ToString();
@@ -69,40 +60,61 @@ namespace LabTutor.Controllers
             return View();
         }
 
+        //[HttpPost]
+        //public ActionResult Login(User user)
+        //{
+        //    using (xinyuedbEntities db = new xinyuedbEntities())
+        //    {
+        //        var usr = db.Users.Where(u => u.email == user.email && u.password == user.password).FirstOrDefault();
+        //        if (usr != null)
+        //        {
+        //            Session["userId"] = usr.userId.ToString();
+        //            Session["name"] = db.Students.Where(s => s.userId == usr.userId).FirstOrDefault().lName;
+        //            Session["account"] = usr.accountType.ToString();
+        //            return RedirectToAction("LoggedIn");
+        //        }
+        //        else
+        //        {
+        //            ModelState.AddModelError("", "Email or Password is wrong.");
+        //        }
+        //        return View();
+        //    }
+        //}
+
         [HttpPost]
-        public ActionResult Login(User user)
+        public JsonResult Login(string email, string password)
         {
             using (xinyuedbEntities db = new xinyuedbEntities())
             {
-                var usr = db.Users.Where(u => u.email == user.email && u.password == user.password).FirstOrDefault();
+                var usr = db.Users.Where(u => u.email == email && u.password == password).FirstOrDefault();
                 if (usr != null)
                 {
                     Session["userId"] = usr.userId.ToString();
-                    Session["email"] = usr.email.ToString();
+                    Session["name"] = db.Students.Where(s => s.userId == usr.userId).FirstOrDefault().lName;
                     Session["account"] = usr.accountType.ToString();
-                    return RedirectToAction("LoggedIn");
+                    return Json(new { success = true, account = usr.accountType.ToString()}, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Email or Password is wrong.");
+                    return Json(new { success = false }, JsonRequestBehavior.AllowGet);
                 }
-                return View();
             }
         }
+
         public ActionResult LoggedIn()
         {
             if (Session["userId"] != null)
             {
                 if (Session["account"].Equals("student"))
                 {
-                    return RedirectToAction("Index", "Application"); 
+                    return RedirectToAction("Index", "Application");
                 }
                 else if (Session["account"].Equals("coordinator"))
                 {
-                    return RedirectToAction("Index", "Allocate"); 
+                    return RedirectToAction("Index", "Allocate");
                 }
             }
-            return RedirectToAction("Login"); 
+            return RedirectToAction("Login");
         }
 
         // POST: /Account/LogOff
@@ -112,7 +124,7 @@ namespace LabTutor.Controllers
         {
             Session.Clear();
             Session.Abandon();
-            return RedirectToAction("LoggedIn");
+            return RedirectToAction("Index", "Home");
         }
 
     }

@@ -33,7 +33,8 @@ namespace LabTutor
         public Nullable<double> paymentRate { get; set; }
         public Nullable<int> maxHour { get; set; }
         public bool applied { get; set; }
-        public Nullable<double> workingHour { get; set; }
+        public double workingHour1 { get; set; }
+        public double workingHour2 { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Allocation> Allocations { get; set; }

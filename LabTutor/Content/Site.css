@@ -1,12 +1,31 @@
-﻿body {
+﻿
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
+    margin: 40px 10px;
+    padding: 0;
+    font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+    font-size: 14px;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+}
+
+.left{
+    float: left;
+}
+
+.right{
+    float: right;
+}
+
+.navbar-right p{
+    color: #999;
+    padding-top: 15px; 
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -16,13 +35,141 @@
     white-space: normal;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
-}
-
-.tabHand{
+.cursorPointer {
     cursor: pointer;
 }
+
+.pageTitle{
+    margin: 40px 0 25px 0;
+}
+
+.operationalButtons{
+    margin: 30px 0;
+}
+
+#main-page-content {  
+    font-size: 16px;
+    color: #888;
+    line-height: 30px;
+    
+}
+
+/*#region Login/Register modal*/
+#modal-login .modal-content {
+	-moz-border-radius: 20px; -webkit-border-radius: 20px; border-radius: 20px;
+	border: 0;
+    width: 450px;
+}
+
+#modal-login .modal-header{
+    padding: 0px;
+    border: 1px;
+    height: 50px;
+    font-size: 20px; 
+}
+
+#modal-login .modal-header li:first-child a{
+    border-top-left-radius: 20px;
+}
+
+#modal-login .modal-header li:last-child a{
+    border-top-right-radius: 20px;
+}
+
+#modal-login .modal-body {
+    padding: 10px 40px 20px 40px;
+}
+
+#modal-login .modal-body .input-group {
+    margin: 20px 0;
+}
+
+#modal-login .modal-body .submit-button{
+    float:right;
+    width: 50%;
+    -moz-border-radius: 0 5px 5px 0; -webkit-border-radius: 0 5px 5px 0; border-radius: 0 5px 5px 0;
+}
+
+#modal-login .modal-body .cancel-button{
+    width: 50%;
+    -moz-border-radius: 5px 0 0 5px; -webkit-border-radius: 5px 0 0 5px; border-radius: 5px 0 0 5px;
+}
+
+#modal-login .error-message{
+    color: #e26363;
+    margin-top: -8px;
+    font-weight: bold;
+}
+
+/*#endregion Login/Register modal*/
+
+
+
+/*#region Calendar*/
+#calendar {
+    margin: 0 auto;
+}
+
+.fc-event {
+    cursor: pointer;
+}
+
+.noCursorPointer .fc-event {
+    cursor: default;
+}
+tutorName {
+    color: black;
+}
+/*#endregion Calendar*/
+
+
+/*#region Legend*/
+.legend {
+    margin: 15px 0px;
+}
+
+    .legend span {
+        display: block;
+        float: left;
+        height: 16px;
+        width: 30px;
+        margin-right: 10px;
+        border: 1px solid #999;
+    }
+
+    .legend .blue {
+        background: #3a87ad;
+    }
+
+    .legend .orange {
+        background: #ff9933;
+    }
+
+    .legend .green {
+        background: #86b300;
+    }
+
+    .legend .grey {
+        background: #8c8c8c;
+    }
+/*#endregion Legend*/
+
+
+/*#region Modal*/
+.modal {
+    text-align: center;
+}
+
+    .modal:before {
+        display: inline-block;
+        vertical-align: middle;
+        content: " ";
+        height: 100%;
+    }
+
+    .modal .modal-dialog {
+        display: inline-block;
+        text-align: left;
+        vertical-align: middle;
+    }
+/*#endregion Modal*/

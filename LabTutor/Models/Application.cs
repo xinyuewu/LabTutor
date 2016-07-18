@@ -10,11 +10,10 @@ namespace LabTutor.Models
     {
         public Student student { get; set; }
         public Grade grade { get; set; }
- 
+
         public List<ClassInfo> classInfo { get; set; }
         public List<ClassInfo> timeClashClass { get; set; }
 
-     
         public List<object> likedClass { get; set; }
         public List<object> dislikedClass { get; set; }
 
@@ -44,6 +43,7 @@ namespace LabTutor.Models
 
         }
 
+
         public List<ClassInfo> getMyClass()
         {
             using (xinyuedbEntities db = new xinyuedbEntities())
@@ -72,8 +72,9 @@ namespace LabTutor.Models
 
                 return myClass;
             }
-            
+
         }
+
 
         public void getLabClass(List<ClassInfo> myClass)
         {
@@ -89,8 +90,6 @@ namespace LabTutor.Models
 
                         foreach (var c in classes)
                         {
-
-
                             bool noTimeClash = true;
                             for (int i = 0; i < myClass.Count(); i++)
                             {
@@ -134,10 +133,10 @@ namespace LabTutor.Models
         {
             using (xinyuedbEntities db = new xinyuedbEntities())
             {
-                var usr = db.Users.Find(userId);                               
+                var usr = db.Users.Find(userId);
                 Student stu = new Student();
                 stu = db.Students.Where(s => s.userId == usr.userId).FirstOrDefault();
-                
+
                 if (student.maxHour != null)
                 {
                     stu.maxHour = student.maxHour;
@@ -150,7 +149,7 @@ namespace LabTutor.Models
 
                 stu.applied = true;
                 db.SaveChanges();
-                
+
             }
         }
 
@@ -175,7 +174,7 @@ namespace LabTutor.Models
                 {
                     stu.NI = student.NI;
                 }
-                else 
+                else
                 {
                     stu.NI = null;
                 }
@@ -184,14 +183,14 @@ namespace LabTutor.Models
 
             }
         }
-        
+
 
         public void readApplication(int userId)
         {
             using (xinyuedbEntities db = new xinyuedbEntities())
             {
                 var usr = db.Users.Find(userId);
-                                
+
                 student = db.Students.Where(s => s.userId == usr.userId).FirstOrDefault();
 
                 var pref = db.Preferences.Where(p => p.studentId == student.studentId);
@@ -208,7 +207,7 @@ namespace LabTutor.Models
                         {
                             ClassInfo cla = new ClassInfo();
                             cla.title = item.Module.name;
-                            cla.classId = i.classId;  
+                            cla.classId = i.classId;
                             cla.startTime = i.startTime.ToString("yyyy-MM-ddTHH:mm:ss");
                             cla.endTime = i.endTime.ToString("yyyy-MM-ddTHH:mm:ss");
                             cla.prefered = "neutral";
@@ -236,13 +235,131 @@ namespace LabTutor.Models
             using (xinyuedbEntities db = new xinyuedbEntities())
             {
                 var usr = db.Users.Find(userId);
-                student = db.Students.Where(s => s.userId == usr.userId).FirstOrDefault();
-                student.maxHour = null;
-                student.applied = false;
-                db.Preferences.RemoveRange(db.Preferences.Where(s => s.studentId == student.studentId));
+                db.Users.Remove(usr);
+                db.Students.Remove(db.Students.Where(s => s.userId == userId).FirstOrDefault());
+                db.Preferences.RemoveRange(db.Preferences.Where(p => p.Student.userId == userId));
+                db.Grades.RemoveRange(db.Grades.Where(g => g.Student.userId == userId));
+                db.Allocations.RemoveRange(db.Allocations.Where(a => a.Student.userId == userId));
                 db.SaveChanges();
             }
         }
+
+
+        public List<ClassInfo> getMyClasses(int studentId)
+        {
+            using (xinyuedbEntities db = new xinyuedbEntities())
+            {
+                var student = db.Students.Where(s => s.studentId == studentId).FirstOrDefault();
+                var myModules = db.Modules.Where(m => m.degree.Contains(student.degree) && m.year == student.year);
+                List<ClassInfo> myClass = new List<ClassInfo>();
+                foreach (var m in myModules)
+                {
+                    var myCla = db.Classes.Where(c => c.moduleId == m.moduleId);
+                    foreach (var c in myCla)
+                    {
+                        ClassInfo cla = new ClassInfo();
+                        cla.title = m.name;
+                        cla.classId = c.classId;
+                        cla.startTime = c.startTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                        cla.endTime = c.endTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                        myClass.Add(cla);
+                    }
+                }
+                return myClass;
+            }
+        }
+
+
+        public static List<Object> getPreference(int semester, int studentId)
+        {
+            using (xinyuedbEntities db = new xinyuedbEntities())
+            {
+                var eventList = new List<Object>();
+
+                var student = db.Students.Where(s => s.studentId == studentId).FirstOrDefault();
+                var myModules = db.Modules.Where(m => m.degree.Contains(student.degree) && m.year == student.year && m.semester == semester);
+                List<ClassInfo> myClass = new List<ClassInfo>();
+                foreach (var m in myModules)
+                {
+                    var myCla = db.Classes.Where(c => c.moduleId == m.moduleId);
+                    foreach (var c in myCla)
+                    {
+                        ClassInfo cla = new ClassInfo();
+                        cla.title = m.name;
+                        cla.classId = c.classId;
+                        cla.startTime = c.startTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                        cla.endTime = c.endTime.ToString("yyyy-MM-ddTHH:mm:ss");
+                        myClass.Add(cla);//add to a list which contains only the classes this applicant is studying
+
+                        eventList.Add(new
+                            {
+                                id = c.classId,
+                                title = c.Module.name,
+                                start = c.startTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                                end = c.endTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                                year = c.Module.year,
+                                degree = c.Module.degree,
+                                tutorNumber = c.tutorNumber,
+                                borderColor = "#8c8c8c",
+                                backgroundColor = "#8c8c8c"
+                            });
+                    }
+                }
+
+                var grades = db.Grades.Where(g => g.studentId == studentId);
+                foreach (var grade in grades)
+                {
+                    var labs = db.Classes.Where(c => c.moduleId == grade.moduleId && c.type.Equals("lab") && c.Module.semester == semester);
+                    foreach (var lab in labs)
+                    {
+                        bool noTimeClash = true;
+
+                        for (int i = 0; i < myClass.Count(); i++)
+                        {
+                            if (!((DateTime.Compare(DateTime.Parse(myClass[i].endTime), lab.startTime) <= 0) || (DateTime.Compare(DateTime.Parse(myClass[i].startTime), lab.endTime) >= 0)))
+                            {
+                                noTimeClash = false;
+                                break;
+                            }
+                        }
+
+                        string color = "";
+                        if (noTimeClash)
+                        {
+                            var preferences = db.Preferences.Where(p => p.studentId == studentId && p.classId == lab.classId).FirstOrDefault();
+                            if (preferences != null)
+                            {
+                                if (preferences.prefered.Equals("liked"))
+                                {
+                                    color = "#86b300";
+                                }
+                                else
+                                {
+                                    color = "#ff9933";
+                                }
+                            }
+                            eventList.Add(new
+                            {
+                                id = lab.classId,
+                                title = lab.Module.name,
+                                start = lab.startTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                                end = lab.endTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                                degree = lab.Module.degree,
+                                year = lab.Module.year,
+                                tutorNumber = lab.tutorNumber,
+                                borderColor = color,
+                                backgroundColor = color
+                            });
+                        }
+
+
+                    }
+                }
+
+                return eventList;
+            }
+        }
+
     }
 
 }
