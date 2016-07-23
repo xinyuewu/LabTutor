@@ -41,6 +41,12 @@ namespace LabTutor.Controllers
             return Json(Application.getPreference(semester, studentId), JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult getNImaxHour(int studentId)
+        {
+            System.Diagnostics.Debug.WriteLine(Application.getNImaxHour(studentId).ToString());
+            return Json(Application.getNImaxHour(studentId), JsonRequestBehavior.AllowGet);
+        }
+
         [HttpGet]
         [StudentFilter]
         public ActionResult Create()
@@ -145,6 +151,11 @@ namespace LabTutor.Controllers
         }
 
 
+        public void Update(IEnumerable<string> neutralList, IEnumerable<string> likedList, IEnumerable<string> dislikedList, string studentId, string ni, string maxHour)
+        {
+            Application.updatePreference(Int32.Parse(maxHour), Int32.Parse(studentId), ni, neutralList, likedList, dislikedList);
+        }
+
         [HttpGet]
         [StudentFilter]
         public ActionResult Edit()
@@ -230,7 +241,7 @@ namespace LabTutor.Controllers
             app.deleteApplication(x);
             Session.Clear();
             Session.Abandon();
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Index", "Home");
         }
 
     }

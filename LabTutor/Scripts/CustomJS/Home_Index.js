@@ -74,6 +74,3 @@ function initCalendar() {
 }
 
 
-
-
-

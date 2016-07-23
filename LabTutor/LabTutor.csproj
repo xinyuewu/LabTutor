@@ -197,6 +197,8 @@
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\Image\soc.png" />
     <Content Include="Content\Image\uod.png" />
+    <Content Include="Content\jquery.dataTables.min.css" />
+    <Content Include="Content\jquery.qtip.min.css" />
     <Content Include="dhxscheduler.sample.mvc3.readme.txt" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
@@ -323,6 +325,8 @@
     <Content Include="fullcalendar-2.7.2\demos\php\utils.php" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\bootstrapvalidator.min.js" />
+    <Content Include="Scripts\CustomJS\Application_Edit.js" />
     <Content Include="Scripts\CustomJS\Application_Index.js" />
     <Content Include="Scripts\CustomJS\Home_Index.js" />
     <Content Include="Scripts\CustomJS\site.js" />
@@ -585,6 +589,8 @@
     <Content Include="Scripts\jquery-2.2.3.min.js" />
     <Content Include="Scripts\jquery-2.2.3.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.dataTables.min.js" />
+    <Content Include="Scripts\jquery.qtip.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -594,7 +600,6 @@
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Scripts\validator.js" />
     <Content Include="Scripts\vue.js" />
     <Content Include="Scripts\vue.min.js" />
     <Content Include="Scripts\_references.js" />
@@ -610,11 +615,8 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Application\Index.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Application\Create.cshtml" />
     <Content Include="Views\Application\Edit.cshtml" />
     <Content Include="Views\Error\PageDoesntExist.cshtml" />
     <Content Include="Views\Error\RestrictedPage.cshtml" />

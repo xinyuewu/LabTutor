@@ -25,6 +25,8 @@ namespace LabTutor
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
+                     "~/Content/jquery.dataTables.min.css",
+                      "~/Content/jquery.qtip.min.css",
                       "~/Content/font-awesome.css",
                       "~/Content/bootstrap.css",
                       "~/Content/bootstrap-select.css", //for multidropdown list
@@ -35,12 +37,14 @@ namespace LabTutor
                       "~/fullcalendar-2.7.2/fullcalendar.css"));
 
             bundles.Add(new ScriptBundle("~/fullcalendar/script").Include(
-                      "~/Scripts/CustomJS/site.js",
-                      "~/Scripts/validator.js",
+                      "~/Scripts/bootstrapvalidator.min.js",                    
+                      "~/Scripts/jquery.qtip.min.js",
+                      "~/Scripts/jquery.dataTables.min.js",
                       "~/fullcalendar-2.7.2/lib/jqueryui/jquery-ui-1.11.1.js",
                       "~/fullcalendar-2.7.2/lib/moment.min.js",
                       "~/fullcalendar-2.7.2/lib/jquery-ui.custom.min.js",
-                      "~/fullcalendar-2.7.2/fullcalendar.js"));
+                      "~/fullcalendar-2.7.2/fullcalendar.js",
+                      "~/Scripts/CustomJS/site.js"));
 
         }
     }

@@ -300,6 +300,7 @@ namespace LabTutor.Models
                                 year = c.Module.year,
                                 degree = c.Module.degree,
                                 tutorNumber = c.tutorNumber,
+                                preference = "",
                                 borderColor = "#8c8c8c",
                                 backgroundColor = "#8c8c8c"
                             });
@@ -347,6 +348,7 @@ namespace LabTutor.Models
                                 degree = lab.Module.degree,
                                 year = lab.Module.year,
                                 tutorNumber = lab.tutorNumber,
+                                preference = preferences == null ? "neutral" : preferences.prefered,
                                 borderColor = color,
                                 backgroundColor = color
                             });
@@ -357,6 +359,92 @@ namespace LabTutor.Models
                 }
 
                 return eventList;
+            }
+        }
+
+
+        public static Object getNImaxHour(int studentId)
+        {
+            using (xinyuedbEntities db = new xinyuedbEntities())
+            {
+                var stu = db.Students.Where(s => s.studentId == studentId).FirstOrDefault();
+
+                var NImaxHour = new Object();
+
+                NImaxHour = (new
+                {
+                    ni = stu.NI,
+                    maxHour = stu.maxHour
+                });
+                return NImaxHour;
+            }
+        }
+
+
+        public static void updatePreference(int maxhour, int studentId, string ni, IEnumerable<string> neutralList, IEnumerable<string> likedList, IEnumerable<string> dislikedList)
+        {
+            using (xinyuedbEntities db = new xinyuedbEntities())
+            {
+                var stu = db.Students.Where(s => s.studentId == studentId).FirstOrDefault();
+                if (maxhour != null) stu.maxHour = maxhour;
+                if (ni != null) stu.NI = ni;
+
+                var pref = db.Preferences.Where(p => p.studentId == studentId);
+
+                if (neutralList != null)
+                {
+                    foreach (var item in neutralList)
+                    {
+                        int classId = Int32.Parse(item);
+                        var entity = pref.Where(e => e.classId == classId).FirstOrDefault();
+                        if (entity != null)
+                        {
+                            db.Preferences.Remove(entity);
+                        }                     
+                    }
+                }
+                if (likedList != null)
+                {
+                    foreach (var item in likedList)
+                    {
+                        int classId = Int32.Parse(item);
+                        var entity = pref.Where(e => e.classId == classId).FirstOrDefault();
+                        if (entity != null)
+                        {
+                            entity.prefered = "liked";
+                        }
+                        else
+                        {
+                            Preference p = new Preference();
+                            p.classId = Int32.Parse(item);
+                            p.studentId = studentId;
+                            p.prefered = "liked";
+                            db.Preferences.Add(p);
+                        }
+                    }
+                }
+                if (dislikedList != null)
+                {
+                    foreach (var item in dislikedList)
+                    {
+                        int classId = Int32.Parse(item);
+                        var entity = pref.Where(e => e.classId == classId).FirstOrDefault();
+                        if (entity != null)
+                        {
+                            entity.prefered = "disliked";
+                        }
+                        else
+                        {
+                            Preference p = new Preference();
+                            p.classId = Int32.Parse(item);
+                            p.studentId = studentId;
+                            p.prefered = "disliked";
+                            db.Preferences.Add(p);
+                        }
+                    }
+                }
+
+                db.SaveChanges();
             }
         }
 

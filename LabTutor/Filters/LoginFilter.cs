@@ -18,8 +18,8 @@ namespace LabTutor.Filters
                 filterContext.Result = new RedirectToRouteResult(
                     new RouteValueDictionary 
                 { 
-                    { "controller", "Account" }, 
-                    { "action", "Login" } 
+                    { "controller", "Home" }, 
+                    { "action", "Index" } 
                 });
             }
         }

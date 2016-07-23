@@ -17,8 +17,8 @@ namespace LabTutor.Filters
                 filterContext.Result = new RedirectToRouteResult(
                     new RouteValueDictionary 
                 { 
-                    { "controller", "Account" }, 
-                    { "action", "Login" } 
+                    { "controller", "Home" }, 
+                    { "action", "Index" } 
                 });
             }
             else if (System.Web.HttpContext.Current.Session["account"].ToString()!=("student"))

@@ -1,200 +1,69 @@
 ﻿@model LabTutor.Models.Application
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit my application";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-    body {
-        margin: 40px 10px;
-        padding: 0;
-        font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-        font-size: 14px;
-    }
+<!-- Page Title -->
+<h2 class="pageTitle">Edit Application</h2>
 
-    #calendar {
-        max-width: 900px;
-        margin: 0 auto;
-    }
-</style>
+<hr />
 
-<h2>Edit my application</h2>
+<form class="form-horizontal" id="application-form">
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.student.studentId, new { id = "studentId" })
 
-    <div class="form-horizontal">
-
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @*@Html.HiddenFor(model => model.allocationId)*@
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.student.NI, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.student.NI, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.student.NI, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.student.maxHour, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.student.maxHour, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.student.maxHour, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div id='calendar'></div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <button type="button" id="submitAjax" class="btn btn-default">Save</button>
-            </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-md-offset-2">National Insurrance Number <span id="optional">(optional)</span></label>
+        <div class="col-md-4">
+            <input id="ni" name="NI" class="form-control" type="text">
         </div>
     </div>
-}
 
-<div>
-    @Html.ActionLink("Back", "Index")
-</div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-md-offset-2">Maximum working hours per week</label>
+        <div class="col-md-4">
+            <input id="maxHour" name="maxHour" class="form-control" type="number">
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs" style="margin-bottom: 15px;">
+        <li class="active cursorPointer" data-toggle="tab" onclick="tabChange(1)"><a>Semester 1 </a></li>
+        <li class="cursorPointer" data-toggle="tab" onclick="tabChange(2)"><a>Semester 2 </a></li>
+    </ul>
+
+    <div id='calendar'></div>
+
+    <!-- Legend -->
+    <div class='legend row'>
+        <div class="col-sm-3">
+            <label>Favoured</label>
+            <span class="green"></span>
+        </div>
+        <div class="col-sm-3">
+            <label>Unfavoured</label>
+            <span class="orange"></span>
+        </div>
+        <div class="col-sm-3">
+            <label>Neutral</label>
+            <span class="blue"></span>
+        </div>
+        <div class="col-sm-3">
+            <label>My Classes</label>
+            <span class="grey"></span>
+        </div>
+    </div>
+
+    <div class="row operationalButtons">
+        <button type="button" class="btn btn-default left" onclick="location.href='@Url.Action("Index", "Application")'">Cancel</button>
+        <button type="submit" id="save_button" class="btn btn-default right">Save</button>
+    </div>
+
+</form>
+
+
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-
-
-<script>
-    var likedList = new Array();
-    var dislikedList = new Array();
-
-    @for (int i = 0; i < @Model.classInfo.Count; i++)
-    {
-        if (@Model.classInfo[i].prefered.Equals("liked"))
-        {
-            @:likedList.push(@Model.classInfo[i].classId);
-
-        }
-        else if (@Model.classInfo[i].prefered.Equals("disliked"))
-        {
-             @:dislikedList.push(@Model.classInfo[i].classId);
-                        }
-    }
-
-    //alert(typeof @Model.classInfo[0].classId);
-
-    //alert("like " + likedList);
-    //alert("dislike " + dislikedList);
-
-    $(document).ready(function () {
-
-        $("#submitAjax").click(function () {
-            $.ajax({
-                url: "/Application/Edit1",
-                data: { likedList: likedList },
-                type: "POST",
-                traditional: true,
-                success: function (data) {
-                    $.ajax({
-                        url: "/Application/Edit2",
-                        data: { dislikedList: dislikedList },
-                        type: "POST",
-                        traditional: true,
-                        success: function (data) {
-                            $('form').submit();
-                        }
-                    })
-                },
-                error: function (data) {
-                    alert("error");
-                }
-            })
-        });
-
-
-        $('#calendar').fullCalendar({
-            editable: false,
-            weekends: false,
-            weekNumbers: false,
-            minTime: "09:00:00",
-            maxTime: "18:00:00",
-            firstDay: 1,
-            contentHeight: 420,
-            defaultView: 'agendaWeek',
-            eventLimit: true, // allow "more" link when too many events
-            defaultDate: "2016-06-06",
-
-            events: [
-                @for (int i = 0; i < @Model.classInfo.Count; i++)
-				{
-                    <text>{</text>
-				   <text>title: '</text>@Model.classInfo[i].classId<text>',</text>
-				    <text>start: '</text>@Model.classInfo[i].startTime<text>',</text>
-				    <text>end: '</text>@Model.classInfo[i].endTime<text>',</text>
-                    <text>id: '</text>@Model.classInfo[i].classId<text>',</text>
-				    <text>selected: '</text>@Model.classInfo[i].prefered<text>'</text>
-                    if (@Model.classInfo[i].prefered.Equals("liked"))
-                        {
-                            <text>, backgroundColor: '#86b300'</text>
-                        }
-                    else if (@Model.classInfo[i].prefered.Equals("disliked"))
-                    {
-                         <text>, backgroundColor: '#ff9933'</text>
-                    }
-
-
-                    <text> }</text>
-                    if (i != @Model.classInfo.Count - 1){<text>,</text>}
-                }
-            ],
-
-            eventClick: function (calEvent, jsEvent, view) {
-
-              
-                //alert(calEvent.id + "selected");
-                if (calEvent.selected === 'neutral') {
-                    $(this).css('background-color', '#86b300');
-                    calEvent.selected = 'liked';
-                    likedList.push(parseInt(calEvent.id));
-                    //alert("like " + likedList);
-                }
-                else if (calEvent.selected === 'liked') {
-                    $(this).css('background-color', '#ff9933');
-                    calEvent.selected = 'disliked';
-
-                    //alert("index of selected item" + likedList.indexOf(parseInt(calEvent.id)));
-                    
-                    //alert("before delete from likedList " + likedList);      
-                    delete likedList.splice(likedList.indexOf(parseInt(calEvent.id)), 1);
-                    //alert("after delete from likedList " + likedList);
-
-                    dislikedList.push(parseInt(calEvent.id));
-                    //alert("dislike "+dislikedList);
-
-                }
-                else if (calEvent.selected === 'disliked') {
-                    $(this).css('background-color', '#3a87ad');
-                    calEvent.selected = 'neutral';
-                    
-                    //alert("index of selected item" + dislikedList.indexOf(parseInt(calEvent.id)));
-
-                    //alert("before delete from dislikedList " + dislikedList);
-                    delete dislikedList.splice(dislikedList.indexOf(parseInt(calEvent.id)), 1);
-                    //alert("after delete from dislikedList " + dislikedList);
-
-                    //alert("like " + likedList);
-                    //alert("dislike " + dislikedList);
-
-
-                }
-                //alert(parseInt(calEvent.id,10));
-            }
-        });
-
-    });
-
-</script>
-
-
+    <script src="~/Scripts/CustomJS/Application_Edit.js"></script>
 }
-    
+

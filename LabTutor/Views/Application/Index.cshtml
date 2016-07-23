@@ -1,7 +1,7 @@
 ﻿@model LabTutor.Models.Application
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "My application";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -47,7 +47,6 @@
 </div>
 
 
-
 <!-- Semester Tabs -->
 <ul class="nav nav-tabs published" style="margin-bottom: 15px;">
     <li class="active cursorPointer" data-toggle="tab" onclick="allocationTabChange(1)"><a>Semester 1 </a></li>
@@ -74,7 +73,7 @@
         <span class="orange"></span>
     </div>
     <div class="col-sm-3">
-        <label>Neutural</label>
+        <label>Neutral</label>
         <span class="blue"></span>
     </div>
     <div class="col-sm-3">
@@ -129,8 +128,8 @@
 
 <!-- Operational buttons -->
 <div class="row operationalButtons">
-    <button class="btn btn-default left unpublished" onclick="location.href='@Url.Action("Edit", "Application", new { id = Model.student.studentId })'">Edit Application</button>
-    <button class="btn btn-default right unpublished" data-toggle="modal" data-target="#deleteModal">Delete Account</button>
+    <button class="btn btn-default right unpublished" onclick="location.href='@Url.Action("Edit", "Application")'">Edit Application</button>
+    <button class="btn btn-default left unpublished" data-toggle="modal" data-target="#deleteModal">Delete Account</button>
 </div>
 
 <!-- Delete Confirmation Modal -->

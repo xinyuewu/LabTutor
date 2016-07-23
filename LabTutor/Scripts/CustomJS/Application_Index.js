@@ -50,7 +50,7 @@ function initPreferenceCalendar() {
 }
 
 function preferenceTabChange(semester) {
-    $('#preferenceCalendar').fullCalendar('removeEventSource', '/Application/getPreference/')
+    $('#preferenceCalendar').fullCalendar('removeEventSource', 'Application/getPreference/')
     $('#preferenceCalendar').fullCalendar('addEventSource', {
         url: urlPrefix + 'Application/getPreference/',
         data: {

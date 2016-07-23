@@ -15,17 +15,17 @@ body {
     padding-right: 15px;
 }
 
-.left{
+.left {
     float: left;
 }
 
-.right{
+.right {
     float: right;
 }
 
-.navbar-right p{
+.navbar-right p {
     color: #999;
-    padding-top: 15px; 
+    padding-top: 15px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -39,67 +39,93 @@ body {
     cursor: pointer;
 }
 
-.pageTitle{
+.pageTitle {
     margin: 40px 0 25px 0;
 }
 
-.operationalButtons{
+.operationalButtons {
     margin: 30px 0;
 }
 
-#main-page-content {  
+#main-page-content {
     font-size: 16px;
     color: #888;
     line-height: 30px;
-    
 }
 
 /*#region Login/Register modal*/
-#modal-login .modal-content {
-	-moz-border-radius: 20px; -webkit-border-radius: 20px; border-radius: 20px;
-	border: 0;
-    width: 450px;
+#login-modal .modal-content {
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    border: 0;
+    width: 82%;
+    left: 9%;
 }
 
-#modal-login .modal-header{
+#login-modal .modal-header {
     padding: 0px;
     border: 1px;
     height: 50px;
-    font-size: 20px; 
+    font-size: 20px;
 }
 
-#modal-login .modal-header li:first-child a{
-    border-top-left-radius: 20px;
+    #login-modal .modal-header li:first-child a {
+        border-top-left-radius: 20px;
+    }
+
+    #login-modal .modal-header li:last-child a {
+        border-top-right-radius: 20px;
+    }
+
+#login-modal .modal-body {
+    padding: 35px 0px 0px 0px;
 }
 
-#modal-login .modal-header li:last-child a{
-    border-top-right-radius: 20px;
-}
+    #login-modal .modal-body .radio {
+        display: inline;
+        margin-right: 5px;
+    }
 
-#modal-login .modal-body {
-    padding: 10px 40px 20px 40px;
-}
+    #login-modal .modal-body .control-label {
+        text-align: left;
+    }
 
-#modal-login .modal-body .input-group {
-    margin: 20px 0;
-}
+    #login-modal .modal-body #degree-label {
+        padding-top: 0;
+    }
 
-#modal-login .modal-body .submit-button{
-    float:right;
-    width: 50%;
-    -moz-border-radius: 0 5px 5px 0; -webkit-border-radius: 0 5px 5px 0; border-radius: 0 5px 5px 0;
-}
+    #login-modal .modal-body .input-field {
+        padding-left: 0;
+    }
 
-#modal-login .modal-body .cancel-button{
-    width: 50%;
-    -moz-border-radius: 5px 0 0 5px; -webkit-border-radius: 5px 0 0 5px; border-radius: 5px 0 0 5px;
-}
+    #login-modal .modal-body .bottom-buttons {
+        margin-top: 30px;
+    }
 
-#modal-login .error-message{
-    color: #e26363;
-    margin-top: -8px;
-    font-weight: bold;
-}
+    #login-modal .modal-body .submit-button {
+        height: 45px;
+        float: right;
+        width: 50%;
+        margin: 0;
+        -moz-border-radius: 0 0 20px 0;
+        -webkit-border-radius: 0 0 20px 0;
+        border-radius: 0 0 20px 0;
+    }
+
+    #login-modal .modal-body .cancel-button {
+        height: 45px;
+        width: 50%;
+        margin: 0;
+        -moz-border-radius: 0 0 0 20px;
+        -webkit-border-radius: 0 0 0 20px;
+        border-radius: 0 0 0 20px;
+    }
+
+    #login-modal .modal-body .error_message {
+        padding: 5px 5px;
+        display: none;
+    }
 
 /*#endregion Login/Register modal*/
 
@@ -117,6 +143,7 @@ body {
 .noCursorPointer .fc-event {
     cursor: default;
 }
+
 tutorName {
     color: black;
 }
