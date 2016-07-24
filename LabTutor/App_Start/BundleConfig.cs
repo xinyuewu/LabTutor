@@ -30,18 +30,18 @@ namespace LabTutor
                       "~/Content/site.css"));
 
             bundles.Add(new StyleBundle("~/fullcalendar/css").Include(
-                      "~/fullcalendar-2.7.2/lib/jqueryui/jquery-ui-1.10.3.min.css",
-                      "~/fullcalendar-2.7.2/fullcalendar.css"));
+                      "~/Content/fullcalendar/jquery-ui-1.10.3.min.css",
+                      "~/Content/fullcalendar/fullcalendar.css"));
 
             bundles.Add(new ScriptBundle("~/fullcalendar/script").Include(
                       "~/Scripts/bootstrapvalidator.min.js",
                       "~/Scripts/jquery.qtip.min.js",
                       "~/Scripts/jquery.dataTables.min.js",  
                       "~/Scripts/CustomJS/site.js",
-                      "~/fullcalendar-2.7.2/lib/jqueryui/jquery-ui-1.11.1.js",
-                      "~/fullcalendar-2.7.2/lib/moment.min.js",
-                      "~/fullcalendar-2.7.2/lib/jquery-ui.custom.min.js",
-                      "~/fullcalendar-2.7.2/fullcalendar.js"));
+                      "~/Scripts/fullcalendar/jquery-ui-1.11.1.js",
+                      "~/Scripts/fullcalendar/moment.min.js",
+                      "~/Scripts/fullcalendar/jquery-ui.custom.min.js",
+                      "~/Scripts/fullcalendar/fullcalendar.js"));
 
         }
     }

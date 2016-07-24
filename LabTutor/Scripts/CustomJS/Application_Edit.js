@@ -3,7 +3,7 @@
     getNImaxHour();
     initCalendar();
     initFormValidator();
-    $('#application-form').bootstrapValidator('validate');
+    
 });
 
 $('#optional').qtip({
@@ -23,8 +23,16 @@ function getNImaxHour() {
             if (json) {
                 $("#ni").val(json.ni);
                 $("#maxHour").val(json.maxHour);
-            }
+            }           
+        },
+        error: function (json) {
+            console.log("getNImaxHour error");
+        },
+        complete: function (data) {
+        
+            $('#application-form').bootstrapValidator('validate');
         }
+
 
     });
 }
