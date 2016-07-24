@@ -136,54 +136,13 @@ namespace LabTutor.Models
                 var usr = db.Users.Find(userId);
                 Student stu = new Student();
                 stu = db.Students.Where(s => s.userId == usr.userId).FirstOrDefault();
-
-                if (student.maxHour != null)
-                {
-                    stu.maxHour = student.maxHour;
-                }
-
-                if (student.NI != null)
-                {
-                    stu.NI = student.NI;
-                }
-
+                stu.maxHour = student.maxHour;
+                stu.NI = student.NI;
                 stu.applied = true;
                 db.SaveChanges();
 
             }
         }
-
-
-        public void updateApplication(int userId)
-        {
-            using (xinyuedbEntities db = new xinyuedbEntities())
-            {
-                var usr = db.Users.Find(userId);
-                Student stu = db.Students.Where(s => s.userId == usr.userId).FirstOrDefault();
-
-                if (student.maxHour != null)
-                {
-                    stu.maxHour = student.maxHour;
-                }
-                else
-                {
-                    stu.maxHour = null;
-                }
-
-                if (student.NI != null)
-                {
-                    stu.NI = student.NI;
-                }
-                else
-                {
-                    stu.NI = null;
-                }
-
-                db.SaveChanges();
-
-            }
-        }
-
 
         public void readApplication(int userId)
         {
@@ -400,7 +359,7 @@ namespace LabTutor.Models
                         if (entity != null)
                         {
                             db.Preferences.Remove(entity);
-                        }                     
+                        }
                     }
                 }
                 if (likedList != null)

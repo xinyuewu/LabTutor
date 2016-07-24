@@ -165,21 +165,21 @@ namespace LabTutor.Controllers
             app.readApplication(x);
             return View(app);
         }
-        [HttpPost]
-        [StudentFilter]
-        public ActionResult Edit(Application app)
-        {
-            if (ModelState.IsValid)
-            {
-                int x = Int32.Parse(Session["userId"].ToString());
-                app.updateApplication(x);
-                return RedirectToAction("Index", "Application");
-            }
-            else
-            {
-                return View(app);
-            }
-        }
+        //[HttpPost]
+        //[StudentFilter]
+        //public ActionResult Edit(Application app)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        int x = Int32.Parse(Session["userId"].ToString());
+        //        app.updateApplication(x);
+        //        return RedirectToAction("Index", "Application");
+        //    }
+        //    else
+        //    {
+        //        return View(app);
+        //    }
+        //}
         [HttpPost]
         public void Edit1(IEnumerable<string> likedList)
         {

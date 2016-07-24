@@ -11,9 +11,6 @@ namespace LabTutor
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*"));
-
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
@@ -37,14 +34,14 @@ namespace LabTutor
                       "~/fullcalendar-2.7.2/fullcalendar.css"));
 
             bundles.Add(new ScriptBundle("~/fullcalendar/script").Include(
-                      "~/Scripts/bootstrapvalidator.min.js",                    
+                      "~/Scripts/bootstrapvalidator.min.js",
                       "~/Scripts/jquery.qtip.min.js",
-                      "~/Scripts/jquery.dataTables.min.js",
+                      "~/Scripts/jquery.dataTables.min.js",  
+                      "~/Scripts/CustomJS/site.js",
                       "~/fullcalendar-2.7.2/lib/jqueryui/jquery-ui-1.11.1.js",
                       "~/fullcalendar-2.7.2/lib/moment.min.js",
                       "~/fullcalendar-2.7.2/lib/jquery-ui.custom.min.js",
-                      "~/fullcalendar-2.7.2/fullcalendar.js",
-                      "~/Scripts/CustomJS/site.js"));
+                      "~/fullcalendar-2.7.2/fullcalendar.js"));
 
         }
     }

@@ -23,15 +23,15 @@ namespace LabTutor
         }
     
         public int studentId { get; set; }
-        public Nullable<int> userId { get; set; }
+        public int userId { get; set; }
         public int matricNumber { get; set; }
         public string fName { get; set; }
         public string lName { get; set; }
         public string degree { get; set; }
         public int year { get; set; }
         public string NI { get; set; }
-        public Nullable<double> paymentRate { get; set; }
-        public Nullable<int> maxHour { get; set; }
+        public double paymentRate { get; set; }
+        public int maxHour { get; set; }
         public bool applied { get; set; }
         public double workingHour1 { get; set; }
         public double workingHour2 { get; set; }

@@ -74,7 +74,7 @@ namespace LabTutor.Controllers
                     Session["account"] = "student";
                     Session["userId"] = userId.ToString();
                     Session["email"] = email.ToString();
-                    return Json(new { success = true}, JsonRequestBehavior.AllowGet);
+                    return Json(new { success = true }, JsonRequestBehavior.AllowGet);
                 }
 
             }
@@ -93,7 +93,7 @@ namespace LabTutor.Controllers
                     return RedirectToAction("Index", "Allocate");
                 }
             }
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: /Account/LogOff
