@@ -199,6 +199,8 @@
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\fullcalendar\fullcalendar.css" />
+    <Content Include="Scripts\CustomJS\Allocate_Edit.js" />
+    <Content Include="Scripts\CustomJS\Allocate_Index.js" />
     <Content Include="Scripts\fullcalendar\fullcalendar.js" />
     <Content Include="Scripts\fullcalendar\jquery-ui.custom.min.js" />
     <Content Include="Content\fullcalendar\jquery-ui-1.10.3.min.css" />
@@ -335,12 +337,12 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Application\Index.cshtml" />
-    <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Application\Edit.cshtml" />
     <Content Include="Views\Error\PageDoesntExist.cshtml" />
     <Content Include="Views\Error\RestrictedPage.cshtml" />
     <Content Include="Views\Allocate\Index.cshtml" />
     <Content Include="Views\Timetable\Edit.cshtml" />
+    <Content Include="Views\Allocate\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

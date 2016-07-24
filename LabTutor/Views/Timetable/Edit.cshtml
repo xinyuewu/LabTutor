@@ -4,368 +4,118 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-    body {
-        margin-top: 40px;
-        padding: 0;
-        font-size: 14px;
-        font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-    }
-
-    #calendar {
-        width: 900px;
-        margin: 0 auto;
-    }
-
-    /* css for timepicker */
-    .ui-timepicker-div dl {
-        text-align: left;
-    }
-
-        .ui-timepicker-div dl dt {
-            height: 25px;
-        }
-
-        .ui-timepicker-div dl dd {
-            margin: -25px 0 10px 65px;
-        }
-
-    .style1 {
-        width: 100%;
-    }
-
-    /* table fields alignment*/
-    .alignRight {
-        text-align: right;
-        padding-right: 10px;
-        padding-bottom: 10px;
-    }
-
-    .alignLeft {
-        text-align: left;
-        padding-bottom: 10px;
-    }
-
-    .dialog-input {
-        width: 60%;
-    }
-
-    #moduleList, option {
-        font-size: 90%;
-    }
-
-    .breadcrumb{
-        background-color: transparent;
-        margin-top: 35px;
-        font-size: 20px;
-    }
-
-</style>
-
-<ol class="breadcrumb">
-    <li><a href="@Url.Action("Index", "Allocate")">Allocation</a></li>
-    <li class="active">Edit timetable</li>
-</ol>
-
-    <div class="form-horizontal">
 
 
-            <ul class="nav nav-tabs" style="margin-bottom: 15px;">
-                <li class="dropdown active">
-                    <a class="dropdown-toggle cursorPointer" data-toggle="dropdown">Year 1 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a id="defaultTab" onclick="tabChange(1, 1)" data-toggle="tab" href="#semester1">Semester 1</a></li>
-                        <li><a onclick="tabChange(1, 2)" data-toggle="tab" href="#semester2">Semester 2</a></li>
-                    </ul>
-                </li>
+<div class="allocation_edit">
 
-                <li class="dropdown">
-                    <a class="dropdown-toggle cursorPointer" data-toggle="dropdown">Year 2 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a onclick="tabChange(2, 1)" data-toggle="tab" href="#semester1">Semester 1</a></li>
-                        <li><a onclick="tabChange(2, 2)" data-toggle="tab" href="#semester2">Semester 2</a></li>
-                    </ul>
-                </li>
+    <!-- Page Title -->
+    <h2 class="pageTitle">Edit Timetable</h2>
 
-                <li class="dropdown">
-                    <a class="dropdown-toggle cursorPointer" data-toggle="dropdown">Year 3 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a onclick="tabChange(3, 1)" data-toggle="tab" href="#semester1">Semester 1</a></li>
-                        <li><a onclick="tabChange(3, 2)" data-toggle="tab" href="#semester2">Semester 2</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">
-                    <a class="dropdown-toggle cursorPointer" data-toggle="dropdown">Year 4 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a onclick="tabChange(4, 1)" data-toggle="tab" href="#semester1">Semester 1</a></li>
-                        <li><a onclick="tabChange(4, 2)" data-toggle="tab" href="#semester2">Semester 2</a></li>
-                    </ul>
-                </li>
+    <!-- semester tabs -->
+    <ul class="nav nav-tabs" style="margin-bottom: 15px;">
+        <li class="dropdown active">
+            <a class="dropdown-toggle cursorPointer" data-toggle="dropdown">Year 1 <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a id="defaultTab" onclick="tabChange(1, 1)" data-toggle="tab" href="#semester1">Semester 1</a></li>
+                <li><a onclick="tabChange(1, 2)" data-toggle="tab" href="#semester2">Semester 2</a></li>
             </ul>
+        </li>
 
-            <div id="myTabContent" class="tab-content">
-                <div class="tab-pane fade" id="semester1"><p>Semester 1</p></div>
-                <div class="tab-pane fade" id="semester2"><p>Semester 2</p></div>
-            </div>
+        <li class="dropdown">
+            <a class="dropdown-toggle cursorPointer" data-toggle="dropdown">Year 2 <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a onclick="tabChange(2, 1)" data-toggle="tab" href="#semester1">Semester 1</a></li>
+                <li><a onclick="tabChange(2, 2)" data-toggle="tab" href="#semester2">Semester 2</a></li>
+            </ul>
+        </li>
 
+        <li class="dropdown">
+            <a class="dropdown-toggle cursorPointer" data-toggle="dropdown">Year 3 <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a onclick="tabChange(3, 1)" data-toggle="tab" href="#semester1">Semester 1</a></li>
+                <li><a onclick="tabChange(3, 2)" data-toggle="tab" href="#semester2">Semester 2</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a class="dropdown-toggle cursorPointer" data-toggle="dropdown">Year 4 <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a onclick="tabChange(4, 1)" data-toggle="tab" href="#semester1">Semester 1</a></li>
+                <li><a onclick="tabChange(4, 2)" data-toggle="tab" href="#semester2">Semester 2</a></li>
+            </ul>
+        </li>
+    </ul>
+
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade" id="semester1"><p>Semester 1</p></div>
+        <div class="tab-pane fade" id="semester2"><p>Semester 2</p></div>
+    </div>
+
+    <!-- calendar -->
+    <div id='calendar'></div>
+
+
+
+    <!-- Operational buttons -->
+    <div class="row operationalButtons">
+        <button type="button" class="btn btn-default left" onclick="location.href='@Url.Action("Index", "Allocate")'">Go back</button>
+    </div>
+
+    <!-- event add dialog -->
+    <div id="addDialog" style=" margin: 50px;" title="Add Class">
+        <div class="row form-group">
+            <label class="col-sm-4">Time:</label>
+            <div class="alignLeft "><span id="eventTime"></span></div>
         </div>
 
-        <div id='calendar'></div>
-
-
-        <div id="addDialog" style=" margin: 50px;" title="Add Class">
-            <div class="row form-group">
-                <label class="col-sm-4">Time:</label>
-                <div class="alignLeft "><span id="eventTime"></span></div>
-            </div>
-
-            <div class="row form-group">
-                <label class="col-sm-4 ">Module:</label>
-                <select class="form-control dialog-input" id="moduleList"></select>
-            </div>
-
-            <div class="row form-group">
-                <label class="col-sm-4 ">Type:</label>
-                <label class="radio-inline"><input type="radio" id="type" name="type" value="lab" checked>Lab</label>
-                <label class="radio-inline"><input type="radio" id="type" name="type" value="lecture">Lecture</label>
-            </div>
-
-            <div class="row form-group">
-                <label class="col-sm-4">Number of tutors:</label>
-                <input class="form-control dialog-input " type="number" min="0" id="tutorNumber" value="0" required>
-            </div>
+        <div class="row form-group">
+            <label class="col-sm-4 ">Module:</label>
+            <select class="form-control dialog-input" id="moduleList"></select>
         </div>
 
-
-        <div id="editDialog" style=" margin: 50px;" title="Edit Class">
-            <div class="row form-group">
-                <input type="hidden" id="editEventId" />
-                <label class="col-sm-4">Time:</label>
-                <div class="alignLeft "><span id="editEventTime"></span></div>
-            </div>
-
-            <div class="row form-group">
-                <label class="col-sm-4 ">Module:</label>
-                <select class="form-control dialog-input" id="editModuleList"></select>
-            </div>
-
-            <div class="row form-group">
-                <label class="col-sm-4 ">Type:</label>
-                <label class="radio-inline"><input type="radio" id="type" name="editType" value="lab" checked>Lab</label>
-                <label class="radio-inline"><input type="radio" id="type" name="editType" value="lecture">Lecture</label>
-            </div>
-
-            <div class="row form-group">
-                <label class="col-sm-4">Number of tutors:</label>
-                <input class="form-control dialog-input " type="number" min="0" id="editTutorNumber" value="0" required>
-            </div>
+        <div class="row form-group">
+            <label class="col-sm-4 ">Type:</label>
+            <label class="radio-inline"><input type="radio" id="type" name="type" value="lab" checked>Lab</label>
+            <label class="radio-inline"><input type="radio" id="type" name="type" value="lecture">Lecture</label>
         </div>
 
+        <div class="row form-group">
+            <label class="col-sm-4">Number of tutors:</label>
+            <input class="form-control dialog-input " type="number" min="0" id="tutorNumber" value="0" required>
+        </div>
+    </div>
+
+    <!-- event edit dialog -->
+    <div id="editDialog" style=" margin: 50px;" title="Edit Class">
+        <div class="row form-group">
+            <input type="hidden" id="editEventId" />
+            <label class="col-sm-4">Time:</label>
+            <div class="alignLeft "><span id="editEventTime"></span></div>
+        </div>
+
+        <div class="row form-group">
+            <label class="col-sm-4 ">Module:</label>
+            <select class="form-control dialog-input" id="editModuleList"></select>
+        </div>
+
+        <div class="row form-group">
+            <label class="col-sm-4 ">Type:</label>
+            <label class="radio-inline"><input type="radio" id="type" name="editType" value="lab" checked>Lab</label>
+            <label class="radio-inline"><input type="radio" id="type" name="editType" value="lecture">Lecture</label>
+        </div>
+
+        <div class="row form-group">
+            <label class="col-sm-4">Number of tutors:</label>
+            <input class="form-control dialog-input " type="number" min="0" id="editTutorNumber" value="0" required>
+        </div>
+    </div>
 
 
+</div>
 
 @section Scripts {
+    <script src="~/Scripts/CustomJS/Allocate_Edit.js"></script>
 
-    <script>
-
-        var startTime;
-        var endTime;
-
-        $(document).ready(function () {
-
-            $('#defaultTab').tab('show')
-            getModules(1, 1);
-
-            //initialize the calendar
-            $('#calendar').fullCalendar({
-
-                weekends: false,
-                weekNumbers: false,
-                minTime: "09:00:00",
-                maxTime: "18:00:00",
-                firstDay: 1,
-                contentHeight: 420,
-                defaultView: 'agendaWeek',
-                defaultDate: "2016-06-06",
-                theme: true,
-                allDaySlot: false,
-                events: {
-                    url: '/Timetable/getClasses/',
-                    data: {
-                        year: 1,
-                        semester: 1
-                    }
-                },
-                selectable: true,
-                selectHelper: true,
-                select: selectDate,
-                editable: true,
-                droppable: true,
-                eventDrop: updateEventTime,
-                eventResize: updateEventTime,
-                eventClick: editEvent
-
-            });
-
-        });
-
-        function tabChange(year, semester) {
-            $('#calendar').fullCalendar('removeEventSource', '/Timetable/getClasses/')
-            $('#calendar').fullCalendar('addEventSource', {
-                url: '/Timetable/getClasses/',
-                data: {
-                    year: year,
-                    semester: semester
-                }
-            })
-
-            $('#moduleList').empty();
-            $('#editModuleList').empty();
-            getModules(year, semester);
-        };
-
-        function selectDate(start, end) {
-
-            $('#addDialog').dialog('open');
-            $("#eventTime").text("" + start.format("dddd HH:mm") + " ~ " + end.format("HH:mm"));
-            startTime = start;
-            endTime = end;
-        }
-
-        function getModules(year, semester) {
-            $.ajax({
-                url: '/Timetable/getModules',
-                type: 'Get',
-                data: {
-                    year: year,
-                    semester: semester
-                },
-                dataType: 'json',
-                success: function (json) {
-                    $('#moduleList').attr('enabled', 'true');
-                    $.each(json, function () {
-                        $('#moduleList').append(
-                             $("<option></option>").text(this.title).val(this.moduleId)
-                        );
-                        $('#editModuleList').append(
-                             $("<option></option>").text(this.title).val(this.moduleId)
-                        );
-                    });
-                },
-            });
-        }
-
-        function updateEventTime(Event) {
-            $.ajax({
-                type: 'POST',
-                url: "/Timetable/updateEventTime",
-                traditional: true,
-                data: {
-                    'classId': Event.id,
-                    'newStart': Event.start,
-                    'newEnd': Event.end
-                }
-            });
-        };
-
-        function editEvent(Event) {
-
-            $('#editEventId').val(Event.id);
-            $("#editEventTime").text("" + Event.start.format("dddd HH:mm") + " ~ " + Event.end.format("HH:mm"));
-            $("#editModuleList").val(Event.moduleId);
-
-            $('input[value=' + Event.type + ']').prop("checked", true);
-            $('input[value=lab]').click(function () {
-                $('input[value=lab]').prop("checked", true);
-            });
-            $('input[value=lecture]').click(function () {
-                $('input[value=lecture]').prop("checked", true);
-            });
-
-            $("#editTutorNumber").val(Event.tutorNumber);
-            $('#editDialog').dialog('open');
-        }
-
-        //add dialog
-        $('#addDialog').dialog({
-            autoOpen: false,
-            width: 470,
-            buttons: {
-                "Add": function () {
-
-                    $.ajax({
-                        url: "/Timetable/Add",
-                        type: "POST",
-                        traditional: true,
-                        data: {
-                            'startTime': startTime,
-                            'endTime': endTime,
-                            'moduleId': $('#moduleList').val(),
-                            'type': $('input[name=type]:checked').val(),
-                            'tutorNumber': $('#tutorNumber').val()
-                        },
-                        success: function () {
-                            $('#addDialog').dialog("close");
-                            $('#calendar').fullCalendar('refetchEvents');
-                        }
-                    })
-
-                },
-
-                "Cancel": function () {
-                    $('#addDialog').dialog('close');
-                }
-            }
-        });
-
-        $('#editDialog').dialog({
-            autoOpen: false,
-            width: 470,
-            buttons: {
-                "update": function () {
-
-                    $.ajax({
-                        url: "/Timetable/Update",
-                        type: "POST",
-                        traditional: true,
-                        data: {
-                            'eventId': $("#editEventId").val(),
-                            'moduleId': $("#editModuleList").val(),
-                            'type': $('input[name=type]:checked').val(),
-                            'tutorNumber': $("#editTutorNumber").val()
-                        },
-                        success: function () {
-                            $('#calendar').fullCalendar('refetchEvents');
-                            $('#editDialog').dialog("close");
-                        }
-                    })
-
-                },
-
-                "delete": function () {
-                    if (confirm("do you really want to delete this event?")) {
-
-                        $.ajax({
-                            url: "/Timetable/Delete",
-                            type: "POST",
-                            traditional: true,
-                            data: {
-                                'eventId': $("#editEventId").val()
-                            },
-                            success: function () {
-                                $('#editDialog').dialog("close");
-                                $('#calendar').fullCalendar('removeEvents', $("#editEventId").val());
-                            }
-                        })
-
-                    }
-                }
-
-            }
-        });
-
-    </script>
 }
 
 

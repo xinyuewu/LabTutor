@@ -53,6 +53,10 @@ body {
     line-height: 30px;
 }
 
+tutorName {
+    color: black;
+}
+
 /*#region Login/Register modal*/
 #login-modal .modal-content {
     -moz-border-radius: 20px;
@@ -130,7 +134,6 @@ body {
 /*#endregion Login/Register modal*/
 
 
-
 /*#region Calendar*/
 #calendar {
     margin: 0 auto;
@@ -153,6 +156,7 @@ tutorName {
 /*#region Legend*/
 .legend {
     margin: 15px 0px;
+    text-align: center;
 }
 
     .legend span {
@@ -200,3 +204,46 @@ tutorName {
         vertical-align: middle;
     }
 /*#endregion Modal*/
+
+
+/*#region Allocation_Index*/
+   .allocation_index thead {
+        background-color: #deedf7;
+    }
+
+    .allocation_index #modalTable {
+        margin: 0px 15px;
+        width: 95%;
+    }
+
+    .allocation_index .modal-body {
+        margin: 10px;
+    }
+/*#endregion Allocation_Index*/
+
+/*#region Allocation_Edit*/
+    .allocation_edit .alignRight {
+        text-align: right;
+        padding-right: 10px;
+        padding-bottom: 10px;
+    }
+
+    .allocation_edit .alignLeft {
+        text-align: left;
+        padding-bottom: 10px;
+    }
+
+    .dialog-input {
+        width: 60%;
+    }
+
+    .allocation_edit #moduleList{
+        font-size: 90%;
+    }
+
+    .allocation_edit option {
+        font-size: 90%;
+    }
+
+
+/*#endregion Allocation_Edit*/
