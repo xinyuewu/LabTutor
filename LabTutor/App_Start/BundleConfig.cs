@@ -22,6 +22,7 @@ namespace LabTutor
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
+                     "~/Content/bootstrap-multiselect.css",
                      "~/Content/jquery.dataTables.min.css",
                       "~/Content/jquery.qtip.min.css",
                       "~/Content/font-awesome.css",
@@ -34,6 +35,7 @@ namespace LabTutor
                       "~/Content/fullcalendar/fullcalendar.css"));
 
             bundles.Add(new ScriptBundle("~/fullcalendar/script").Include(
+                      "~/Scripts/bootstrap-multiselect.js",
                       "~/Scripts/bootstrapvalidator.min.js",
                       "~/Scripts/jquery.qtip.min.js",
                       "~/Scripts/jquery.dataTables.min.js",  

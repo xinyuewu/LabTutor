@@ -23,7 +23,7 @@ namespace LabTutor
         }
     
         public int studentId { get; set; }
-        public int userId { get; set; }
+        public Nullable<int> userId { get; set; }
         public int matricNumber { get; set; }
         public string fName { get; set; }
         public string lName { get; set; }

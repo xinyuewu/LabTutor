@@ -24,7 +24,7 @@ function getPublishState() {
 }
 
 function tabChange(semester) {
-    $('#calendar').fullCalendar('removeEventSource', '/Allocate/getAllocation/')
+    $('#calendar').fullCalendar('removeEventSource', 'Allocate/getAllocation/')
     $('#calendar').fullCalendar('addEventSource', {
         url: 'Allocate/getAllocation/',
         data: {
@@ -59,15 +59,9 @@ function initCalendar() {
 
             var tutors = "";
             $.each(event.tutorName, function () {
-                var i = 0;
-                $.each(this, function () {
-                    if (i % 2 != 0) {
-                        tutors += this + ", " ;
-                    }                 
-                    i++;
-                })
+                tutors += this.name + ", ";
             });
-            element.find('.fc-content').append("<tutorName>" + tutors.slice(0, -2) + "</tutorName>");  
+            element.find('.fc-content').append("<tutorName>" + tutors.slice(0, -2) + "</tutorName>");
 
         }
 

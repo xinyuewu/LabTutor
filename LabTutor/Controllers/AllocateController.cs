@@ -26,7 +26,6 @@ namespace LabTutor.Controllers
             return View();
         }
 
-        [CoordinatorFilter]
         public JsonResult getAllocation(int semester, int studentId)
         {
             return Json(Allocate.getAllocation(semester, studentId), JsonRequestBehavior.AllowGet);

@@ -27,7 +27,15 @@ namespace LabTutor.Controllers
                 if (usr != null)
                 {
                     Session["userId"] = usr.userId.ToString();
-                    Session["name"] = db.Students.Where(s => s.userId == usr.userId).FirstOrDefault().lName;
+                    if (usr.accountType.Equals("coordinator"))
+                    {
+                        Session["name"] = "Coordinator";
+                    }
+                    else if (usr.accountType.Equals("student"))
+                    {
+                        Session["name"] = db.Students.Where(s => s.userId == usr.userId).FirstOrDefault().lName;
+                    }
+                    
                     Session["account"] = usr.accountType.ToString();
                     return Json(new { success = true, account = usr.accountType.ToString() }, JsonRequestBehavior.AllowGet);
                 }

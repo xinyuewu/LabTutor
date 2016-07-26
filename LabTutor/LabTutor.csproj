@@ -183,6 +183,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-multiselect.css" />
     <Content Include="Content\bootstrap-select.css" />
     <Content Include="Content\bootstrap-select.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -199,7 +200,9 @@
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\fullcalendar\fullcalendar.css" />
+    <Content Include="Scripts\bootstrap-multiselect.js" />
     <Content Include="Scripts\CustomJS\Allocate_Edit.js" />
+    <Content Include="Scripts\CustomJS\Timetable_Edit.js" />
     <Content Include="Scripts\CustomJS\Allocate_Index.js" />
     <Content Include="Scripts\fullcalendar\fullcalendar.js" />
     <Content Include="Scripts\fullcalendar\jquery-ui.custom.min.js" />

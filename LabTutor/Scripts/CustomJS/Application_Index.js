@@ -99,7 +99,7 @@ function initAllocationCalendar() {
 }
 
 function allocationTabChange(semester) {
-    $('#allocationCalendar').fullCalendar('removeEventSource', '/Allocate/getAllocation/')
+    $('#allocationCalendar').fullCalendar('removeEventSource', 'Allocate/getAllocation/')
     $('#allocationCalendar').fullCalendar('addEventSource', {
         url: urlPrefix + 'Allocate/getAllocation/',
         data: {
@@ -123,13 +123,7 @@ function clickAllocationEvent(Event) {
 
     var tutorName = "";
     $.each(Event.tutorName, function () {
-        var i = 0;
-        $.each(this, function () {
-            if (i % 2 != 0) {
-                tutorName += this + ", ";
-            }
-            i++;
-        })
+        tutorName += this.name + ", ";
     });
 
     if (tutorName == "") {

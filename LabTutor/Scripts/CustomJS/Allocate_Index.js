@@ -68,16 +68,7 @@ function initCalendar() {
 
             var tutors = "";
             $.each(event.tutorName, function () {
-                var i = 0;
-                $.each(this, function () {
-                    if (i % 2 == 0) {
-                        tutors += "<a href='#tutor_" + this + "'>";
-                    }
-                    else {
-                        tutors += this + "</a>, ";
-                    }
-                    i++;
-                })
+                tutors += "<a href='#tutor_" + this.studentId + "'>" + this.name + "</a>, ";
             });
             element.find('.fc-content').append("<tutorName>" + tutors.slice(0, -2) + "</tutorName>");
 

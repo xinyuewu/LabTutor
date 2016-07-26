@@ -207,7 +207,12 @@ namespace LabTutor.Models
                         tutorName.Add(new
                         {
                             studentId = tutor.studentId,
-                            name = tutor.Student.fName + " " + tutor.Student.lName
+                            name = tutor.Student.fName + " " + tutor.Student.lName,
+                            degree= tutor.Student.degree,
+                            year = tutor.Student.year,
+                            maxHour = tutor.Student.maxHour,
+                            workingHour1 = tutor.Student.workingHour1,
+                            workingHour2 = tutor.Student.workingHour2
                         });
                         if (tutor.studentId == studentId)
                         {

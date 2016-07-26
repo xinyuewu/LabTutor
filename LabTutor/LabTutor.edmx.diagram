@@ -19,11 +19,11 @@
         <AssociationConnector Association="xinyuedbModel.FK_Preference_Class" />
         <EntityTypeShape EntityType="xinyuedbModel.Grade" Width="1.5" PointX="2.75" PointY="5.5" />
         <AssociationConnector Association="xinyuedbModel.FK_Grade_Module" />
-        <EntityTypeShape EntityType="xinyuedbModel.Student" Width="1.5" PointX="5.625" PointY="6.25" />
+        <EntityTypeShape EntityType="xinyuedbModel.Config" Width="1.5" PointX="10.625" PointY="2.375" />
+        <EntityTypeShape EntityType="xinyuedbModel.Student" Width="1.5" PointX="5.5" PointY="7.25" />
         <AssociationConnector Association="xinyuedbModel.FK_Allocation_Student" />
         <AssociationConnector Association="xinyuedbModel.FK_Grade_Student" />
         <AssociationConnector Association="xinyuedbModel.FK_Preference_Student" />
-        <EntityTypeShape EntityType="xinyuedbModel.Config" Width="1.5" PointX="10.625" PointY="2.375" />
         <AssociationConnector Association="xinyuedbModel.FK_Student_Users" />
         </Diagram>
     </edmx:Diagrams>
