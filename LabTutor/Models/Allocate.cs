@@ -9,17 +9,42 @@ namespace LabTutor.Models
     {
         public Allocation allocation { get; set; }
         public Student student { get; set; }
-        public Grade grade { get; set; }
         public Module module { get; set; }
         public Class classes { get; set; }
         public Application app { get; set; }
 
         public List<ClassInfo> classInfo { get; set; }
 
-        public int prefWeight = 1;
-        public int yearWeight = 1;
-        public int minusWeight = 5;
+        public static Object getWeight()
+        {
+            using (xinyuedbEntities db = new xinyuedbEntities())
+            {
+                var weights = new Object();
+                var config = db.Configs;
 
+                weights = (new
+                {
+                    prefWeight = config.Where(c => c.name.Equals("prefWeight")).FirstOrDefault().value,
+                    yearWeight = config.Where(c => c.name.Equals("yearWeight")).FirstOrDefault().value,
+                    stuWeight = config.Where(c => c.name.Equals("stuWeight")).FirstOrDefault().value
+                });
+
+                return weights;
+            }
+        }
+
+        public static void saveWeight(int prefWeight, int yearWeight, int stuWeight)
+        {
+            using (xinyuedbEntities db = new xinyuedbEntities())
+            {
+                var config = db.Configs;
+                config.Where(c => c.name.Equals("prefWeight")).FirstOrDefault().value = prefWeight;
+                config.Where(c => c.name.Equals("yearWeight")).FirstOrDefault().value = yearWeight;
+                config.Where(c => c.name.Equals("stuWeight")).FirstOrDefault().value = stuWeight;
+
+                db.SaveChanges();
+            }
+        }
 
         public void createAllocation()
         {
@@ -31,6 +56,12 @@ namespace LabTutor.Models
         {
             using (xinyuedbEntities db = new xinyuedbEntities())
             {
+                //get weight from database 
+                var config = db.Configs;
+                int prefWeight = config.Where(c => c.name.Equals("prefWeight")).FirstOrDefault().value;
+                int yearWeight = config.Where(c => c.name.Equals("yearWeight")).FirstOrDefault().value;
+                int stuWeight = config.Where(c => c.name.Equals("stuWeight")).FirstOrDefault().value;
+
                 //get all lab classes and sort them in descending order 
                 var labs = db.Classes.Where(c => c.type == "lab" && c.Module.semester == semester).OrderByDescending(l => l.Module.year).ToList();
                 List<int> labId = new List<int>();
@@ -142,7 +173,7 @@ namespace LabTutor.Models
                                     {
                                         if (w.studentId == sortedStudents[j].studentId)
                                         {
-                                            w.weight -= minusWeight;
+                                            w.weight -= stuWeight;
                                         }
                                     }
                                 }
@@ -208,7 +239,7 @@ namespace LabTutor.Models
                         {
                             studentId = tutor.studentId,
                             name = tutor.Student.fName + " " + tutor.Student.lName,
-                            degree= tutor.Student.degree,
+                            degree = tutor.Student.degree,
                             year = tutor.Student.year,
                             maxHour = tutor.Student.maxHour,
                             workingHour1 = tutor.Student.workingHour1,
@@ -225,6 +256,19 @@ namespace LabTutor.Models
                         color = allocatedTutorNumber < lab.tutorNumber ? "#ff9933" : "#3a87ad";
                     }
 
+                    //var lecturer = lab.Module.Lecturer;
+                    //if (lecturer.lecturerId == lecturerId)
+                    //{
+                    //    color = "#ff9933";
+                    //}
+                    //var lecturerObject = new Object();
+                    //lecturerObject = (new
+                    //{
+                    //    name = lecturer.fName + " " + lecturer.lName,
+                    //    email = lecturer.email
+                    //});
+
+
                     eventList.Add(new
                         {
                             id = lab.classId,
@@ -237,11 +281,114 @@ namespace LabTutor.Models
                             year = lab.Module.year,
                             degree = lab.Module.degree,
                             tutorName = tutorName,
+                            //lecturer = lecturerObject,
                             borderColor = color,
                             backgroundColor = color
                         });
                 }
                 return eventList;
+            }
+        }
+
+        public static List<Object> getStudentsForMultiselectList(int classId)
+        {
+            using (xinyuedbEntities db = new xinyuedbEntities())
+            {
+
+                var eventList = new List<Object>();
+
+                var lab = db.Classes.Where(c => c.classId == classId).FirstOrDefault();
+                var allocations = db.Allocations.Where(a => a.classId == classId);
+                int allocatedTutorNumber = allocations.Count();
+                var preferences = db.Preferences.Where(p => p.classId == classId);
+
+                //  var students = db.Students.Where(s => s.year > lab.Module.year && lab.Module.degree.Contains(s.degree));
+                var students = db.Students.Where(s => s.year > lab.Module.year);
+                foreach (var stu in students)
+                {
+                    bool allocated = false;
+
+                    if (allocations.Where(allo => allo.studentId == stu.studentId).FirstOrDefault() != null)
+                    {
+                        allocated = true;
+
+                    }
+
+                    var color = new Object();
+                    var pref = preferences.Where(pr => pr.studentId == stu.studentId).FirstOrDefault();
+                    if (pref != null)
+                    {
+                        if (pref.prefered.Equals("liked"))
+                        {
+                            color = new { color = "#86b300" };
+                        }
+                        else if (pref.prefered.Equals("disliked"))
+                        {
+                            color = new { color = "#ff9933" };
+                        }
+                    }
+                    eventList.Add(new
+                    {
+                        value = stu.studentId,
+                        label = stu.fName + " " + stu.lName,
+                        title = stu.degree + ", year " + stu.year + "\n"
+                                + "Maximum working hours: " + stu.maxHour + "\n"
+                                + "Allocated hours (S1): " + stu.workingHour1 + "\n"
+                                + "Allocated hours (S2): " + stu.workingHour2,
+                        selected = allocated,
+                        disabled = allocatedTutorNumber < lab.tutorNumber ? false : !allocated,
+                        attributes = color
+                    });
+                }
+                return eventList;
+            }
+        }
+
+        public static void saveStudentsForMultiselectList(IEnumerable<string> selected_students, int classId)
+        {
+            using (xinyuedbEntities db = new xinyuedbEntities())
+            {
+                var lab = db.Classes.Where(c => c.classId == classId).FirstOrDefault();
+                double classTime = (lab.endTime - lab.startTime).TotalHours;
+
+                //remove old allocations
+                var allocations = db.Allocations.Where(a => a.classId == classId);
+                foreach (var allocation in allocations)
+                {
+                    var oldstudent = db.Students.Where(s => s.studentId == allocation.studentId).FirstOrDefault();
+                    if (lab.Module.semester == 1)
+                    {
+                        oldstudent.workingHour1 -= classTime;
+                    }
+                    else
+                    {
+                        oldstudent.workingHour2 -= classTime;
+                    }
+                }
+                db.Allocations.RemoveRange(allocations);
+
+                //store new allocations
+                foreach (var stu in selected_students)
+                {
+                    int studentId = Int32.Parse(stu);
+
+                    Allocation allo = new Allocation();
+                    allo.classId = classId;
+                    allo.studentId = studentId;
+                    db.Allocations.Add(allo);
+
+                    var newstudent = db.Students.Where(s => s.studentId == studentId).FirstOrDefault();
+                    if (lab.Module.semester == 1)
+                    {
+                        newstudent.workingHour1 += classTime;
+                    }
+                    else
+                    {
+                        newstudent.workingHour2 += classTime;
+                    }
+
+                }
+                db.SaveChanges();
             }
         }
 
@@ -262,8 +409,8 @@ namespace LabTutor.Models
             using (xinyuedbEntities db = new xinyuedbEntities())
             {
                 db.Allocations.RemoveRange(db.Allocations);
-                var config = db.Configs.FirstOrDefault();
-                config.published = false;
+                var config = db.Configs.Where(c => c.name.Equals("published")).FirstOrDefault();
+                config.value = 0;
                 db.SaveChanges();
             }
         }
@@ -312,12 +459,6 @@ namespace LabTutor.Models
                     var modules = db.Modules.Where(m => m.year < stu.year && m.degree.Contains(stu.degree));
                     foreach (var module in modules)
                     {
-                        Grade finalGrade = new Grade();
-                        finalGrade.finalGrade = System.Convert.ToDouble(rnd.Next(40, 100));
-                        finalGrade.moduleId = module.moduleId;
-                        finalGrade.studentId = stu.studentId;
-                        db.Grades.Add(finalGrade);//add student[i] to "grades" table
-
                         var labs = db.Classes.Where(c => c.moduleId == module.moduleId).Where(c => c.type == "lab");
                         foreach (var lab in labs)
                         {
@@ -381,10 +522,9 @@ namespace LabTutor.Models
             {
                 db.Students.RemoveRange(db.Students);
                 db.Preferences.RemoveRange(db.Preferences);
-                db.Grades.RemoveRange(db.Grades);
                 db.Allocations.RemoveRange(db.Allocations);
-                var config = db.Configs.FirstOrDefault();
-                config.published = false;
+                var config = db.Configs.Where(c => c.name.Equals("published")).FirstOrDefault();
+                config.value = 0;
 
                 db.SaveChanges();
             }
@@ -430,9 +570,7 @@ namespace LabTutor.Models
                         degree = lab.Class.Module.degree,
                         module = lab.Class.Module.name,
                         semester = lab.Class.Module.semester,
-                        time = lab.Class.startTime.ToString("dddd HH:mm") + " ~ " + lab.Class.endTime.ToString("HH:mm"),
-
-                        //grades = db.Grades.Where(g => g.studentId == studentId && g.moduleId == lab.Class.moduleId).FirstOrDefault().finalGrade,
+                        time = lab.Class.startTime.ToString("dddd HH:mm") + " ~ " + lab.Class.endTime.ToString("HH:mm"),                     
                         //prefered = db.Preferences.Where(p => p.studentId == studentId && p.classId == lab.classId).FirstOrDefault().prefered
                     });
                 }
@@ -482,7 +620,8 @@ namespace LabTutor.Models
         {
             using (xinyuedbEntities db = new xinyuedbEntities())
             {
-                bool published = db.Configs.FirstOrDefault().published;
+                var config = db.Configs.Where(c => c.name.Equals("published")).FirstOrDefault();
+                bool published = config.value != 0;
                 return published;
             }
         }
@@ -491,10 +630,11 @@ namespace LabTutor.Models
         {
             using (xinyuedbEntities db = new xinyuedbEntities())
             {
-                var config = db.Configs.FirstOrDefault();
-                config.published = !config.published;
+                var config = db.Configs.Where(c => c.name.Equals("published")).FirstOrDefault();
+                config.value = config.value != 0 ? 0 : 1;
                 db.SaveChanges();
             }
         }
+
     }
 }

@@ -15,7 +15,7 @@ namespace LabTutor
     public partial class Config
     {
         public int id { get; set; }
-        public bool published { get; set; }
-        public System.DateTime timestamp { get; set; }
+        public string name { get; set; }
+        public int value { get; set; }
     }
 }

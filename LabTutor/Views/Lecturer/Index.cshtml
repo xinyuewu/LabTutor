@@ -1,0 +1,76 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Page Title -->
+<h2 class="pageTitle">Allocation</h2>
+
+<ul class="nav nav-tabs published" style="margin-bottom: 15px;" hidden>
+    <li class="active cursorPointer" data-toggle="tab" onclick="tabChange(1)"><a>Semester 1 </a></li>
+    <li class="cursorPointer" data-toggle="tab" onclick="tabChange(2)"><a>Semester 2 </a></li>
+</ul>
+
+<div id='calendar'></div>
+
+
+<!-- class detail Modal -->
+<div class="modal fade" id="classDetailModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Degree: </label>
+                            <degree></degree>
+                        </div>
+                        <div class="form-group">
+                            <label>Year: </label>
+                            <year></year>
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <label>Semester: </label>
+                            <semester></semester>
+                        </div>
+                        <div class="form-group">
+                            <label>Time: </label>
+                            <time></time>
+                        </div>
+                    </div>                 
+                </div>
+
+                <div class="row">
+                    <table class="table table-hover table-responsive modalTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Year</th>
+                                <th>Degree</th>
+                                <th>Matriculation Number</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="lecturerId" hidden></div>
+
+@section Scripts {
+    <script src="~/Scripts/CustomJS/Lecturer_Index.js"></script>
+}

@@ -35,9 +35,9 @@
         <button class="btn btn-default col-sm-2" onclick="location.href='@Url.Action("Edit", "Timetable")'">Edit Timetable</button>
         <button class="btn btn-default col-sm-2" onclick="location.href='@Url.Action("populateDatabase", "Allocate")'">Populate Datebase</button>
         <button class="btn btn-default col-sm-2" onclick="location.href='@Url.Action("Create", "Allocate")'">Create Allocation</button>
+        <button class="btn btn-default col-sm-2" data-toggle="modal" data-target="#adjustWeightModal" onclick="getWeightModal()">Adjust Allocation Rules</button>
         <button class="btn btn-default col-sm-2" onclick="location.href='@Url.Action("Edit", "Allocate")'">Edit Allocation</button>
-        <button class="btn btn-default col-sm-2" onclick="location.href='@Url.Action("Delete", "Allocate")'">Delete Allocation</button>
-        <button class="btn btn-default col-sm-2" id="publishButton" value="Publish Allocation" onclick="location.href='@Url.Action("changePublishState", "Allocate")'">Publish Allocation</button>       
+        <button class="btn btn-default col-sm-2" id="publishButton" value="Publish Allocation" onclick="location.href='@Url.Action("changePublishState", "Allocate")'">Publish Allocation</button>
     </div>
 
     <!-- Table (All Students) -->
@@ -58,22 +58,22 @@
         {
             if (item.workingHour1 == 0 && item.workingHour2 == 0)
             {
-                @:<tr class="danger cursorPointer" data-toggle="modal" data-target="#studentDetailModal" onclick="passStudentId(@item.studentId)">
+            @:<tr class="danger cursorPointer" data-toggle="modal" data-target="#studentDetailModal" onclick="passStudentId(@item.studentId)">
                     }
             else
             {
-                @:<tr id="tutor_@item.studentId" class="cursorPointer" data-toggle="modal" data-target="#studentDetailModal" onclick="passStudentId(@item.studentId)">
+            @:<tr id="tutor_@item.studentId" class="cursorPointer" data-toggle="modal" data-target="#studentDetailModal" onclick="passStudentId(@item.studentId)">
                     }
 
-                    <td>@(rowNo += 1)</td>
-                    <td>@item.fName @item.lName</td>
-                    <td>@item.degree</td>
-                    <td>@item.year</td>
-                    <td>@item.maxHour</td>
-                    <td>@item.workingHour1</td>
-                    <td>@item.workingHour2</td>
+            <td>@(rowNo += 1)</td>
+            <td>@item.fName @item.lName</td>
+            <td>@item.degree</td>
+            <td>@item.year</td>
+            <td>@item.maxHour</td>
+            <td>@item.workingHour1</td>
+            <td>@item.workingHour2</td>
 
-                    @:</tr>
+            @:</tr>
                 }
         </tbody>
     </table>
@@ -131,7 +131,7 @@
                     </div>
 
                     <div class="row">
-                        <table id="modalTable" class="table table-hover table-responsive">
+                        <table class="table table-hover table-responsive modalTable">
                             <thead>
                                 <tr>
                                     <th>Year</th>
@@ -149,6 +149,46 @@
             </div>
         </div>
     </div>
+
+    <!-- adjust allocation weight Modal -->
+    <div class="modal fade" id="adjustWeightModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form role="form" class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Adjust Weight in Allocation Algorithm</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-offset-1 col-sm-4 col-form-label">Preference: </label>
+                            <div class="col-sm-6">
+                                <input type="number" min="1" class="form-control" id="prefWeight" placeholder="Preference Weight" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-offset-1 col-sm-4 col-form-label">One-Year-Approach: </label>
+                            <div class="col-sm-6">
+                                <input type="number" min="1" class="form-control" id="yearWeight" placeholder="One-Year-Approach Weight" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-offset-1 col-sm-4 col-form-label">Individual Student: </label>
+                            <div class="col-sm-6">
+                                <input type="number" min="1" class="form-control" id="stuWeight" placeholder="Individual Student Weight" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-default" id="save_weight">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 
 </div>
 

@@ -7,7 +7,7 @@
 
 function getPublishState() {
     $.ajax({
-        url: 'Allocate/getPublishState',
+        url: '/Allocate/getPublishState',
         type: 'Get',
         dataType: 'json',
         success: function (json) {
@@ -24,9 +24,9 @@ function getPublishState() {
 }
 
 function tabChange(semester) {
-    $('#calendar').fullCalendar('removeEventSource', 'Allocate/getAllocation/')
+    $('#calendar').fullCalendar('removeEventSource', '/Allocate/getAllocation/')
     $('#calendar').fullCalendar('addEventSource', {
-        url: 'Allocate/getAllocation/',
+        url: '/Allocate/getAllocation/',
         data: {
             studentId: -1,
             semester: semester
@@ -49,7 +49,7 @@ function initCalendar() {
         theme: true,
         allDaySlot: false,
         events: {
-            url: 'Allocate/getAllocation/',
+            url: '/Allocate/getAllocation/',
             data: {
                 studentId: -1,
                 semester: 1
@@ -82,13 +82,13 @@ $('#login-form').submit(function (event) {
     event.preventDefault();
 
     $.ajax({
-        url: 'Account/Login',
+        url: '/Account/Login',
         type: 'Post',
         dataType: 'json',
         data: $(this).serialize(),
         success: function (json) {
             if (json.success) {
-                window.location.href = "Account/LoggedIn";
+                window.location.href = "/Account/LoggedIn";
             }
             else {
                 $('#login_error').slideDown({ opacity: "show" }, "slow");
@@ -105,13 +105,13 @@ $('#register-form').submit(function (event) {
     event.preventDefault();
 
     $.ajax({
-        url: 'Account/Register',
+        url: '/Account/Register',
         type: 'Post',
         dataType: 'json',
         data: $(this).serialize(),
         success: function (json) {
             if (json.success) {
-                window.location.href = "Account/LoggedIn";
+                window.location.href = "/Account/LoggedIn";
             }
             else {
                 $('#register_error').slideDown({ opacity: "show" }, "slow");

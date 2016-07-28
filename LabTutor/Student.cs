@@ -18,7 +18,6 @@ namespace LabTutor
         public Student()
         {
             this.Allocations = new HashSet<Allocation>();
-            this.Grades = new HashSet<Grade>();
             this.Preferences = new HashSet<Preference>();
         }
     
@@ -38,8 +37,6 @@ namespace LabTutor
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Allocation> Allocations { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Grade> Grades { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Preference> Preferences { get; set; }
         public virtual User User { get; set; }

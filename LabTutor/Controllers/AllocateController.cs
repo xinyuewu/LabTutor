@@ -26,6 +26,26 @@ namespace LabTutor.Controllers
             return View();
         }
 
+        [CoordinatorFilter]
+        public void saveWeight(string prefWeight, string yearWeight, string stuWeight)
+        {
+            Allocate.saveWeight(Int32.Parse(prefWeight), Int32.Parse(yearWeight), Int32.Parse(stuWeight));
+        }
+
+        [CoordinatorFilter]
+        public JsonResult getStudentsForMultiselectList(int classId)
+        {
+            return Json(Allocate.getStudentsForMultiselectList(classId), JsonRequestBehavior.AllowGet);
+        }
+
+
+        [CoordinatorFilter]
+        public void saveStudentsForMultiselectList(IEnumerable<string> selected_students, string classId)
+        {
+            Allocate.saveStudentsForMultiselectList(selected_students, Int32.Parse(classId));
+        }
+
+
         public JsonResult getAllocation(int semester, int studentId)
         {
             return Json(Allocate.getAllocation(semester, studentId), JsonRequestBehavior.AllowGet);
@@ -35,6 +55,12 @@ namespace LabTutor.Controllers
         public JsonResult getStudentInfo(int studentId)
         {
             return Json(Allocate.getStudentInfo(studentId), JsonRequestBehavior.AllowGet);
+        }
+
+        [CoordinatorFilter]
+        public JsonResult getWeight()
+        {
+            return Json(Allocate.getWeight(), JsonRequestBehavior.AllowGet);
         }
 
         [CoordinatorFilter]

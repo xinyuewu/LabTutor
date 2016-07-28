@@ -35,6 +35,10 @@ namespace LabTutor.Controllers
                     {
                         Session["name"] = db.Students.Where(s => s.userId == usr.userId).FirstOrDefault().lName;
                     }
+                    else
+                    {
+                        Session["name"] = db.Lecturers.Where(l => l.userId == usr.userId).FirstOrDefault().lName;
+                    }
                     
                     Session["account"] = usr.accountType.ToString();
                     return Json(new { success = true, account = usr.accountType.ToString() }, JsonRequestBehavior.AllowGet);
@@ -99,6 +103,10 @@ namespace LabTutor.Controllers
                 else if (Session["account"].Equals("coordinator"))
                 {
                     return RedirectToAction("Index", "Allocate");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Lecturer");
                 }
             }
             return RedirectToAction("Index", "Home");

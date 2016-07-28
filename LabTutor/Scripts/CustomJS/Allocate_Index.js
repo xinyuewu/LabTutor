@@ -13,6 +13,7 @@
     $('#calendar').addClass("noCursorPointer");
 
     getPublishState();
+
 });
 
 function tabChange(semester) {
@@ -39,7 +40,7 @@ function passStudentId(id) {
         },
         dataType: 'json',
         success: function (json) {
-            getModal(json);
+            getStudentModal(json);
         }
     });
 }
@@ -104,7 +105,7 @@ function getPublishState() {
     });
 }
 
-function getModal(json) {
+function getStudentModal(json) {
 
     $(".modal-title").text(json.name);
     $("degree").text(json.degree);
@@ -142,5 +143,43 @@ function getModal(json) {
 
         tbl_body += "<tr>" + tbl_row + "</tr>";
     });
-    $("#modalTable tbody").html(tbl_body);
+    $("#studentDetailModal tbody").html(tbl_body);
 }
+
+function getWeightModal() {
+    $.ajax({
+        url: '/Allocate/getWeight',
+        type: 'Get',
+        dataType: 'json',
+        success: function (json) {
+            $("#prefWeight").val(json.prefWeight);
+            $("#yearWeight").val(json.yearWeight);
+            $("#stuWeight").val(json.stuWeight);
+        },
+        error: function (json) {
+            console.log("get weight error");
+        }
+    });
+}
+
+$("#save_weight").click(function (e) {
+    e.preventDefault();
+
+    $.ajax({
+        url: '/Allocate/saveWeight',
+        data: {
+            'prefWeight': $("#prefWeight").val(),
+            'yearWeight': $("#yearWeight").val(),
+            'stuWeight': $("#stuWeight").val()
+        },
+        type: 'POST',
+        traditional: true,
+        success: function (data) {
+            window.location.href = "/Allocate/Index";
+        },
+        error: function (data) {
+            console.log('save weight error!');
+        }
+    });
+
+})

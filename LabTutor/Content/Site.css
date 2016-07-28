@@ -1,6 +1,4 @@
-﻿
-
-body {
+﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
     margin: 40px 10px;
@@ -27,6 +25,7 @@ body {
     color: #999;
     padding-top: 15px;
 }
+
 
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
@@ -206,17 +205,18 @@ tutorName {
 /*#endregion Modal*/
 
 
-/*#region Allocation_Index*/
-   .allocation_index thead {
+/*#region table in modals*/
+.modalTable thead {
         background-color: #deedf7;
     }
 
-    .allocation_index #modalTable {
+.modalTable {
         margin: 0px 15px;
         width: 95%;
     }
 
-    .allocation_index .modal-body {
+#studentDetailModal .modal-body,
+#classDetailModal .modal-body{
         margin: 10px;
     }
 /*#endregion Allocation_Index*/

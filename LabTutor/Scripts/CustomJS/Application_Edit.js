@@ -8,7 +8,11 @@
 
 $('#optional').qtip({
     content: {
-        text: 'My common piece of text here'
+        text: 'You can apply to be lab tutors if you do not have a National Insurrance Number at the moment, but you should start applying for it and and fill in this blank as soon as you get it.'
+    },
+    position: {
+        my: 'bottom center',
+        at: 'top center'
     }
 })
 

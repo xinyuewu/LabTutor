@@ -132,17 +132,16 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AllocateController.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Controllers\LecturerController.cs" />
     <Compile Include="Controllers\TimetableController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Filters\LecturerFilter.cs" />
     <Compile Include="Filters\CoordinatorFilter.cs" />
     <Compile Include="Filters\LoginFilter.cs" />
     <Compile Include="Filters\StudentFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
-    <Compile Include="Grade.cs">
-      <DependentUpon>LabTutor.tt</DependentUpon>
     </Compile>
     <Compile Include="LabTutor.Context.cs">
       <AutoGen>True</AutoGen>
@@ -165,6 +164,7 @@
     <Compile Include="Models\Allocate.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\ClassInfo.cs" />
+    <Compile Include="Models\LecturerModel.cs" />
     <Compile Include="Models\Register.cs" />
     <Compile Include="Models\Timetable.cs" />
     <Compile Include="Models\Weight.cs" />
@@ -202,6 +202,7 @@
     <Content Include="Content\fullcalendar\fullcalendar.css" />
     <Content Include="Scripts\bootstrap-multiselect.js" />
     <Content Include="Scripts\CustomJS\Allocate_Edit.js" />
+    <Content Include="Scripts\CustomJS\Lecturer_Index.js" />
     <Content Include="Scripts\CustomJS\Timetable_Edit.js" />
     <Content Include="Scripts\CustomJS\Allocate_Index.js" />
     <Content Include="Scripts\fullcalendar\fullcalendar.js" />
@@ -346,6 +347,7 @@
     <Content Include="Views\Allocate\Index.cshtml" />
     <Content Include="Views\Timetable\Edit.cshtml" />
     <Content Include="Views\Allocate\Edit.cshtml" />
+    <Content Include="Views\Lecturer\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
