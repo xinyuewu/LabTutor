@@ -1,25 +1,30 @@
 ﻿$(document).ready(function () {
 
+    getPublishState();
+
     $('#myTable').DataTable({
         "iDisplayLength": -1,
         "lengthChange": true
     });
+
+    initValidator();
 
     $('.modal-dialog').draggable({
         //  handle: ".modal-header"
     });
 
     initCalendar();
-    $('#calendar').addClass("noCursorPointer");
-
-    getPublishState();
+    $('#calendar').addClass("noCursorPointer"); 
 
 });
 
+//var urlPrefix = "/2015-msc/xinyuewu";
+var urlPrefix = "";
+
 function tabChange(semester) {
-    $('#calendar').fullCalendar('removeEventSource', '/Allocate/getAllocation/')
+    $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation')
     $('#calendar').fullCalendar('addEventSource', {
-        url: '/Allocate/getAllocation/',
+        url: urlPrefix + '/Allocate/getAllocation',
         data: {
             studentId: -1,
             semester: semester
@@ -33,7 +38,7 @@ window.addEventListener("hashchange", function () { scrollBy(0, -50) })
 //use ajax to get student info into modal according to studentId
 function passStudentId(id) {
     $.ajax({
-        url: '/Allocate/getStudentInfo',
+        url: urlPrefix + '/Allocate/getStudentInfo',
         type: 'Get',
         data: {
             studentId: id
@@ -59,7 +64,7 @@ function initCalendar() {
         theme: true,
         allDaySlot: false,
         events: {
-            url: '/Allocate/getAllocation/',
+            url: urlPrefix + '/Allocate/getAllocation',
             data: {
                 studentId: -1,
                 semester: 1
@@ -73,12 +78,18 @@ function initCalendar() {
             });
             element.find('.fc-content').append("<tutorName>" + tutors.slice(0, -2) + "</tutorName>");
 
+
+            var lecturers = "";
+            $.each(event.lecturers, function () {
+                lecturers += this.name + ", ";
+            });
             element.qtip({
                 content: {
                     title: event.title,
                     text: "Time: " + event.start.format("dddd HH:mm") + " ~ " + event.end.format("HH:mm")
                         + "<br/>Year: " + event.year
                         + "<br/>Degree: " + event.degree
+                        + "<br/>Lecturer(s): " + lecturers.slice(0, -2)
                         + "<br/>Number of tutors needed: " + event.tutorNumber
                 },
                 position: {
@@ -94,13 +105,14 @@ function initCalendar() {
 
 function getPublishState() {
     $.ajax({
-        url: '/Allocate/getPublishState',
+        url: urlPrefix + '/Allocate/getPublishState',
         type: 'Get',
         dataType: 'json',
         success: function (json) {
             if (json) {
-                $("#publishButton").html("Unpublish Allocation");
-            }
+                $("#publish_button").html("Unpublish Allocation");
+                $(".unpublished").hide();
+            }           
         }
     });
 }
@@ -148,7 +160,7 @@ function getStudentModal(json) {
 
 function getWeightModal() {
     $.ajax({
-        url: '/Allocate/getWeight',
+        url: urlPrefix + '/Allocate/getWeight',
         type: 'Get',
         dataType: 'json',
         success: function (json) {
@@ -162,11 +174,40 @@ function getWeightModal() {
     });
 }
 
+function initValidator() {
+
+    $('#weight_form').bootstrapValidator({
+        // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            preference: {
+                validators: {
+                    notEmpty: {
+                        message: 'Please enter the weight for preferences!'
+                    },
+                    integer: {                     
+                        message: 'Please enter an integer'
+                    },
+                    greaterThan: {
+                        value: 1,
+                        message: 'Please enter an integer more than 1'
+                    }
+                }
+            }
+        }
+    });
+
+}
+
 $("#save_weight").click(function (e) {
     e.preventDefault();
 
     $.ajax({
-        url: '/Allocate/saveWeight',
+        url: urlPrefix + '/Allocate/saveWeight',
         data: {
             'prefWeight': $("#prefWeight").val(),
             'yearWeight': $("#yearWeight").val(),
@@ -175,7 +216,7 @@ $("#save_weight").click(function (e) {
         type: 'POST',
         traditional: true,
         success: function (data) {
-            window.location.href = "/Allocate/Index";
+            window.location.href = urlPrefix + "/Allocate/Index";
         },
         error: function (data) {
             console.log('save weight error!');
@@ -183,3 +224,41 @@ $("#save_weight").click(function (e) {
     });
 
 })
+
+$("#create_allocation").click(function () {
+
+    $('body').waitMe({
+
+        //none, rotateplane, stretch, orbit, roundBounce, win8, 
+        //win8_linear, ios, facebook, rotation, timer, pulse, 
+        //progressBar, bouncePulse or img
+        effect: 'roundBounce',
+
+        //place text under the effect (string).
+        text: 'The algorithm is running ...',
+
+        //background for container (string).
+        bg: 'rgba(0,0,0,0.5)',
+
+        //color for background animation and text (string).
+        color: '#eee',
+
+        //change width for elem animation (string).
+        sizeW: '',
+
+        //change height for elem animation (string).
+        sizeH: '',
+
+        // url to image
+        source: '',
+
+        // callback
+        onClose: function () { }
+
+    });
+
+    window.location.href = urlPrefix + "/Allocate/Create";
+
+})
+
+

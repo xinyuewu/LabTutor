@@ -6,47 +6,52 @@
 }
 
 <!-- Page Title -->
-<h2 class="unpublished pageTitle">Application</h2>
+<h2 class="unpublished pageTitle">My Application</h2>
 <h2 class="published pageTitle">Allocation</h2>
 
 
 <!-- "Basic Information" panel -->
 <div class="panel panel-info">
-    <div class="panel-heading">Basic Information</div>
+    <div class="panel-heading">Personal Information</div>
 
     @Html.HiddenFor(model => model.student.studentId, new { id = "studentId" })
-    <table class="table table-bordered" id="basicInfo">
-        <tbody>
-            <tr>
-                <td><strong>First Name</strong></td>
-                <td>@Html.DisplayFor(model => model.student.fName)</td>
-                <td><strong>Last Name</strong></td>
-                <td>@Html.DisplayFor(model => model.student.lName)</td>
-            </tr>
-            <tr>
-                <td class="tableLabel"><strong>Matriculation Number</strong></td>
-                <td>@Html.DisplayFor(model => model.student.matricNumber)</td>
-                <td class="tableLabel"><strong>Dundee Email</strong></td>
-                <td>@Html.DisplayFor(model => model.student.User.email)</td>
-            </tr>
-            <tr>
-                <td class="tableLabel"><strong>Degree</strong></td>
-                <td>@Html.DisplayFor(model => model.student.degree)</td>
-                <td class="tableLabel"><strong>Year</strong></td>
-                <td>@Html.DisplayFor(model => model.student.year)</td>
-            </tr>
-            <tr>
-                <td class="tableLabel"><strong>NI Number</strong></td>
-                <td>@Html.DisplayFor(model => model.student.NI)</td>
-                <td class="tableLabel"><strong>Max Working Hour</strong></td>
-                <td>@Html.DisplayFor(model => model.student.maxHour)</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-bordered" id="basicInfo">
 
+            <tbody>
+                <tr>
+                    <td><strong>First Name</strong></td>
+                    <td>@Html.DisplayFor(model => model.student.fName)</td>
+                    <td><strong>Last Name</strong></td>
+                    <td>@Html.DisplayFor(model => model.student.lName)</td>
+                </tr>
+                <tr>
+                    <td class="tableLabel"><strong>Matriculation Number</strong></td>
+                    <td>@Html.DisplayFor(model => model.student.matricNumber)</td>
+                    <td class="tableLabel"><strong>Dundee Email</strong></td>
+                    <td>@Html.DisplayFor(model => model.student.User.email)</td>
+                </tr>
+                <tr>
+                    <td class="tableLabel"><strong>Degree</strong></td>
+                    <td>@Html.DisplayFor(model => model.student.degree)</td>
+                    <td class="tableLabel"><strong>Year</strong></td>
+                    <td>@Html.DisplayFor(model => model.student.year)</td>
+                </tr>
+                <tr>
+                    <td class="tableLabel"><strong>NI Number</strong></td>
+                    <td>@Html.DisplayFor(model => model.student.NI)</td>
+                    <td class="tableLabel"><strong>Max Working Hour</strong></td>
+                    <td>@Html.DisplayFor(model => model.student.maxHour)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-
+<div>
+    <h4 class="unpublished" style="font-size: 17px; padding:15px 0">The timetable below shows the lab classes that you are currently eligible to be a tutor for. By default you will be eligible for all modules that you have already taken in previous years. Please click "Edit Application" below to modify your preferences.</h4>
+    <h4 class="published" style="font-size: 17px; padding:15px 0">The timetable below highlights the lab classes that you are allocated to in ORGANGE.  Please double check the time of the lab classes that you will tutor on the official timetable or make direct contact with the lecturers through provided emails.</h4>
+</div>
 <!-- Semester Tabs -->
 <ul class="nav nav-tabs published" style="margin-bottom: 15px;">
     <li class="active cursorPointer" data-toggle="tab" onclick="allocationTabChange(1)"><a>Semester 1 </a></li>
@@ -59,29 +64,31 @@
 </ul>
 
 <!-- Calendars -->
-<div id="allocationCalendar"></div>
-<div id="preferenceCalendar"></div>
+<div class="table-responsive">
+    <div id="allocationCalendar"></div>
+    <div id="preferenceCalendar"></div>
+</div>
 
 <!-- Legend -->
-<div class='legend row'>
+<div class='legend row color_box unpublished'>
     <div class="col-sm-3">
-        <label><span class="green"></span>Favoured</label>
-        
+        <label title="A lab class which you are eligible to tutor and which you have expressed a particular interest in"><span class="green"></span>Prefer to do <i class="fa fa-info-circle"></i></label>
     </div>
     <div class="col-sm-3">
-        <label><span class="orange"></span>Unfavoured</label>
-        
+        <label title="A lab class which you feel you definitely wouldn't be a good tutor for."><span class="orange"></span>Prefer <u>NOT</u> to do <i class="fa fa-info-circle"></i></label>
     </div>
     <div class="col-sm-3">
-        <label><span class="blue"></span>Neutral</label>
-        
+        <label title="A lab class which you are eligible to tutor but do not have preferences either way"><span class="blue"></span>Neutral <i class="fa fa-info-circle"></i></label>
     </div>
     <div class="col-sm-3">
-        <label><span class="grey"></span>My Classes</label>
-        
+        <label title="All classes you may be attending in your current year for your current degree"><span class="grey"></span>My Classes <i class="fa fa-info-circle"></i></label>
     </div>
 </div>
 
+<!-- Legend -->
+<div class='legend row color_box published'>
+    <label class="pull-left"><span class="orange"></span>Allocated to me</label>
+</div>
 
 
 <!-- Class Info Modal -->
@@ -114,6 +121,12 @@
                         <div class="form-group">
                             <label class="col-sm-5">Tutors: </label>
                             <tutors></tutors>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="col-sm-3">Lecturer(s): </label>
+                            <lecturers style="white-space:pre-wrap"></lecturers>
                         </div>
                     </div>
                 </div>

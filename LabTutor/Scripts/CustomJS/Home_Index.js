@@ -5,16 +5,19 @@
 
 });
 
+//var urlPrefix = "/2015-msc/xinyuewu";
+var urlPrefix = "";
+
 function getPublishState() {
     $.ajax({
-        url: '/Allocate/getPublishState',
+        url: urlPrefix + '/Allocate/getPublishState',
         type: 'Get',
         dataType: 'json',
         success: function (json) {
             if (json) {
+               // $("#registerLink").hide();
                 $(".published").show();
-                initCalendar();
-                $("#registerLink").hide();
+                initCalendar();               
             }
             else {
                 $(".unpublished").show();
@@ -24,9 +27,9 @@ function getPublishState() {
 }
 
 function tabChange(semester) {
-    $('#calendar').fullCalendar('removeEventSource', '/Allocate/getAllocation/')
+    $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation')
     $('#calendar').fullCalendar('addEventSource', {
-        url: '/Allocate/getAllocation/',
+        url: urlPrefix + '/Allocate/getAllocation',
         data: {
             studentId: -1,
             semester: semester
@@ -49,7 +52,7 @@ function initCalendar() {
         theme: true,
         allDaySlot: false,
         events: {
-            url: '/Allocate/getAllocation/',
+            url: urlPrefix + '/Allocate/getAllocation',
             data: {
                 studentId: -1,
                 semester: 1
@@ -82,13 +85,13 @@ $('#login-form').submit(function (event) {
     event.preventDefault();
 
     $.ajax({
-        url: '/Account/Login',
+        url: urlPrefix + '/Account/Login',
         type: 'Post',
         dataType: 'json',
         data: $(this).serialize(),
         success: function (json) {
             if (json.success) {
-                window.location.href = "/Account/LoggedIn";
+                window.location.href = urlPrefix + "/Account/LoggedIn";
             }
             else {
                 $('#login_error').slideDown({ opacity: "show" }, "slow");
@@ -105,13 +108,13 @@ $('#register-form').submit(function (event) {
     event.preventDefault();
 
     $.ajax({
-        url: '/Account/Register',
+        url: urlPrefix + '/Account/Register',
         type: 'Post',
         dataType: 'json',
         data: $(this).serialize(),
         success: function (json) {
             if (json.success) {
-                window.location.href = "/Account/LoggedIn";
+                window.location.href = urlPrefix + "/Account/LoggedIn";
             }
             else {
                 $('#register_error').slideDown({ opacity: "show" }, "slow");
@@ -166,11 +169,11 @@ function initValidator() {
         },
 
         submitHandler: function (validator, form, submitButton) {
-            $.post('Account/Register',
+            $.post(urlPrefix + '/Account/Register',
                 form.serialize(),
                 function (result) {
                     if (result.success) {
-                        window.location.href = "Account/LoggedIn";
+                        window.location.href = urlPrefix + "/Account/LoggedIn";
                     }
                     else {
                         $('#register_error').slideDown({ opacity: "show" }, "slow");
@@ -251,3 +254,12 @@ function initValidator() {
     });
 
 }
+
+
+$('#other_degree').click(function () {
+    $('#level_dropdownlist').hide();
+    $("#level_select").val(5);
+})
+$('.ACorCS').click(function () {
+    $('#level_dropdownlist').show();
+})

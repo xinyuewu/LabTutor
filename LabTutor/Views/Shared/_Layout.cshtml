@@ -6,7 +6,6 @@
     <title>@ViewBag.Title - Lab Tutor System</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    <link href="~/fullcalendar-2.7.2/fullcalendar.print.css" rel="stylesheet" media="print" />
     @Styles.Render("~/fullcalendar/css")
 
 </head>
@@ -48,7 +47,7 @@
                 else
                 {
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a class="cursorPointer js-register-link" data-toggle="modal" data-target="#login-modal">Register</a></li>
+                        <li hidden><a class="cursorPointer js-register-link unpublished" data-toggle="modal" data-target="#login-modal" style="display:none;">Register</a></li>
                         <li><a class="cursorPointer js-login-link" data-toggle="modal" data-target="#login-modal">Log in</a></li>
                     </ul>
                 }
@@ -165,27 +164,33 @@
                                     <div class="col-md-8 input-field">
                                         <div class="radio">
                                             <label>
-                                                <input type="radio" name="degree" value="CS"/>Computing Science
+                                                <input type="radio" name="degree" value="CS" class="ACorCS" />Computing Science
                                             </label>
                                         </div>
                                         <div class="radio">
                                             <label>
-                                                <input type="radio" name="degree" value="AC"/>Applied Computing
+                                                <input type="radio" name="degree" value="AC" class="ACorCS"/>Applied Computing
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="degree" value="AC,CS" id="other_degree"/>Other(including MSc/Phd)
                                             </label>
                                         </div>
                                     </div>                          
                                 </div>
                                 <!-- level-->
-                                <div class="form-group">
+                                <div class="form-group" id="level_dropdownlist">
                                     <label class="col-md-3 col-md-offset-1 control-label">Level</label>
                                     <div class="col-md-7 input-field">
                                         <div class="input-group">
                                             <span class="input-group-addon"><i class="fa fa-list-ul"></i></span>
-                                            <select name="level" class="form-control selectpicker">
+                                            <select name="level" class="form-control selectpicker" id="level_select">
                                                 <option value=" "></option>
                                                 <option value="2">Year 2</option>
                                                 <option value="3">Year 3</option>
                                                 <option value="4">Year 4</option>
+                                                <option value="5" style="display:none;">Other</option>
                                             </select>
                                         </div>
                                     </div>
@@ -216,7 +221,7 @@
 
         <hr />
         <footer>
-            <p>&copy; 2016 - Xinyue Wu</p>
+            <p>Please email Xinyue Wu (<a href="mailto:xrwu@dundee.ac.uk">xrwu@dundee.ac.uk</a>) if you have any problems or feedback.</p>
         </footer>
 
     </div>

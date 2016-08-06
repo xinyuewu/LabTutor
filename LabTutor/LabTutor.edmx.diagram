@@ -7,22 +7,24 @@
       <Diagram DiagramId="137be0e0da784de4936c5bd3c9b05f30" Name="Diagram1">
         <EntityTypeShape EntityType="xinyuedbModel.Allocation" Width="1.5" PointX="4.5" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="xinyuedbModel.Class" Width="1.5" PointX="0.75" PointY="2.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="xinyuedbModel.User" Width="1.5" PointX="7.375" PointY="7.375" IsExpanded="true" />
         <AssociationConnector Association="xinyuedbModel.FK_Allocation_Class" ManuallyRouted="false" />
         <AssociationConnector Association="xinyuedbModel.UserStudent" />
         <AssociationConnector Association="xinyuedbModel.StudentPreference" />
         <EntityTypeShape EntityType="xinyuedbModel.Preference" Width="1.5" PointX="4.5" PointY="3.125" />
         <AssociationConnector Association="xinyuedbModel.FK_Preference_Class" />
-        <EntityTypeShape EntityType="xinyuedbModel.Student" Width="1.5" PointX="7.25" PointY="2.625" />
+        <EntityTypeShape EntityType="xinyuedbModel.Student" Width="1.5" PointX="7.375" PointY="1.25" />
         <AssociationConnector Association="xinyuedbModel.FK_Allocation_Student" />
         <AssociationConnector Association="xinyuedbModel.FK_Preference_Student" />
-        <AssociationConnector Association="xinyuedbModel.FK_Student_Users" />
-        <EntityTypeShape EntityType="xinyuedbModel.Config" Width="1.5" PointX="9" PointY="2.25" />
-        <EntityTypeShape EntityType="xinyuedbModel.Lecturer" Width="1.5" PointX="10.125" PointY="5.5" />
-        <EntityTypeShape EntityType="xinyuedbModel.Module" Width="1.5" PointX="0.75" PointY="6.375" />
+        <EntityTypeShape EntityType="xinyuedbModel.Config" Width="1.5" PointX="10.125" PointY="0.75" />
+        <EntityTypeShape EntityType="xinyuedbModel.Teaching" Width="1.5" PointX="4.5" PointY="6.625" />
+        <EntityTypeShape EntityType="xinyuedbModel.Lecturer" Width="1.5" PointX="7.5" PointY="6.375" />
+        <AssociationConnector Association="xinyuedbModel.FK_Teaching_Lecturer" />
+        <EntityTypeShape EntityType="xinyuedbModel.Module" Width="1.5" PointX="0.625" PointY="6.25" />
         <AssociationConnector Association="xinyuedbModel.FK_Class_Module" />
+        <AssociationConnector Association="xinyuedbModel.FK_Teaching_Module" />
+        <EntityTypeShape EntityType="xinyuedbModel.User" Width="1.5" PointX="10.5" PointY="4.25" />
         <AssociationConnector Association="xinyuedbModel.FK_Lecturer_Account1" />
-        <AssociationConnector Association="xinyuedbModel.FK_Module_Lecturer" />
+        <AssociationConnector Association="xinyuedbModel.FK_Student_Users" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

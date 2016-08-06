@@ -1,17 +1,24 @@
 ﻿@{
+    ViewBag.Title = "Error";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Restricted Page</title>
-</head>
-<body>
-    <div class="row">
-        <h1 class="text-danger">Wrong account type</h1>
-        <h2 class="text-info">Your account doesnt have access rights to this page.</h2>
+<div class="error_page">
+    <div class="jumbotron">
+        <h1><i class="fa fa-ban" style="color: #d9534f"></i> 403 Forbidden</h1>
+        <p>Sorry! You don't have access permissions for this page.</p>
+        <a onclick="location.href='@Url.Action("Index", "Home")'" class="btn btn-default btn-lg" style="color: #5cb85c">Take Me To The Homepage</a>
     </div>
-</body>
-</html>
+    <div class="row">
+        <div class="col-md-5">
+            <h2>What happened?</h2>
+            <p>A 403 error status indicates that you don't have permission to access the page. </p>
+        </div>
+        <div class="col-md-6 col-md-offset-1">
+            <h2>What can I do?</h2>
+            <p>Please use your browsers back button and check that you're in the right place. If you need assistance, please make contact with Xinyue Wu (<a href="mailto:xrwu@dundee.ac.uk">xrwu@dundee.ac.uk</a>).</p>
+        </div>
+    </div>
+</div>
+
+

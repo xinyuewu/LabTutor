@@ -8,7 +8,7 @@
 
 $('#optional').qtip({
     content: {
-        text: 'You can apply to be lab tutors if you do not have a National Insurrance Number at the moment, but you should start applying for it and and fill in this blank as soon as you get it.'
+        text: 'Please enter your National Insurance (NI) Number . If you don\'t have an NI Number, you can apply for one. You can still apply to be a lab tutor just now while your NI application is being processed'
     },
     position: {
         my: 'bottom center',
@@ -16,9 +16,11 @@ $('#optional').qtip({
     }
 })
 
+//var urlPrefix = "/2015-msc/xinyuewu";
+var urlPrefix = "";
 function getNImaxHour() {
     $.ajax({
-        url: '/Application/getNImaxHour',
+        url: urlPrefix + '/Application/getNImaxHour',
         dataType: 'json',
         type: "GET",
         traditional: true,
@@ -54,7 +56,7 @@ function initFormValidator() {
             NI: {
                 validators: {
                     regexp: {
-                        regexp: "^\s*[a-zA-Z]{2}(?:\s*\d\s*){6}[a-zA-Z]?\s*$",
+                        regexp: "^[a-zA-Z]{2}[0-9]{6}[a-zA-Z]{1}$",
                         message: 'Please enter a valid National Insurrance Number'
                     }
                 }
@@ -89,7 +91,7 @@ function initCalendar() {
         theme: true,
         allDaySlot: false,
         events: {
-            url: '/Application/getPreference/',
+            url: urlPrefix + '/Application/getPreference/',
             data: {
                 studentId: $("#studentId").val(),
                 semester: 1
@@ -100,9 +102,9 @@ function initCalendar() {
 }
 
 function tabChange(semester) {
-    $('#calendar').fullCalendar('removeEventSource', '/Application/getPreference/')
+    $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Application/getPreference/')
     $('#calendar').fullCalendar('addEventSource', {
-        url: '/Application/getPreference/',
+        url: urlPrefix + '/Application/getPreference/',
         data: {
             studentId: $("#studentId").val(),
             semester: semester
@@ -150,11 +152,13 @@ function eventClick(Event) {
 
 }
 
-$("#save_button").click(function () {
+$("#save_button").click(function (e) {
+    e.preventDefault();
     $.ajax({
-        url: "/Application/Update",
+        url: urlPrefix + "/Application/Update",
         type: "POST",
         traditional: true,
+        dataType: 'json',
         data: {
             'likedList': likedList,
             'dislikedList': dislikedList,
@@ -164,7 +168,13 @@ $("#save_button").click(function () {
             'maxHour': $("#maxHour").val()
         },
         success: function () {
-            window.location.href = "/Application";
+            window.location.href = urlPrefix + "/Application/Index";
+        },
+        error: function (){
+            window.location.href = urlPrefix + "/Application/Index";
+        },
+        complete: function (xhr) {
+            console.log(xhr.status)
         }
     })
 });

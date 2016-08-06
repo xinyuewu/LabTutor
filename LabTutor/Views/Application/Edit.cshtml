@@ -7,6 +7,8 @@
 <!-- Page Title -->
 <h2 class="pageTitle">Edit Application</h2>
 
+<p>Here you can edit your personal profile (limited fields only) and you can edit your preferences for lab tutoring. Instructions for doing so are provided below.</p>
+
 <hr />
 
 <form class="form-horizontal" id="application-form">
@@ -26,6 +28,26 @@
             <input id="maxHour" name="maxHour" class="form-control" type="number">
         </div>
     </div>
+    <hr />
+
+    <h4>Instructions on editing preferences</h4>
+    <p>The timetable below shows the lab classes that you are currently eligible to be a tutor for. Each lab class is coloured based on the following scheme: </p>
+    <p>
+        <label class="color_box"><span class="green"></span>Prefer to do:</label> A lab class which you are eligible to tutor and which you have expressed a particular interest in.
+    </p>
+    <p>
+        <label class="color_box"><span class="orange"></span>Prefer <u>NOT</u> to do:</label> A lab class which you feel you definitely wouldn't be a good tutor for.
+    </p>
+    <p>
+        <label class="color_box"><span class="blue"></span>Neutral:</label> A lab class which you are eligible to tutor but do not have preferences either way.
+    </p>
+    <p>
+        <label class="color_box"><span class="grey"></span>My Classes:</label> All classes you may be attending in your current year for your current degree.
+    </p>
+    <p style="font-weight: bold;">You can click the lab classes below to record any preferences you have. </p>
+    <p>
+        Click a specified lab class once to make it a "Prefer to do" class. Click the same lab class again to make it a "Prefer not to do" class. If you click for a third time, it will change back to "Neutral".
+    </p>
 
     <ul class="nav nav-tabs" style="margin-bottom: 15px;">
         <li class="active cursorPointer" data-toggle="tab" onclick="tabChange(1)"><a>Semester 1 </a></li>
@@ -35,22 +57,18 @@
     <div id='calendar'></div>
 
     <!-- Legend -->
-    <div class='legend row'>
+    <div class='legend row color_box'>
         <div class="col-sm-3">
-            <label>Favoured</label>
-            <span class="green"></span>
+            <label><span class="green"></span>Prefer to do</label>
         </div>
         <div class="col-sm-3">
-            <label>Unfavoured</label>
-            <span class="orange"></span>
+            <label><span class="orange"></span>Prefer <u>NOT</u> to do</label>
         </div>
         <div class="col-sm-3">
-            <label>Neutral</label>
-            <span class="blue"></span>
+            <label><span class="blue"></span>Neutral</label>
         </div>
         <div class="col-sm-3">
-            <label>My Classes</label>
-            <span class="grey"></span>
+            <label><span class="grey"></span>My Classes</label>
         </div>
     </div>
 

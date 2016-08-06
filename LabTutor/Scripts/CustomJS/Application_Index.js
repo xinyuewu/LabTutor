@@ -4,11 +4,12 @@
 
 });
 
-var urlPrefix = "";//"${pageContext.request.contextPath}";
+//var urlPrefix = "/2015-msc/xinyuewu";
+var urlPrefix = "";
 
  function getPublishState() {
     $.ajax({
-        url: urlPrefix + 'Allocate/getPublishState',
+        url: urlPrefix + '/Allocate/getPublishState',
         type: 'Get',
         dataType: 'json',
         success: function (json) {
@@ -24,7 +25,7 @@ var urlPrefix = "";//"${pageContext.request.contextPath}";
     });
 }
 
-//#region preference calendar
+//preference calendar
 function initPreferenceCalendar() {
 
     $('#preferenceCalendar').fullCalendar({
@@ -39,7 +40,7 @@ function initPreferenceCalendar() {
         theme: true,
         allDaySlot: false,
         events: {
-            url: urlPrefix + 'Application/getPreference/',
+            url: urlPrefix + '/Application/getPreference',
             data: {
                 studentId: $("#studentId").val(),
                 semester: 1
@@ -50,9 +51,9 @@ function initPreferenceCalendar() {
 }
 
 function preferenceTabChange(semester) {
-    $('#preferenceCalendar').fullCalendar('removeEventSource', 'Application/getPreference/')
+    $('#preferenceCalendar').fullCalendar('removeEventSource', urlPrefix + '/Application/getPreference')
     $('#preferenceCalendar').fullCalendar('addEventSource', {
-        url: urlPrefix + 'Application/getPreference/',
+        url: urlPrefix + '/Application/getPreference',
         data: {
             studentId: $("#studentId").val(),
             semester: semester
@@ -67,7 +68,13 @@ function clickPreferenceEvent(Event) {
     $("year").text(Event.year);
     $("degree").text(Event.degree);
     $("tutors").text(Event.tutorNumber);
-    $("tutors").prev().text("Number of tutors:");
+    $("tutors").prev().text("Tutor Number:");
+
+    var lecturers = "";
+    $.each(Event.lecturers, function () {
+        lecturers += this.name + " ( " + this.email + " )\n";
+    });
+    $("lecturers").text(lecturers.slice(0, -1));
 
     $('#classDetailModal').modal('toggle');
 }
@@ -87,7 +94,7 @@ function initAllocationCalendar() {
         theme: true,
         allDaySlot: false,
         events: {
-            url: urlPrefix + 'Allocate/getAllocation/',
+            url: urlPrefix + '/Allocate/getAllocation',
             data: {
                 studentId: $("#studentId").val(),
                 semester: 1
@@ -99,9 +106,9 @@ function initAllocationCalendar() {
 }
 
 function allocationTabChange(semester) {
-    $('#allocationCalendar').fullCalendar('removeEventSource', 'Allocate/getAllocation/')
+    $('#allocationCalendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation')
     $('#allocationCalendar').fullCalendar('addEventSource', {
-        url: urlPrefix + 'Allocate/getAllocation/',
+        url: urlPrefix + '/Allocate/getAllocation',
         data: {
             studentId: $("#studentId").val(),
             semester: semester
@@ -120,6 +127,12 @@ function clickAllocationEvent(Event) {
     $("time").text(Event.start.format("dddd HH:mm") + " ~ " + Event.end.format("HH:mm"));
     $("year").text(Event.year);
     $("degree").text(Event.degree);
+
+    var lecturers = "";
+    $.each(Event.lecturers, function () {
+        lecturers += this.name + " ( " + this.email + " )\n";
+    });
+    $("lecturers").text(lecturers.slice(0, -1));
 
     var tutorName = "";
     $.each(Event.tutorName, function () {

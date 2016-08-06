@@ -26,6 +26,10 @@
     padding-top: 15px;
 }
 
+footer {
+    text-align: center;
+}
+
 
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
@@ -46,14 +50,12 @@
     margin: 30px 0;
 }
 
-#main-page-content {
-    font-size: 16px;
-    color: #888;
-    line-height: 30px;
-}
-
 tutorName {
     color: black;
+}
+
+input[type=checkbox] {
+    cursor: pointer;
 }
 
 /*#region Login/Register modal*/
@@ -158,7 +160,7 @@ tutorName {
     text-align: center;
 }
 
-    .legend span {
+    .color_box span {
         display: block;
         float: left;
         height: 16px;
@@ -167,19 +169,19 @@ tutorName {
         border: 1px solid #999;
     }
 
-    .legend .blue {
+    .color_box .blue {
         background: #3a87ad;
     }
 
-    .legend .orange {
+    .color_box .orange {
         background: #ff9933;
     }
 
-    .legend .green {
+    .color_box .green {
         background: #86b300;
     }
 
-    .legend .grey {
+    .color_box .grey {
         background: #8c8c8c;
     }
 /*#endregion Legend*/
@@ -206,44 +208,64 @@ tutorName {
 
 
 /*#region table in modals*/
-.modalTable thead {
-        background-color: #deedf7;
-    }
+/*.modalTable thead {*/
+thead {
+    background-color: #deedf7;
+}
 
 .modalTable {
-        margin: 0px 15px;
-        width: 95%;
-    }
+    margin: 0px 15px;
+    width: 95%;
+}
 
 #studentDetailModal .modal-body,
-#classDetailModal .modal-body{
-        margin: 10px;
-    }
+#classDetailModal .modal-body {
+    margin: 10px;
+}
 /*#endregion Allocation_Index*/
 
 /*#region Allocation_Edit*/
-    .allocation_edit .alignRight {
-        text-align: right;
-        padding-right: 10px;
-        padding-bottom: 10px;
-    }
+.allocation_edit .alignRight {
+    text-align: right;
+    padding-right: 10px;
+    padding-bottom: 10px;
+}
 
-    .allocation_edit .alignLeft {
-        text-align: left;
-        padding-bottom: 10px;
-    }
+.allocation_edit .alignLeft {
+    text-align: left;
+    padding-bottom: 10px;
+}
 
-    .dialog-input {
-        width: 60%;
-    }
+.dialog-input {
+    width: 60%;
+}
 
-    .allocation_edit #moduleList{
-        font-size: 90%;
-    }
+.allocation_edit #moduleList {
+    font-size: 90%;
+}
 
-    .allocation_edit option {
-        font-size: 90%;
-    }
+.allocation_edit option {
+    font-size: 90%;
+}
 
 
 /*#endregion Allocation_Edit*/
+
+
+/*#region error page*/
+.error_page p {
+    font-size: 17px;
+    margin: 15px 0;
+}
+
+.jumbotron {
+    text-align: center;
+    background-color: transparent;
+    margin: 0;
+}
+
+    .jumbotron .btn {
+        font-size: 21px;
+        padding: 14px 24px;
+    }
+/*#endregion error page*/

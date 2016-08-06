@@ -3,10 +3,13 @@
     initCalendar();
 });
 
+//var urlPrefix = "/2015-msc/xinyuewu";
+var urlPrefix = "";
+
 function tabChange(semester) {
-    $('#calendar').fullCalendar('removeEventSource', '/Allocate/getAllocation/')
+    $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation')
     $('#calendar').fullCalendar('addEventSource', {
-        url: '/Allocate/getAllocation/',
+        url: urlPrefix + '/Allocate/getAllocation',
         data: {
             studentId: -1,
             semester: semester
@@ -28,7 +31,7 @@ function initCalendar() {
         theme: true,
         allDaySlot: false,
         events: {
-            url: '/Allocate/getAllocation/',
+            url: urlPrefix + '/Allocate/getAllocation',
             data: {
                 studentId: -1,
                 semester: 1
@@ -68,20 +71,16 @@ function initCalendar() {
     });
 }
 
-//$(document).on('click', '#tutor_394', function () {
-//    alert("studentId");
-//});
-
-var tutorNumber = "";
 function clickEvent(Event) {
     $("#adjustAllocationModal .modal-title").text(Event.title);
     $("classId").val(Event.id);
     $("year").text(Event.year);
     $("degree").text(Event.degree);
     $("time").text(Event.start.format("dddd HH:mm") + " ~ " + Event.end.format("HH:mm"));
+    $("tutornumber").text(Event.tutorNumber);
 
     $.ajax({
-        url: '/Allocate/getStudentsForMultiselectList',
+        url: urlPrefix + '/Allocate/getStudentsForMultiselectList',
         type: 'Get',
         dataType: 'json',
         data: {
@@ -89,22 +88,34 @@ function clickEvent(Event) {
         },
         success: function (json) {
             $('#multiselect').multiselect('dataprovider', json);
+
+            var hoursExceededList = new Array();
+            $.each(json, function () {
+                $.each(this.children, function () {
+                    if (this.hoursExceeded) {
+                        hoursExceededList.push(this);
+                    }
+                });
+            });
+            localStorage.setItem('hoursExceededList', JSON.stringify(hoursExceededList));
         }
     });
 
     var tutorNumber = Event.tutorNumber;
-    // alert("first: "+tutorNumber);
+    localStorage.setItem('tutorNumber', JSON.stringify(tutorNumber));
+
 
     $('#multiselect').multiselect({
         maxHeight: 200,
         enableFiltering: true,
         filterBehavior: 'value',
         buttonText: function (options, select) {
+            var retrievedObject = localStorage.getItem('tutorNumber');
             if (options.length === 0) {
                 return 'No student selected ...';
             }
-            else if (options.length > tutorNumber) {
-                return 'More than ' + tutorNumber + ' students selected!';
+            else if (options.length > retrievedObject) {
+                return 'More than ' + retrievedObject + ' students selected!';
             }
             else {
                 var labels = [];
@@ -122,8 +133,10 @@ function clickEvent(Event) {
         onChange: function (option, checked) {
             // Get selected options.
             var selectedOptions = $('#multiselect option:selected');
-            // alert("second: " + tutorNumber);
-            if (selectedOptions.length >= tutorNumber) {
+
+            // Retrieve the object from storage
+            var retrievedObject = localStorage.getItem('tutorNumber');
+            if (selectedOptions.length >= retrievedObject) {
                 // Disable all other checkboxes.
                 var nonSelectedOptions = $('#multiselect option').filter(function () {
                     return !$(this).is(':selected');
@@ -136,14 +149,24 @@ function clickEvent(Event) {
                 });
             }
             else {
+                var retrievedObject = JSON.parse(localStorage.getItem('hoursExceededList'));
+
                 // Enable all checkboxes.
                 $('#multiselect option').each(function () {
                     var input = $('input[value="' + $(this).val() + '"]');
                     input.prop('disabled', false);
-                    input.parent('li').addClass('disabled');
+                    $.each(retrievedObject, function () {
+                        if (this.value == input.attr('value')) {
+                            input.prop('disabled', true);
+                            input.parent('li').addClass('disabled');
+                        }
+                    });
+                    
                 });
             }
         }
+
+
     });
 
     $('#adjustAllocationModal').modal('toggle');
@@ -154,22 +177,22 @@ $("#save_multiselectlist").click(function (e) {
     var options = $('#multiselect option:selected');
 
     if (options.length > 0) {
-       
+
         var selected_students = new Array();
         options.each(function (i, selected) {
             selected_students.push($(selected).val());
         });
 
         $.ajax({
-            url: '/Allocate/saveStudentsForMultiselectList',
+            url: urlPrefix + '/Allocate/saveStudentsForMultiselectList',
             data: {
                 'selected_students': selected_students,
                 'classId': $("classId").val()
             },
             type: 'POST',
             traditional: true,
-            success: function (data) {             
-                window.location.href = "/Allocate/Edit";
+            success: function (data) {
+                window.location.href = urlPrefix + "/Allocate/Edit";
             },
             error: function (data) {
                 console.log('error!');

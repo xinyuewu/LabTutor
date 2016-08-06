@@ -17,12 +17,12 @@ namespace LabTutor.Controllers
             Allocate allo = new Allocate();
             List<Student> stuList = new List<Student>();
             stuList = allo.getStudents();
-            return View(stuList); 
+            return View(stuList);
         }
 
         [CoordinatorFilter]
         public ActionResult Edit()
-        {          
+        {
             return View();
         }
 
@@ -48,7 +48,15 @@ namespace LabTutor.Controllers
 
         public JsonResult getAllocation(int semester, int studentId)
         {
-            return Json(Allocate.getAllocation(semester, studentId), JsonRequestBehavior.AllowGet);
+            int lecturerId = -1;
+            if (Session["account"] != null)
+            {
+                if (Session["account"].Equals("lecturer"))
+                {
+                    lecturerId = Convert.ToInt32(Session["userId"]);
+                }
+            }
+            return Json(Allocate.getAllocation(semester, studentId, lecturerId), JsonRequestBehavior.AllowGet);
         }
 
         [CoordinatorFilter]
@@ -102,6 +110,6 @@ namespace LabTutor.Controllers
             allo.populateDatabase();
             return RedirectToAction("Index");
         }
-      
+
     }
 }

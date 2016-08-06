@@ -23,8 +23,9 @@ namespace LabTutor.Controllers
         {
             using (xinyuedbEntities db = new xinyuedbEntities())
             {
-                var usr = db.Users.Where(u => u.email == email && u.password == password).FirstOrDefault();
-                if (usr != null)
+                var usr = db.Users.Where(u => u.email == email).FirstOrDefault();
+                bool validPassword = PasswordHash.ValidatePassword(password, usr.password);
+                if (validPassword)
                 {
                     Session["userId"] = usr.userId.ToString();
                     if (usr.accountType.Equals("coordinator"))
@@ -37,9 +38,11 @@ namespace LabTutor.Controllers
                     }
                     else
                     {
-                        Session["name"] = db.Lecturers.Where(l => l.userId == usr.userId).FirstOrDefault().lName;
+                        var lecturer = db.Lecturers.Where(l => l.userId == usr.userId).FirstOrDefault();
+                        Session["name"] = lecturer.lName;
+                        Session["userId"] = lecturer.lecturerId.ToString();
                     }
-                    
+
                     Session["account"] = usr.accountType.ToString();
                     return Json(new { success = true, account = usr.accountType.ToString() }, JsonRequestBehavior.AllowGet);
                 }
@@ -66,25 +69,25 @@ namespace LabTutor.Controllers
                 {
                     User user = new User();
                     user.email = email;
-                    user.password = password;
+                    user.password = PasswordHash.HashPassword(password);
                     user.accountType = "student";
                     db.Users.Add(user);
-                    db.SaveChanges();
 
                     Student student = new Student();
-                    int userId = db.Users.Where(u => u.email == email).FirstOrDefault().userId;
-                    student.userId = userId;
+                    student.userId = user.userId;
                     student.fName = first_name;
                     student.lName = last_name;
                     student.matricNumber = matric_number;
                     student.degree = degree;
                     student.year = level;
+                    student.maxHour = 4;
+                    student.applied = true;
                     db.Students.Add(student);
 
                     db.SaveChanges();
 
                     Session["account"] = "student";
-                    Session["userId"] = userId.ToString();
+                    Session["userId"] = user.userId.ToString();
                     Session["email"] = email.ToString();
                     return Json(new { success = true }, JsonRequestBehavior.AllowGet);
                 }

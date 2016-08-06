@@ -27,11 +27,12 @@ namespace LabTutor
     
         public virtual DbSet<Allocation> Allocations { get; set; }
         public virtual DbSet<Class> Classes { get; set; }
-        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Preference> Preferences { get; set; }
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<Config> Configs { get; set; }
+        public virtual DbSet<Teaching> Teachings { get; set; }
         public virtual DbSet<Lecturer> Lecturers { get; set; }
         public virtual DbSet<Module> Modules { get; set; }
+        public virtual DbSet<User> Users { get; set; }
     }
 }

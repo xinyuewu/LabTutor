@@ -1,16 +1,22 @@
 ﻿@{
+    ViewBag.Title = "Error";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>404</title>
-</head>
-<body>
-    <div class="row">
-        <h1 class="text-danger">Error 404</h1>
-        <h2 class="text-info">Ooops this page doesn`t exist!</h2>
+
+<div class="error_page">
+    <div class="jumbotron">
+        <h1><i class="fa fa-frown-o" style="color: #d9534f"></i> 404 Not Found</h1>
+        <p>Sorry! We couldn't find what you're looking for.</p>
+        <a onclick="location.href='@Url.Action("Index", "Home")'" class="btn btn-default btn-lg" style="color: #5cb85c">Take Me To The Homepage</a>
     </div>
-</body>
-</html>
+    <div class="row">
+        <div class="col-md-5">
+            <h2>What happened?</h2>
+            <p>A 404 error status implies that the page that you're looking for could not be found. </p>
+        </div>
+        <div class="col-md-6 col-md-offset-1">
+            <h2>What can I do?</h2>
+            <p>Please use your browsers back button and check that you're in the right place. If you need assistance, please make contact with Xinyue Wu (<a href="mailto:xrwu@dundee.ac.uk">xrwu@dundee.ac.uk</a>).</p>
+        </div>
+    </div>
+</div>

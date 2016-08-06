@@ -40,7 +40,6 @@
           <Property Name="userId" Type="int" Nullable="false" />
           <Property Name="fName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="lName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="email" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Module">
           <Key>
@@ -51,7 +50,6 @@
           <Property Name="year" Type="int" Nullable="false" />
           <Property Name="degree" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="semester" Type="int" Nullable="false" />
-          <Property Name="lecturerId" Type="int" />
         </EntityType>
         <EntityType Name="Preference">
           <Key>
@@ -80,13 +78,21 @@
           <Property Name="workingHour1" Type="float" Nullable="false" />
           <Property Name="workingHour2" Type="float" Nullable="false" />
         </EntityType>
+        <EntityType Name="Teaching">
+          <Key>
+            <PropertyRef Name="teachingId" />
+          </Key>
+          <Property Name="teachingId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="lecturerId" Type="int" Nullable="false" />
+          <Property Name="moduleId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="userId" />
           </Key>
           <Property Name="userId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="email" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="password" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="password" Type="varchar(max)" Nullable="false" />
           <Property Name="accountType" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <Association Name="FK_Allocation_Class">
@@ -137,18 +143,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Module_Lecturer">
-          <End Role="Lecturer" Type="Self.Lecturer" Multiplicity="0..1" />
-          <End Role="Module" Type="Self.Module" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Lecturer">
-              <PropertyRef Name="lecturerId" />
-            </Principal>
-            <Dependent Role="Module">
-              <PropertyRef Name="lecturerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Preference_Class">
           <End Role="Class" Type="Self.Class" Multiplicity="1" />
           <End Role="Preference" Type="Self.Preference" Multiplicity="*" />
@@ -185,6 +179,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Teaching_Lecturer">
+          <End Role="Lecturer" Type="Self.Lecturer" Multiplicity="1" />
+          <End Role="Teaching" Type="Self.Teaching" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lecturer">
+              <PropertyRef Name="lecturerId" />
+            </Principal>
+            <Dependent Role="Teaching">
+              <PropertyRef Name="lecturerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Teaching_Module">
+          <End Role="Module" Type="Self.Module" Multiplicity="1" />
+          <End Role="Teaching" Type="Self.Teaching" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Module">
+              <PropertyRef Name="moduleId" />
+            </Principal>
+            <Dependent Role="Teaching">
+              <PropertyRef Name="moduleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="xinyuedbModelStoreContainer">
           <EntitySet Name="Allocation" EntityType="Self.Allocation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Class" EntityType="Self.Class" Schema="dbo" store:Type="Tables" />
@@ -193,6 +211,7 @@
           <EntitySet Name="Module" EntityType="Self.Module" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Preference" EntityType="Self.Preference" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Teaching" EntityType="Self.Teaching" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Allocation_Class" Association="Self.FK_Allocation_Class">
             <End Role="Class" EntitySet="Class" />
@@ -210,10 +229,6 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Lecturer" EntitySet="Lecturer" />
           </AssociationSet>
-          <AssociationSet Name="FK_Module_Lecturer" Association="Self.FK_Module_Lecturer">
-            <End Role="Lecturer" EntitySet="Lecturer" />
-            <End Role="Module" EntitySet="Module" />
-          </AssociationSet>
           <AssociationSet Name="FK_Preference_Class" Association="Self.FK_Preference_Class">
             <End Role="Class" EntitySet="Class" />
             <End Role="Preference" EntitySet="Preference" />
@@ -225,6 +240,14 @@
           <AssociationSet Name="FK_Student_Users" Association="Self.FK_Student_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Student" EntitySet="Student" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Teaching_Lecturer" Association="Self.FK_Teaching_Lecturer">
+            <End Role="Lecturer" EntitySet="Lecturer" />
+            <End Role="Teaching" EntitySet="Teaching" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Teaching_Module" Association="Self.FK_Teaching_Module">
+            <End Role="Module" EntitySet="Module" />
+            <End Role="Teaching" EntitySet="Teaching" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -255,17 +278,6 @@
           <NavigationProperty Name="Preferences" Relationship="xinyuedbModel.FK_Preference_Class" FromRole="Class" ToRole="Preference" />
           <NavigationProperty Name="Module" Relationship="xinyuedbModel.FK_Class_Module" FromRole="Class" ToRole="Module" />
         </EntityType>
-        <EntityType Name="User">
-          <Key>
-            <PropertyRef Name="userId" />
-          </Key>
-          <Property Name="userId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="accountType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Students" Relationship="xinyuedbModel.FK_Student_Users" FromRole="User" ToRole="Student" />
-          <NavigationProperty Name="Lecturers" Relationship="xinyuedbModel.FK_Lecturer_Account1" FromRole="User" ToRole="Lecturer" />
-        </EntityType>
         <Association Name="FK_Allocation_Class">
           <End Role="Class" Type="Self.Class" Multiplicity="1" />
           <End Role="Allocation" Type="Self.Allocation" Multiplicity="*" />
@@ -281,7 +293,6 @@
         <EntityContainer Name="xinyuedbEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Allocations" EntityType="Self.Allocation" />
           <EntitySet Name="Classes" EntityType="Self.Class" />
-          <EntitySet Name="Users" EntityType="Self.User" />
           <AssociationSet Name="FK_Allocation_Class" Association="Self.FK_Allocation_Class">
             <End Role="Class" EntitySet="Classes" />
             <End Role="Allocation" EntitySet="Allocations" />
@@ -300,24 +311,30 @@
             <End Role="Student" EntitySet="Students" />
             <End Role="Preference" EntitySet="Preferences" />
           </AssociationSet>
-          <AssociationSet Name="FK_Student_Users" Association="xinyuedbModel.FK_Student_Users">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Student" EntitySet="Students" />
-          </AssociationSet>
           <EntitySet Name="Configs" EntityType="xinyuedbModel.Config" />
+          <EntitySet Name="Teachings" EntityType="xinyuedbModel.Teaching" />
           <EntitySet Name="Lecturers" EntityType="xinyuedbModel.Lecturer" />
+          <AssociationSet Name="FK_Teaching_Lecturer" Association="xinyuedbModel.FK_Teaching_Lecturer">
+            <End Role="Lecturer" EntitySet="Lecturers" />
+            <End Role="Teaching" EntitySet="Teachings" />
+          </AssociationSet>
           <EntitySet Name="Modules" EntityType="xinyuedbModel.Module" />
           <AssociationSet Name="FK_Class_Module" Association="xinyuedbModel.FK_Class_Module">
             <End Role="Module" EntitySet="Modules" />
             <End Role="Class" EntitySet="Classes" />
           </AssociationSet>
+          <AssociationSet Name="FK_Teaching_Module" Association="xinyuedbModel.FK_Teaching_Module">
+            <End Role="Module" EntitySet="Modules" />
+            <End Role="Teaching" EntitySet="Teachings" />
+          </AssociationSet>
+          <EntitySet Name="Users" EntityType="xinyuedbModel.User" />
           <AssociationSet Name="FK_Lecturer_Account1" Association="xinyuedbModel.FK_Lecturer_Account1">
             <End Role="User" EntitySet="Users" />
             <End Role="Lecturer" EntitySet="Lecturers" />
           </AssociationSet>
-          <AssociationSet Name="FK_Module_Lecturer" Association="xinyuedbModel.FK_Module_Lecturer">
-            <End Role="Lecturer" EntitySet="Lecturers" />
-            <End Role="Module" EntitySet="Modules" />
+          <AssociationSet Name="FK_Student_Users" Association="xinyuedbModel.FK_Student_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Student" EntitySet="Students" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Preference">
@@ -388,18 +405,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Student_Users">
-          <End Type="xinyuedbModel.User" Role="User" Multiplicity="0..1" />
-          <End Type="xinyuedbModel.Student" Role="Student" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="userId" />
-            </Principal>
-            <Dependent Role="Student">
-              <PropertyRef Name="userId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Config">
           <Key>
             <PropertyRef Name="id" />
@@ -407,6 +412,16 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="20" FixedLength="true" Unicode="false" />
           <Property Name="value" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Teaching">
+          <Key>
+            <PropertyRef Name="teachingId" />
+          </Key>
+          <Property Name="teachingId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="lecturerId" Type="Int32" Nullable="false" />
+          <Property Name="moduleId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Lecturer" Relationship="xinyuedbModel.FK_Teaching_Lecturer" FromRole="Teaching" ToRole="Lecturer" />
+          <NavigationProperty Name="Module" Relationship="xinyuedbModel.FK_Teaching_Module" FromRole="Teaching" ToRole="Module" />
         </EntityType>
         <EntityType Name="Lecturer">
           <Key>
@@ -416,10 +431,21 @@
           <Property Name="userId" Type="Int32" Nullable="false" />
           <Property Name="fName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="lName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Teachings" Relationship="xinyuedbModel.FK_Teaching_Lecturer" FromRole="Lecturer" ToRole="Teaching" />
           <NavigationProperty Name="User" Relationship="xinyuedbModel.FK_Lecturer_Account1" FromRole="Lecturer" ToRole="User" />
-          <NavigationProperty Name="Modules" Relationship="xinyuedbModel.FK_Module_Lecturer" FromRole="Lecturer" ToRole="Module" />
         </EntityType>
+        <Association Name="FK_Teaching_Lecturer">
+          <End Type="xinyuedbModel.Lecturer" Role="Lecturer" Multiplicity="1" />
+          <End Type="xinyuedbModel.Teaching" Role="Teaching" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lecturer">
+              <PropertyRef Name="lecturerId" />
+            </Principal>
+            <Dependent Role="Teaching">
+              <PropertyRef Name="lecturerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityType Name="Module">
           <Key>
             <PropertyRef Name="moduleId" />
@@ -429,9 +455,8 @@
           <Property Name="year" Type="Int32" Nullable="false" />
           <Property Name="degree" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="semester" Type="Int32" Nullable="false" />
-          <Property Name="lecturerId" Type="Int32" />
           <NavigationProperty Name="Classes" Relationship="xinyuedbModel.FK_Class_Module" FromRole="Module" ToRole="Class" />
-          <NavigationProperty Name="Lecturer" Relationship="xinyuedbModel.FK_Module_Lecturer" FromRole="Module" ToRole="Lecturer" />
+          <NavigationProperty Name="Teachings" Relationship="xinyuedbModel.FK_Teaching_Module" FromRole="Module" ToRole="Teaching" />
         </EntityType>
         <Association Name="FK_Class_Module">
           <End Type="xinyuedbModel.Module" Role="Module" Multiplicity="1" />
@@ -445,6 +470,29 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Teaching_Module">
+          <End Type="xinyuedbModel.Module" Role="Module" Multiplicity="1" />
+          <End Type="xinyuedbModel.Teaching" Role="Teaching" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Module">
+              <PropertyRef Name="moduleId" />
+            </Principal>
+            <Dependent Role="Teaching">
+              <PropertyRef Name="moduleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="userId" />
+          </Key>
+          <Property Name="userId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="accountType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Lecturers" Relationship="xinyuedbModel.FK_Lecturer_Account1" FromRole="User" ToRole="Lecturer" />
+          <NavigationProperty Name="Students" Relationship="xinyuedbModel.FK_Student_Users" FromRole="User" ToRole="Student" />
+        </EntityType>
         <Association Name="FK_Lecturer_Account1">
           <End Type="xinyuedbModel.User" Role="User" Multiplicity="1" />
           <End Type="xinyuedbModel.Lecturer" Role="Lecturer" Multiplicity="*" />
@@ -457,15 +505,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Module_Lecturer">
-          <End Type="xinyuedbModel.Lecturer" Role="Lecturer" Multiplicity="0..1" />
-          <End Type="xinyuedbModel.Module" Role="Module" Multiplicity="*" />
+        <Association Name="FK_Student_Users">
+          <End Type="xinyuedbModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="xinyuedbModel.Student" Role="Student" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Lecturer">
-              <PropertyRef Name="lecturerId" />
+            <Principal Role="User">
+              <PropertyRef Name="userId" />
             </Principal>
-            <Dependent Role="Module">
-              <PropertyRef Name="lecturerId" />
+            <Dependent Role="Student">
+              <PropertyRef Name="userId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -493,16 +541,6 @@
                 <ScalarProperty Name="moduleId" ColumnName="moduleId" />
                 <ScalarProperty Name="startTime" ColumnName="startTime" />
                 <ScalarProperty Name="endTime" ColumnName="endTime" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="xinyuedbModel.User">
-              <MappingFragment StoreEntitySet="Users">
-                <ScalarProperty Name="userId" ColumnName="userId" />
-                <ScalarProperty Name="email" ColumnName="email" />
-                <ScalarProperty Name="password" ColumnName="password" />
-                <ScalarProperty Name="accountType" ColumnName="accountType" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -544,10 +582,18 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Teachings">
+            <EntityTypeMapping TypeName="xinyuedbModel.Teaching">
+              <MappingFragment StoreEntitySet="Teaching">
+                <ScalarProperty Name="moduleId" ColumnName="moduleId" />
+                <ScalarProperty Name="lecturerId" ColumnName="lecturerId" />
+                <ScalarProperty Name="teachingId" ColumnName="teachingId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Lecturers">
             <EntityTypeMapping TypeName="xinyuedbModel.Lecturer">
               <MappingFragment StoreEntitySet="Lecturer">
-                <ScalarProperty Name="email" ColumnName="email" />
                 <ScalarProperty Name="lName" ColumnName="lName" />
                 <ScalarProperty Name="fName" ColumnName="fName" />
                 <ScalarProperty Name="userId" ColumnName="userId" />
@@ -558,12 +604,21 @@
           <EntitySetMapping Name="Modules">
             <EntityTypeMapping TypeName="xinyuedbModel.Module">
               <MappingFragment StoreEntitySet="Module">
-                <ScalarProperty Name="lecturerId" ColumnName="lecturerId" />
                 <ScalarProperty Name="semester" ColumnName="semester" />
                 <ScalarProperty Name="degree" ColumnName="degree" />
                 <ScalarProperty Name="year" ColumnName="year" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="moduleId" ColumnName="moduleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="xinyuedbModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="accountType" ColumnName="accountType" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

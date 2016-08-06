@@ -4,9 +4,12 @@
 
 });
 
+//var urlPrefix = "/2015-msc/xinyuewu";
+var urlPrefix = "";
+
 function getPublishState() {
     $.ajax({
-        url: '/Allocate/getPublishState',
+        url: urlPrefix + '/Allocate/getPublishState',
         type: 'Get',
         dataType: 'json',
         success: function (json) {
@@ -22,12 +25,12 @@ function getPublishState() {
 }
 
 function tabChange(semester) {
-    $('#calendar').fullCalendar('removeEventSource', '/Allocate/getAllocation/')
+    $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation')
     $('#calendar').fullCalendar('addEventSource', {
-        url: '/Allocate/getAllocation/',
+        url: urlPrefix + '/Allocate/getAllocation',
         data: {
-            studentId: -1,
-            semester: semester
+            semester: semester,
+            studentId: -2
         }
     })
 };
@@ -48,10 +51,10 @@ function initCalendar() {
         allDaySlot: false,
         eventClick: clickEvent,
         events: {
-            url: '/Allocate/getAllocation/',
+            url: urlPrefix + '/Allocate/getAllocation',
             data: {
-                studentId: 0,
-                semester: 1
+                semester: 1,
+                studentId: -2
             },
         },
         eventRender: function (event, element) {
@@ -68,7 +71,7 @@ function initCalendar() {
 
 function clickEvent(Event) {
     $.ajax({
-        url: '/Lecturer/getClassInfo',
+        url: urlPrefix + '/Lecturer/getClassInfo',
         type: 'Get',
         data: {
             classId: Event.id
@@ -95,7 +98,7 @@ function clickEvent(Event) {
             $("#classDetailModal tbody").html(tbl_body);
 
         },
-        error: function (json) { alert("error");}
+        error: function (json) { console.log("/Lecturer/getClassInfo error"); }
     });
 
     $('#classDetailModal').modal('toggle');

@@ -1,5 +1,7 @@
 ﻿var startTime;
 var endTime;
+//var urlPrefix = "/2015-msc/xinyuewu";
+var urlPrefix = "";
 
 $(document).ready(function () {
 
@@ -20,7 +22,7 @@ $(document).ready(function () {
         theme: true,
         allDaySlot: false,
         events: {
-            url: '/Timetable/getClasses/',
+            url: urlPrefix + '/Timetable/getClasses/',
             data: {
                 year: 1,
                 semester: 1
@@ -42,7 +44,7 @@ $(document).ready(function () {
 function tabChange(year, semester) {
     $('#calendar').fullCalendar('removeEventSource', '/Timetable/getClasses/')
     $('#calendar').fullCalendar('addEventSource', {
-        url: '/Timetable/getClasses/',
+        url: urlPrefix + '/Timetable/getClasses/',
         data: {
             year: year,
             semester: semester
@@ -64,7 +66,7 @@ function selectDate(start, end) {
 
 function getModules(year, semester) {
     $.ajax({
-        url: '/Timetable/getModules',
+        url: urlPrefix + '/Timetable/getModules',
         type: 'Get',
         data: {
             year: year,
@@ -88,7 +90,7 @@ function getModules(year, semester) {
 function updateEventTime(Event) {
     $.ajax({
         type: 'POST',
-        url: "/Timetable/updateEventTime",
+        url: urlPrefix + "/Timetable/updateEventTime",
         traditional: true,
         data: {
             'classId': Event.id,
@@ -124,7 +126,7 @@ $('#addDialog').dialog({
         "Add": function () {
 
             $.ajax({
-                url: "/Timetable/Add",
+                url: urlPrefix + "/Timetable/Add",
                 type: "POST",
                 traditional: true,
                 data: {
@@ -155,7 +157,7 @@ $('#editDialog').dialog({
         "update": function () {
 
             $.ajax({
-                url: "/Timetable/Update",
+                url: urlPrefix + "/Timetable/Update",
                 type: "POST",
                 traditional: true,
                 data: {
@@ -176,7 +178,7 @@ $('#editDialog').dialog({
             if (confirm("do you really want to delete this event?")) {
 
                 $.ajax({
-                    url: "/Timetable/Delete",
+                    url: urlPrefix + "/Timetable/Delete",
                     type: "POST",
                     traditional: true,
                     data: {

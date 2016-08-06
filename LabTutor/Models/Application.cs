@@ -248,6 +248,18 @@ namespace LabTutor.Models
                         cla.endTime = c.endTime.ToString("yyyy-MM-ddTHH:mm:ss");
                         myClass.Add(cla);//add to a list which contains only the classes this applicant is studying
 
+                        var lecturers = new List<Object>();
+                        var teaches = db.Teachings.Where(t => t.moduleId == c.moduleId);
+                        foreach (var teach in teaches)
+                        {
+                            lecturers.Add(new
+                            {
+                                lecturerId = teach.lecturerId,
+                                name = teach.Lecturer.fName + " " + teach.Lecturer.lName,
+                                email = teach.Lecturer.User.email
+                            });
+                        }
+
                         eventList.Add(new
                             {
                                 id = c.classId,
@@ -257,6 +269,7 @@ namespace LabTutor.Models
                                 year = c.Module.year,
                                 degree = c.Module.degree,
                                 tutorNumber = c.tutorNumber,
+                                lecturers = lecturers,
                                 preference = "",
                                 borderColor = "#8c8c8c",
                                 backgroundColor = "#8c8c8c"
@@ -267,19 +280,35 @@ namespace LabTutor.Models
                 //var grades = db.Grades.Where(g => g.studentId == studentId);
                 //foreach (var grade in grades)
                 //{
-                var labs = db.Classes.Where(c => c.Module.degree.Contains(student.degree) && c.Module.year < student.year && c.type.Equals("lab") && c.Module.semester == semester);
+                var labs = db.Classes.Where(c => (c.Module.degree.Contains(student.degree) || student.degree.Contains(c.Module.degree)) && c.Module.year < student.year && c.type.Equals("lab") && c.Module.semester == semester);
                 foreach (var lab in labs)
                 {
+                    var lecturers = new List<Object>();
+                    var teaches = db.Teachings.Where(t => t.moduleId == lab.moduleId);
+                    foreach (var teach in teaches)
+                    {
+                        lecturers.Add(new
+                        {
+                            lecturerId = teach.lecturerId,
+                            name = teach.Lecturer.fName + " " + teach.Lecturer.lName,
+                            email = teach.Lecturer.User.email
+                        });
+                    }
+
                     bool noTimeClash = true;
 
-                    for (int i = 0; i < myClass.Count(); i++)
+                    if (student.year == 2 || student.year == 3)
                     {
-                        if (!((DateTime.Compare(DateTime.Parse(myClass[i].endTime), lab.startTime) <= 0) || (DateTime.Compare(DateTime.Parse(myClass[i].startTime), lab.endTime) >= 0)))
+                        for (int i = 0; i < myClass.Count(); i++)
                         {
-                            noTimeClash = false;
-                            break;
+                            if (!((DateTime.Compare(DateTime.Parse(myClass[i].endTime), lab.startTime) <= 0) || (DateTime.Compare(DateTime.Parse(myClass[i].startTime), lab.endTime) >= 0)))
+                            {
+                                noTimeClash = false;
+                                break;
+                            }
                         }
                     }
+
 
                     string color = "";
                     if (noTimeClash)
@@ -306,6 +335,7 @@ namespace LabTutor.Models
                             year = lab.Module.year,
                             tutorNumber = lab.tutorNumber,
                             preference = preferences == null ? "neutral" : preferences.prefered,
+                            lecturers = lecturers,
                             borderColor = color,
                             backgroundColor = color
                         });

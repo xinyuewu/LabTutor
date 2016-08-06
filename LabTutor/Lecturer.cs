@@ -17,17 +17,16 @@ namespace LabTutor
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Lecturer()
         {
-            this.Modules = new HashSet<Module>();
+            this.Teachings = new HashSet<Teaching>();
         }
     
         public int lecturerId { get; set; }
         public int userId { get; set; }
         public string fName { get; set; }
         public string lName { get; set; }
-        public string email { get; set; }
     
-        public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Module> Modules { get; set; }
+        public virtual ICollection<Teaching> Teachings { get; set; }
+        public virtual User User { get; set; }
     }
 }

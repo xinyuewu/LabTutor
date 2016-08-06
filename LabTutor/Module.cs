@@ -18,6 +18,7 @@ namespace LabTutor
         public Module()
         {
             this.Classes = new HashSet<Class>();
+            this.Teachings = new HashSet<Teaching>();
         }
     
         public int moduleId { get; set; }
@@ -25,10 +26,10 @@ namespace LabTutor
         public int year { get; set; }
         public string degree { get; set; }
         public int semester { get; set; }
-        public Nullable<int> lecturerId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Class> Classes { get; set; }
-        public virtual Lecturer Lecturer { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Teaching> Teachings { get; set; }
     }
 }

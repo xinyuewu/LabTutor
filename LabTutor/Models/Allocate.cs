@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -48,11 +50,11 @@ namespace LabTutor.Models
 
         public void createAllocation()
         {
-            allocateAlgorithm(1);
-            allocateAlgorithm(2);
+            allocateAlgorithm1();//allocate for sememster 1 
+            allocateAlgorithm2();//allocate for sememster 2 
         }
 
-        public void allocateAlgorithm(int semester)
+        public void allocateAlgorithm1()
         {
             using (xinyuedbEntities db = new xinyuedbEntities())
             {
@@ -63,7 +65,7 @@ namespace LabTutor.Models
                 int stuWeight = config.Where(c => c.name.Equals("stuWeight")).FirstOrDefault().value;
 
                 //get all lab classes and sort them in descending order 
-                var labs = db.Classes.Where(c => c.type == "lab" && c.Module.semester == semester).OrderByDescending(l => l.Module.year).ToList();
+                var labs = db.Classes.Where(c => c.type == "lab" && c.Module.semester == 1 && c.Module.year <= 3).OrderByDescending(l => l.Module.year).ToList();
                 List<int> labId = new List<int>();
                 foreach (var l in labs)
                 {
@@ -196,14 +198,7 @@ namespace LabTutor.Models
 
                             //add applicant's allocated working hours to the "student" table
                             var st = db.Students.Where(s => s.studentId == studentId).FirstOrDefault();
-                            if (semester == 1)
-                            {
-                                st.workingHour1 = workingHours[sortedStudents[j].studentId];
-                            }
-                            else
-                            {
-                                st.workingHour2 = workingHours[sortedStudents[j].studentId];
-                            }
+                            st.workingHour1 = workingHours[sortedStudents[j].studentId];
 
                         }
                     }
@@ -212,22 +207,172 @@ namespace LabTutor.Models
                 }
 
                 db.SaveChanges();
-
-                //System.Diagnostics.Debug.WriteLine("after sorted:");
-                //printList(sortedWeight);
             }
         }
 
-        public static List<Object> getAllocation(int semester, int studentId)
+        public void allocateAlgorithm2()
         {
             using (xinyuedbEntities db = new xinyuedbEntities())
             {
-                int allocatedTutorNumber = 0;
+                //get weight from database 
+                var config = db.Configs;
+                int prefWeight = config.Where(c => c.name.Equals("prefWeight")).FirstOrDefault().value;
+                int yearWeight = config.Where(c => c.name.Equals("yearWeight")).FirstOrDefault().value;
+                int stuWeight = config.Where(c => c.name.Equals("stuWeight")).FirstOrDefault().value;
+
+                //get all lab classes and sort them in descending order 
+                var labs = db.Classes.Where(c => c.type == "lab" && c.Module.semester == 2 && c.Module.year <= 3).OrderByDescending(c => c.Module.year).ToList();
+                List<int> labId = new List<int>();
+                foreach (var l in labs)
+                {
+                    labId.Add(l.classId);
+                }
+
+                Dictionary<int, double> workingHours = new Dictionary<int, double>();
+                var stu = db.Students.Where(s => s.applied == true).OrderBy(s => s.workingHour1);
+                List<int> stuId = new List<int>();
+                foreach (var s in stu)
+                {
+                    stuId.Add(s.studentId);
+                    workingHours.Add(s.studentId, 0);
+                }
+
+                //create matric and set weight according to "preferences" and "1-year-approach" 
+                List<List<Weight>> weight = new List<List<Weight>>();
+                for (var i = 0; i < labs.Count(); i++)
+                {
+                    weight.Add(new List<Weight>());
+                    for (var j = 0; j < stuId.Count; j++)
+                    {
+                        weight[i].Add(new Weight(labId[i], stuId[j], prefWeight));
+                        int lId = labId[i];
+                        int sId = stuId[j];
+
+                        //preference
+                        string prefered = "neutral";
+                        try
+                        {
+                            prefered = db.Preferences.Where(p => p.classId == lId).Where(p => p.studentId == sId).FirstOrDefault().prefered;
+                            if (prefered.Equals("liked"))
+                            {
+                                weight[i][j].weight = 2 * prefWeight;
+                            }
+                            else if (prefered.Equals("disliked"))
+                            {
+                                weight[i][j].weight = 0;
+                            }
+                            else if (prefered.Equals("timeClash"))
+                            {
+                                weight[i][j].weight = null;
+                            }
+                        }
+                        catch
+                        {
+                            System.Diagnostics.Debug.WriteLine("Preference doesn't exist!");
+                        }
+
+
+
+                        //1-year approach
+                        int stuYear = db.Students.Where(s => s.studentId == sId).FirstOrDefault().year;
+                        int labYear = db.Classes.Where(c => c.classId == lId).FirstOrDefault().Module.year;
+                        if (stuYear > labYear)
+                        {
+                            switch (stuYear - labYear)
+                            {
+                                case 1: weight[i][j].weight += 3 * yearWeight; break;
+                                case 2: weight[i][j].weight += 2 * yearWeight; break;
+                                case 3: weight[i][j].weight += 1 * yearWeight; break;
+                            }
+                        }
+                        else
+                        {
+                            weight[i][j].weight = null;
+                        }
+                    }
+                }
+
+
+                List<List<Weight>> sortedWeight = new List<List<Weight>>();
+
+                for (var i = 0; i < weight.Count(); i++)
+                {
+                    //sort students for each lab class
+                    List<Weight> sortedStudents = weight[i].OrderByDescending(w => w.weight).ToList();
+                    sortedWeight.Add(sortedStudents);
+
+                    int classId = weight[i][0].classId;
+                    int tutorNumber = db.Classes.Where(c => c.classId == classId).FirstOrDefault().tutorNumber;
+                    DateTime startTime = db.Classes.Where(c => c.classId == classId).FirstOrDefault().startTime;
+                    DateTime endTime = db.Classes.Where(c => c.classId == classId).FirstOrDefault().endTime;
+
+                    //the number of tutors
+                    for (var j = 0; j < (tutorNumber < sortedStudents.Count() ? tutorNumber : sortedStudents.Count()); j++)
+                    {
+                        int studentId = sortedStudents[j].studentId;
+
+                        if (sortedStudents[j].weight != null)
+                        {
+                            int? maxHour = db.Students.Where(s => s.studentId == studentId).FirstOrDefault().maxHour;
+
+                            if ((maxHour == null) || (workingHours[sortedStudents[j].studentId] + (endTime - startTime).TotalHours <= maxHour)) //maxHour
+                            {
+                                Allocation allo = new Allocation();
+                                allo.classId = sortedStudents[j].classId;
+                                allo.studentId = sortedStudents[j].studentId;
+                                db.Allocations.Add(allo);
+
+                                workingHours[sortedStudents[j].studentId] += (endTime - startTime).TotalHours;
+
+                                //more applicants assigned 
+                                for (var k = i + 1; k < weight.Count(); k++)
+                                {
+                                    foreach (var w in weight[k])
+                                    {
+                                        if (w.studentId == sortedStudents[j].studentId)
+                                        {
+                                            w.weight -= stuWeight;
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //set weight in other following classes to be null
+                                for (var k = i; k < weight.Count(); k++)
+                                {
+                                    foreach (var w in weight[k])
+                                    {
+                                        if (w.studentId == sortedStudents[j].studentId)
+                                        {
+                                            w.weight = null;
+                                        }
+                                    }
+                                }
+
+                            }
+
+                            //add applicant's allocated working hours to the "student" table
+                            var st = db.Students.Where(s => s.studentId == studentId).FirstOrDefault();
+                            st.workingHour2 = workingHours[sortedStudents[j].studentId];
+                        }
+                    }
+                }
+
+                db.SaveChanges();
+            }
+        }
+
+        public static List<Object> getAllocation(int semester, int studentId, int lecturerId)
+        {
+            using (xinyuedbEntities db = new xinyuedbEntities())
+            {
                 var eventList = new List<Object>();
 
-                var labs = db.Classes.Where(c => c.type.Equals("lab") && c.Module.semester == semester && c.Module.year <= 3);
+                var labs = db.Classes.Where(c => c.type.Equals("lab") && c.Module.semester == semester && c.Module.year <= 4);
                 foreach (var lab in labs)
                 {
+                    int allocatedTutorNumber = 0;
                     string color = "";
 
                     var tutorName = new List<Object>();
@@ -256,18 +401,30 @@ namespace LabTutor.Models
                         color = allocatedTutorNumber < lab.tutorNumber ? "#ff9933" : "#3a87ad";
                     }
 
-                    //var lecturer = lab.Module.Lecturer;
-                    //if (lecturer.lecturerId == lecturerId)
-                    //{
-                    //    color = "#ff9933";
-                    //}
-                    //var lecturerObject = new Object();
-                    //lecturerObject = (new
-                    //{
-                    //    name = lecturer.fName + " " + lecturer.lName,
-                    //    email = lecturer.email
-                    //});
+                    if (lecturerId != -1)
+                    {
+                        var teachings = lab.Module.Teachings;
+                        foreach (var teaching in teachings)
+                        {
+                            if (teaching.lecturerId == lecturerId)
+                            {
+                                color = "#ff9933";
+                                break;
+                            }
+                        }
+                    }
 
+                    var lecturers = new List<Object>();
+                    var teaches = db.Teachings.Where(t => t.moduleId == lab.moduleId);
+                    foreach (var teach in teaches)
+                    {
+                        lecturers.Add(new
+                        {
+                            lecturerId = teach.lecturerId,
+                            name = teach.Lecturer.fName + " " + teach.Lecturer.lName,
+                            email = teach.Lecturer.User.email
+                        });
+                    }
 
                     eventList.Add(new
                         {
@@ -281,7 +438,7 @@ namespace LabTutor.Models
                             year = lab.Module.year,
                             degree = lab.Module.degree,
                             tutorName = tutorName,
-                            //lecturer = lecturerObject,
+                            lecturers = lecturers,
                             borderColor = color,
                             backgroundColor = color
                         });
@@ -294,25 +451,90 @@ namespace LabTutor.Models
         {
             using (xinyuedbEntities db = new xinyuedbEntities())
             {
-
-                var eventList = new List<Object>();
-
                 var lab = db.Classes.Where(c => c.classId == classId).FirstOrDefault();
                 var allocations = db.Allocations.Where(a => a.classId == classId);
                 int allocatedTutorNumber = allocations.Count();
                 var preferences = db.Preferences.Where(p => p.classId == classId);
 
-                //  var students = db.Students.Where(s => s.year > lab.Module.year && lab.Module.degree.Contains(s.degree));
                 var students = db.Students.Where(s => s.year > lab.Module.year);
+                var groupList = new List<Object>();
+                int studentNumber = students.Count();
+
+                var likedList = new List<Object>();
+                var dislikedList = new List<Object>();
+                var neutralList = new List<Object>();
+
                 foreach (var stu in students)
                 {
+                    bool disabled = false;
                     bool allocated = false;
-
+                    bool hoursExceeded = false;
                     if (allocations.Where(allo => allo.studentId == stu.studentId).FirstOrDefault() != null)
                     {
                         allocated = true;
-
                     }
+
+                    if (allocatedTutorNumber < lab.tutorNumber)
+                    {
+                        if (allocated)
+                        {
+                            disabled = false;
+                        }
+                        else
+                        {
+                            if (lab.Module.semester == 1)
+                            {
+                                if (stu.workingHour1 + (lab.endTime - lab.startTime).TotalHours <= stu.maxHour)
+                                {
+                                    disabled = false;
+                                }
+                                else
+                                {
+                                    disabled = true;
+                                    hoursExceeded = true;
+                                }
+                            }
+                            else
+                            {
+                                if (stu.workingHour2 + (lab.endTime - lab.startTime).TotalHours <= stu.maxHour)
+                                {
+                                    disabled = false;
+                                }
+                                else
+                                {
+                                    disabled = true;
+                                    hoursExceeded = true;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        disabled = !allocated;
+
+                        if (allocated)
+                        {
+                            disabled = false;
+                        }
+                        else
+                        {
+                            if (lab.Module.semester == 1)
+                            {
+                                if (stu.workingHour1 + (lab.endTime - lab.startTime).TotalHours > stu.maxHour)
+                                {
+                                    hoursExceeded = true;
+                                }
+                            }
+                            else
+                            {
+                                if (stu.workingHour2 + (lab.endTime - lab.startTime).TotalHours <= stu.maxHour)
+                                {
+                                    hoursExceeded = true;
+                                }
+                            }
+                        }                  
+                    }
+
 
                     var color = new Object();
                     var pref = preferences.Where(pr => pr.studentId == stu.studentId).FirstOrDefault();
@@ -320,27 +542,70 @@ namespace LabTutor.Models
                     {
                         if (pref.prefered.Equals("liked"))
                         {
-                            color = new { color = "#86b300" };
+                            likedList.Add(new
+                            {
+                                value = stu.studentId,
+                                label = stu.fName + " " + stu.lName,
+                                title = stu.degree + ", year " + stu.year + "\n"
+                                        + "Maximum working hours: " + stu.maxHour + "\n"
+                                        + "Allocated hours (S1): " + stu.workingHour1 + "\n"
+                                        + "Allocated hours (S2): " + stu.workingHour2,
+                                selected = allocated,
+                                disabled = disabled,
+                                hoursExceeded = hoursExceeded
+                            });
                         }
                         else if (pref.prefered.Equals("disliked"))
                         {
-                            color = new { color = "#ff9933" };
+                            dislikedList.Add(new
+                            {
+                                value = stu.studentId,
+                                label = stu.fName + " " + stu.lName,
+                                title = stu.degree + ", year " + stu.year + "\n"
+                                        + "Maximum working hours: " + stu.maxHour + "\n"
+                                        + "Allocated hours (S1): " + stu.workingHour1 + "\n"
+                                        + "Allocated hours (S2): " + stu.workingHour2,
+                                selected = allocated,
+                                disabled = disabled,
+                                hoursExceeded = hoursExceeded
+                            });
                         }
                     }
-                    eventList.Add(new
+                    else
                     {
-                        value = stu.studentId,
-                        label = stu.fName + " " + stu.lName,
-                        title = stu.degree + ", year " + stu.year + "\n"
-                                + "Maximum working hours: " + stu.maxHour + "\n"
-                                + "Allocated hours (S1): " + stu.workingHour1 + "\n"
-                                + "Allocated hours (S2): " + stu.workingHour2,
-                        selected = allocated,
-                        disabled = allocatedTutorNumber < lab.tutorNumber ? false : !allocated,
-                        attributes = color
-                    });
+                        neutralList.Add(new
+                        {
+                            value = stu.studentId,
+                            label = stu.fName + " " + stu.lName,
+                            title = stu.degree + ", year " + stu.year + "\n"
+                                    + "Maximum working hours: " + stu.maxHour + "\n"
+                                    + "Allocated hours (S1): " + stu.workingHour1 + "\n"
+                                    + "Allocated hours (S2): " + stu.workingHour2,
+                            selected = allocated,
+                            disabled = disabled,
+                            hoursExceeded = hoursExceeded
+                        });
+                    }
                 }
-                return eventList;
+
+                groupList.Add(new
+                {
+                    label = "Like",
+                    children = likedList.ToArray()
+                });
+
+                groupList.Add(new
+                {
+                    label = "Dislike",
+                    children = dislikedList.ToArray()
+                });
+                groupList.Add(new
+                {
+                    label = "Neutral",
+                    children = neutralList.ToArray()
+                });
+
+                return groupList;
             }
         }
 
@@ -421,7 +686,7 @@ namespace LabTutor.Models
             {
                 Random rnd = new Random();
                 string[] degrees = { "AC", "CS" };
-                int applicantsNumber = rnd.Next(10, 40);
+                int applicantsNumber = rnd.Next(5, 10);
 
                 for (int i = 0; i < applicantsNumber; i++)
                 {
@@ -570,7 +835,7 @@ namespace LabTutor.Models
                         degree = lab.Class.Module.degree,
                         module = lab.Class.Module.name,
                         semester = lab.Class.Module.semester,
-                        time = lab.Class.startTime.ToString("dddd HH:mm") + " ~ " + lab.Class.endTime.ToString("HH:mm"),                     
+                        time = lab.Class.startTime.ToString("dddd HH:mm") + " ~ " + lab.Class.endTime.ToString("HH:mm"),
                         //prefered = db.Preferences.Where(p => p.studentId == studentId && p.classId == lab.classId).FirstOrDefault().prefered
                     });
                 }
@@ -583,17 +848,17 @@ namespace LabTutor.Models
                 {
                     if (cla.prefered.Equals("liked"))
                     {
-                        liked += cla.Class.Module.name + ", ";
+                        liked += cla.Class.Module.name + "\n(" + cla.Class.startTime.ToString("dddd HH:mm") + " ~ " + cla.Class.endTime.ToString("HH:mm") + ")\n";
                     }
                     else
                     {
-                        disliked += cla.Class.Module.name + ", ";
+                        disliked += cla.Class.Module.name + "\n(" + cla.Class.startTime.ToString("dddd HH:mm") + " ~ " + cla.Class.endTime.ToString("HH:mm") + ")\n";
                     }
                 }
                 preferences.Add(new
                 {
-                    liked = String.IsNullOrEmpty(liked) ? liked : liked.Remove(liked.Length - 2),
-                    disliked = String.IsNullOrEmpty(disliked) ? disliked : disliked.Remove(disliked.Length - 2)
+                    liked = String.IsNullOrEmpty(liked) ? liked : liked.Remove(liked.Length - 1),
+                    disliked = String.IsNullOrEmpty(disliked) ? disliked : disliked.Remove(disliked.Length - 1)
                 });
 
 
