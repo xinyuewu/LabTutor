@@ -1,11 +1,11 @@
 ﻿$(document).ready(function () {
 
     getPublishState();
-
+    initValidator();
 });
 
-//var urlPrefix = "/2015-msc/xinyuewu";
-var urlPrefix = "";
+var urlPrefix = "/2015-msc/xinyuewu";
+//var urlPrefix = "";
 
 function getPublishState() {
     $.ajax({
@@ -104,3 +104,102 @@ function clickEvent(Event) {
     $('#classDetailModal').modal('toggle');
 
 }
+
+function initValidator() {
+
+    $('#reset_password_form').bootstrapValidator({
+        // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            old_password: {
+                verbose: false,
+                validators: {
+                    notEmpty: {
+                        message: 'Please enter your current password'
+                    },
+                    stringLength: {
+                        min: 6,
+                        message: 'Please enter at least 6 characters'
+                    },
+                    // The validator will create an Ajax request
+                    // sending { username: 'its value' } to the back-end
+                    remote: {
+                        message: 'Incorrect current password',
+                        url: urlPrefix + '/Lecturer/checkOldPassword',
+                        delay: 500
+                    }
+                }
+            },
+            new_password: {
+                verbose: false,
+                validators: {
+                    notEmpty: {
+                        message: 'Please enter your new password'
+                    },
+                    stringLength: {
+                        min: 6,
+                        message: 'Please enter at least 6 characters'
+                    },
+                    different: {
+                        field: 'old_password',
+                        message: 'The same as the current password'
+                    },
+                    identical: {
+                        field: 'confirm_password',
+                        message: 'Password does not match the confirm password'
+                    }
+                }
+            },
+            confirm_password: {
+                verbose: false,
+                validators: {
+                    notEmpty: {
+                        message: 'Please confirm your new password'
+                    },
+                    stringLength: {
+                        min: 6,
+                        message: 'Please enter at least 6 characters'
+                    },
+                    different: {
+                        field: 'old_password',
+                        message: 'The same as the current password'
+                    },
+                    identical: {
+                        field: 'new_password',
+                        message: 'Password does not match the confirm password'
+                    }
+                }
+            }
+        }
+    });
+
+}
+
+$('#reset_password_form').submit(function (event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if ($('#reset_password_form').data("bootstrapValidator").isValid()) {
+        $.ajax({
+            url: urlPrefix + '/Lecturer/resetPassword',
+            type: 'Post',
+            //dataType: 'json',
+            data: { new_password: $('#new_password').val() },
+            success: function (json) {
+                window.location.href = urlPrefix + "/Lecturer/Index";
+                //$('.modal-backdrop').hide();
+                //$('body').removeClass('modal-open');
+                //$('#rest_password_modal').modal('hide');
+            },
+            error: function () {
+                console.log("reset passowrd error!")
+            }
+        });
+    }
+    else {
+        $('#reset_password_form').bootstrapValidator('disableSubmitButtons', true);
+    }
+});

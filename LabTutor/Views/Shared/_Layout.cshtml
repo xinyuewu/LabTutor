@@ -73,21 +73,21 @@
                         <!-- login-form -->
                         <div id="login" class="tab-pane fade in active">
                             <form class="form-horizontal" role="form" data-toggle="validator" action="Account/Login" id="login-form">                                                         
-                                
+                               
                                 <!-- email-->
                                 <div class="form-group">
-                                    <label class="col-md-3 col-md-offset-1 control-label">Uni Email</label>
-                                    <div class="col-md-7 input-field">
+                                    <label class="col-xs-3 col-xs-offset-1 control-label">Uni Email</label>
+                                    <div class="col-xs-7 input-field">
                                         <div class="input-group">
                                             <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                                            <input name="email" placeholder="*@("@")dundee.ac.uk" class="form-control" type="email">
+                                            <input name="email" placeholder="*@("@")dundee.ac.uk" class="form-control" type="text">
                                         </div>
                                     </div>
                                 </div>
                                 <!-- password-->
                                 <div class="form-group">
-                                    <label class="col-md-3 col-md-offset-1 control-label">Password</label>
-                                    <div class="col-md-7 input-field">
+                                    <label class="col-xs-3 col-xs-offset-1 control-label">Password</label>
+                                    <div class="col-xs-7 input-field">
                                         <div class="input-group">
                                             <span class="input-group-addon"><i class="fa fa-key"></i></span>
                                             <input name="password" placeholder="Password" class="form-control" type="password">
@@ -95,7 +95,7 @@
                                     </div>
                                 </div>
                                 <!-- error message -->
-                                <div class="error_message alert alert-danger col-md-10 col-md-offset-1" role="alert" id="login_error">Invalid email or password!</div>
+                                <div class="error_message alert alert-danger col-xs-10 col-xs-offset-1" role="alert" id="login_error">Invalid email or password!</div>
                                 <!-- cancel/submit-->
                                 <div class="bottom-buttons">
                                     <button type="button" class="btn btn-default cancel-button" data-dismiss="modal">Cancel</button>
@@ -107,21 +107,21 @@
 
                         <!-- register-form -->
                         <div id="register" class="tab-pane fade">
-                            <form class="form-horizontal" role="form" data-toggle="validator" action="Account/Register" id="register-form">
+                            <form class="form-horizontal" role="form" data-toggle="validator" id="register-form">
                                 <!-- email-->
                                 <div class="form-group">
-                                    <label class="col-md-3 col-md-offset-1 control-label">Uni Email</label>
-                                    <div class="col-md-7 input-field">
+                                    <label class="col-xs-3 col-xs-offset-1 control-label">Uni Email</label>
+                                    <div class="col-xs-7 input-field">
                                         <div class="input-group">
                                             <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                                            <input name="email" placeholder="*@("@")dundee.ac.uk" class="form-control" type="email">
+                                            <input name="email" placeholder="*@("@")dundee.ac.uk" class="form-control" type="text">
                                         </div>
                                     </div>
                                 </div>
                                 <!-- password-->
                                 <div class="form-group">
-                                    <label class="col-md-3 col-md-offset-1 control-label">Password</label>
-                                    <div class="col-md-7 input-field">
+                                    <label class="col-xs-3 col-xs-offset-1 control-label">Password</label>
+                                    <div class="col-xs-7 input-field">
                                         <div class="input-group">
                                             <span class="input-group-addon"><i class="fa fa-key"></i></span>
                                             <input name="password" placeholder="Password" class="form-control" type="password">
@@ -130,8 +130,8 @@
                                 </div>
                                 <!-- first name-->
                                 <div class="form-group">
-                                    <label class="col-md-3 col-md-offset-1 control-label">First Name</label>
-                                    <div class="col-md-7 input-field">
+                                    <label class="col-xs-3 col-xs-offset-1 control-label">First Name</label>
+                                    <div class="col-xs-7 input-field">
                                         <div class="input-group">
                                             <span class="input-group-addon"><i class="fa fa-user"></i></span>
                                             <input name="first_name" placeholder="First Name" class="form-control" type="text">
@@ -140,8 +140,8 @@
                                 </div>
                                 <!-- last name-->
                                 <div class="form-group">
-                                    <label class="col-md-3 col-md-offset-1 control-label">Last Name</label>
-                                    <div class="col-md-7 input-field">
+                                    <label class="col-xs-3 col-xs-offset-1 control-label">Last Name</label>
+                                    <div class="col-xs-7 input-field">
                                         <div class="input-group">
                                             <span class="input-group-addon"><i class="fa fa-user"></i></span>
                                             <input name="last_name" placeholder="Last Name" class="form-control" type="text">
@@ -150,8 +150,8 @@
                                 </div>
                                 <!-- matric number-->
                                 <div class="form-group">
-                                    <label class="col-md-3 col-md-offset-1 control-label">Uni ID</label>
-                                    <div class="col-md-7 input-field">
+                                    <label class="col-xs-3 col-xs-offset-1 control-label">Uni ID</label>
+                                    <div class="col-xs-7 input-field">
                                         <div class="input-group">
                                             <span class="input-group-addon"><i class="fa fa-universal-access"></i></span>
                                             <input name="matric_number" placeholder="Matriculation Number" class="form-control" type="text">
@@ -160,8 +160,8 @@
                                 </div>
                                 <!-- year-->
                                 <div class="form-group">
-                                    <label class="col-md-3 col-md-offset-1 control-label" id="degree-label">Degree</label>
-                                    <div class="col-md-8 input-field">
+                                    <label class="col-xs-3 col-xs-offset-1 control-label" id="degree-label">Degree</label>
+                                    <div class="col-xs-8 input-field">
                                         <div class="radio">
                                             <label>
                                                 <input type="radio" name="degree" value="CS" class="ACorCS" />Computing Science
@@ -181,8 +181,8 @@
                                 </div>
                                 <!-- level-->
                                 <div class="form-group" id="level_dropdownlist">
-                                    <label class="col-md-3 col-md-offset-1 control-label">Level</label>
-                                    <div class="col-md-7 input-field">
+                                    <label class="col-xs-3 col-xs-offset-1 control-label">Level</label>
+                                    <div class="col-xs-7 input-field">
                                         <div class="input-group">
                                             <span class="input-group-addon"><i class="fa fa-list-ul"></i></span>
                                             <select name="level" class="form-control selectpicker" id="level_select">
@@ -197,7 +197,7 @@
                                 </div>
 
                                 <!-- error message -->
-                                <div class="error_message alert alert-danger col-md-10 col-md-offset-1" role="alert" id="register_error">An account for this email/matriculation number already exists!</div>
+                                <div class="error_message alert alert-danger col-xs-10 col-xs-offset-1" role="alert" id="register_error">An account for this email/matriculation number already exists!</div>
 
 
                                 <div class="bottom-buttons">

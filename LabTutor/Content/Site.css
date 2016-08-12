@@ -224,33 +224,6 @@ thead {
 }
 /*#endregion Allocation_Index*/
 
-/*#region Allocation_Edit*/
-.allocation_edit .alignRight {
-    text-align: right;
-    padding-right: 10px;
-    padding-bottom: 10px;
-}
-
-.allocation_edit .alignLeft {
-    text-align: left;
-    padding-bottom: 10px;
-}
-
-.dialog-input {
-    width: 60%;
-}
-
-.allocation_edit #moduleList {
-    font-size: 90%;
-}
-
-.allocation_edit option {
-    font-size: 90%;
-}
-
-
-/*#endregion Allocation_Edit*/
-
 
 /*#region error page*/
 .error_page p {
@@ -269,3 +242,7 @@ thead {
         padding: 14px 24px;
     }
 /*#endregion error page*/
+
+.timeClash{
+    color: red;
+}

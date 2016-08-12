@@ -73,7 +73,7 @@ namespace LabTutor.Models
                 }
 
                 Dictionary<int, double> workingHours = new Dictionary<int, double>();
-                var stu = db.Students.Where(s => s.applied == true);
+                var stu = db.Students.Where(s => s.year <= 4);
                 List<int> stuId = new List<int>();
                 foreach (var s in stu)
                 {
@@ -101,13 +101,9 @@ namespace LabTutor.Models
                             {
                                 weight[i][j].weight = 2 * prefWeight;
                             }
-                            else if (prefered.Equals("disliked"))
+                            else
                             {
                                 weight[i][j].weight = 0;
-                            }
-                            else if (prefered.Equals("timeClash"))
-                            {
-                                weight[i][j].weight = null;
                             }
                         }
                         catch
@@ -115,7 +111,11 @@ namespace LabTutor.Models
                             System.Diagnostics.Debug.WriteLine("Preference doesn't exist!");
                         }
 
-
+                        //check time clash
+                        if (checkTimeClash(lId, sId))
+                        {
+                            weight[i][j].weight = null;
+                        }
 
                         //1-year approach
                         int stuYear = db.Students.Where(s => s.studentId == sId).FirstOrDefault().year;
@@ -203,7 +203,6 @@ namespace LabTutor.Models
                         }
                     }
 
-
                 }
 
                 db.SaveChanges();
@@ -229,7 +228,7 @@ namespace LabTutor.Models
                 }
 
                 Dictionary<int, double> workingHours = new Dictionary<int, double>();
-                var stu = db.Students.Where(s => s.applied == true).OrderBy(s => s.workingHour1);
+                var stu = db.Students.Where(s => s.year <= 4).OrderBy(s => s.workingHour1);//students not allocated in the first sememster will be first considered in the second semester
                 List<int> stuId = new List<int>();
                 foreach (var s in stu)
                 {
@@ -257,13 +256,9 @@ namespace LabTutor.Models
                             {
                                 weight[i][j].weight = 2 * prefWeight;
                             }
-                            else if (prefered.Equals("disliked"))
+                            else
                             {
                                 weight[i][j].weight = 0;
-                            }
-                            else if (prefered.Equals("timeClash"))
-                            {
-                                weight[i][j].weight = null;
                             }
                         }
                         catch
@@ -271,6 +266,12 @@ namespace LabTutor.Models
                             System.Diagnostics.Debug.WriteLine("Preference doesn't exist!");
                         }
 
+
+                        //check time clash
+                        if (checkTimeClash(lId, sId))
+                        {
+                            weight[i][j].weight = null;
+                        }
 
 
                         //1-year approach
@@ -360,6 +361,29 @@ namespace LabTutor.Models
                 }
 
                 db.SaveChanges();
+            }
+        }
+
+        private static bool checkTimeClash(int classId, int studentId)
+        {
+            using (xinyuedbEntities db = new xinyuedbEntities())
+            {
+                //check if timeClash
+                var lab = db.Classes.Where(l => l.classId == classId).FirstOrDefault();
+                var student = db.Students.Where(s => s.studentId == studentId).FirstOrDefault();
+                var myModules = db.Modules.Where(m => m.degree.Contains(student.degree) && m.year == student.year && m.semester == lab.Module.semester);
+                foreach (var myModule in myModules)
+                {
+                    var myClas = db.Classes.Where(c => c.moduleId == myModule.moduleId);
+                    foreach (var myCla in myClas)
+                    {
+                        if (!((DateTime.Compare(myCla.endTime, lab.startTime) <= 0) || (DateTime.Compare(myCla.startTime, lab.endTime) >= 0)))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
             }
         }
 
@@ -532,9 +556,15 @@ namespace LabTutor.Models
                                     hoursExceeded = true;
                                 }
                             }
-                        }                  
+                        }
                     }
-
+                    
+                    //check time clash
+                    bool timeClash = false;
+                    if (checkTimeClash(classId, stu.studentId))
+                    {
+                        timeClash = true;
+                    }
 
                     var color = new Object();
                     var pref = preferences.Where(pr => pr.studentId == stu.studentId).FirstOrDefault();
@@ -545,7 +575,7 @@ namespace LabTutor.Models
                             likedList.Add(new
                             {
                                 value = stu.studentId,
-                                label = stu.fName + " " + stu.lName,
+                                label = stu.fName + " " + stu.lName + (timeClash ? "(Time Clash)" : ""),
                                 title = stu.degree + ", year " + stu.year + "\n"
                                         + "Maximum working hours: " + stu.maxHour + "\n"
                                         + "Allocated hours (S1): " + stu.workingHour1 + "\n"
@@ -560,7 +590,7 @@ namespace LabTutor.Models
                             dislikedList.Add(new
                             {
                                 value = stu.studentId,
-                                label = stu.fName + " " + stu.lName,
+                                label = stu.fName + " " + stu.lName + (timeClash ? "(Time Clash)" : ""),
                                 title = stu.degree + ", year " + stu.year + "\n"
                                         + "Maximum working hours: " + stu.maxHour + "\n"
                                         + "Allocated hours (S1): " + stu.workingHour1 + "\n"
@@ -576,7 +606,7 @@ namespace LabTutor.Models
                         neutralList.Add(new
                         {
                             value = stu.studentId,
-                            label = stu.fName + " " + stu.lName,
+                            label = stu.fName + " " + stu.lName + (timeClash ? "(Time Clash)" : ""),
                             title = stu.degree + ", year " + stu.year + "\n"
                                     + "Maximum working hours: " + stu.maxHour + "\n"
                                     + "Allocated hours (S1): " + stu.workingHour1 + "\n"
@@ -673,6 +703,12 @@ namespace LabTutor.Models
         {
             using (xinyuedbEntities db = new xinyuedbEntities())
             {
+                var students = db.Students;
+                foreach (var student in students)
+                {
+                    student.workingHour1 = 0;
+                    student.workingHour2 = 0;
+                }
                 db.Allocations.RemoveRange(db.Allocations);
                 var config = db.Configs.Where(c => c.name.Equals("published")).FirstOrDefault();
                 config.value = 0;
@@ -686,7 +722,7 @@ namespace LabTutor.Models
             {
                 Random rnd = new Random();
                 string[] degrees = { "AC", "CS" };
-                int applicantsNumber = rnd.Next(5, 10);
+                int applicantsNumber = rnd.Next(25, 30);
 
                 for (int i = 0; i < applicantsNumber; i++)
                 {

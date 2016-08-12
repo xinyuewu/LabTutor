@@ -2,11 +2,11 @@
 
     getPublishState();
     initValidator();
-
+    $('#calendar').addClass("noCursorPointer");
 });
 
-//var urlPrefix = "/2015-msc/xinyuewu";
-var urlPrefix = "";
+var urlPrefix = "/2015-msc/xinyuewu";
+//var urlPrefix = "";
 
 function getPublishState() {
     $.ajax({
@@ -15,9 +15,9 @@ function getPublishState() {
         dataType: 'json',
         success: function (json) {
             if (json) {
-               // $("#registerLink").hide();
+                // $("#registerLink").hide();
                 $(".published").show();
-                initCalendar();               
+                initCalendar();
             }
             else {
                 $(".unpublished").show();
@@ -83,48 +83,56 @@ $(".js-login-link").click(function (e) {
 
 $('#login-form').submit(function (event) {
     event.preventDefault();
-
-    $.ajax({
-        url: urlPrefix + '/Account/Login',
-        type: 'Post',
-        dataType: 'json',
-        data: $(this).serialize(),
-        success: function (json) {
-            if (json.success) {
-                window.location.href = urlPrefix + "/Account/LoggedIn";
+    if ($('#login-form').data("bootstrapValidator").isValid()) {
+        $.ajax({
+            url: urlPrefix + '/Account/Login',
+            type: 'Post',
+            //dataType: 'json',
+            data: $(this).serialize(),
+            success: function (json) {
+                if (json.success) {
+                    window.location.href = urlPrefix + "/Account/LoggedIn";
+                }
+                else {
+                    $('#login_error').slideDown({ opacity: "show" }, "slow");
+                    $('#login-form').bootstrapValidator('disableSubmitButtons', false);
+                }
+            },
+            error: function () {
+                console.log("login error!")
             }
-            else {
-                $('#login_error').slideDown({ opacity: "show" }, "slow");
-                $('#login-form').bootstrapValidator('disableSubmitButtons', false);
-            }
-        },
-        error: function () {
-            console.log("login error!")
-        }
-    });
+        });
+    }
+    else {
+        $('#login-form').bootstrapValidator('disableSubmitButtons', true);
+    }
 });
 
 $('#register-form').submit(function (event) {
     event.preventDefault();
-
-    $.ajax({
-        url: urlPrefix + '/Account/Register',
-        type: 'Post',
-        dataType: 'json',
-        data: $(this).serialize(),
-        success: function (json) {
-            if (json.success) {
-                window.location.href = urlPrefix + "/Account/LoggedIn";
+    if ($('#register-form').data("bootstrapValidator").isValid()) {
+        $.ajax({
+            url: urlPrefix + '/Account/Register',
+            type: 'Post',
+            //dataType: 'json',
+            data: $(this).serialize(),
+            success: function (json) {
+                if (json.success) {
+                    window.location.href = urlPrefix + "/Account/LoggedIn";
+                }
+                else {
+                    $('#register_error').slideDown({ opacity: "show" }, "slow");
+                    $('#register-form').bootstrapValidator('disableSubmitButtons', false);
+                }
+            },
+            error: function () {
+                console.log("register error!")
             }
-            else {
-                $('#register_error').slideDown({ opacity: "show" }, "slow");
-                $('#register-form').bootstrapValidator('disableSubmitButtons', false);
-            }
-        },
-        error: function () {
-            console.log("register error!")
-        }
-    });
+        });
+    }
+    else {
+        $('#register-form').bootstrapValidator('disableSubmitButtons', true);
+    }
 });
 
 function initValidator() {
@@ -167,21 +175,6 @@ function initValidator() {
         feedbackIcons: {
             validating: 'glyphicon glyphicon-refresh'
         },
-
-        submitHandler: function (validator, form, submitButton) {
-            $.post(urlPrefix + '/Account/Register',
-                form.serialize(),
-                function (result) {
-                    if (result.success) {
-                        window.location.href = urlPrefix + "/Account/LoggedIn";
-                    }
-                    else {
-                        $('#register_error').slideDown({ opacity: "show" }, "slow");
-                        $('#register-form').bootstrapValidator('disableSubmitButtons', false);
-                    }
-                }, 'json');
-        },
-
         fields: {
             email: {
                 validators: {
@@ -209,6 +202,7 @@ function initValidator() {
                 validators: {
                     stringLength: {
                         min: 2,
+                        message: 'Please enter at least 2 characters'
                     },
                     notEmpty: {
                         message: 'Please enter your first name'
@@ -219,6 +213,7 @@ function initValidator() {
                 validators: {
                     stringLength: {
                         min: 2,
+                        message: 'Please enter at least 2 characters'
                     },
                     notEmpty: {
                         message: 'Please enter your last name'

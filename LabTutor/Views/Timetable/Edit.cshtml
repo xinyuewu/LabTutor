@@ -53,63 +53,125 @@
 
     <!-- calendar -->
     <div id='calendar'></div>
+    <br />
 
-
+    <!-- Legend -->
+    <div class='legend row color_box'>
+        <div class="col-sm-6">
+            <label><span class="green"></span>Lab</label>
+        </div>
+        <div class="col-sm-6">
+            <label><span class="blue"></span>Lecture</label>
+        </div>
+    </div>
 
     <!-- Operational buttons -->
     <div class="row operationalButtons">
         <button type="button" class="btn btn-default left" onclick="location.href='@Url.Action("Index", "Allocate")'">Go back</button>
     </div>
 
-    <!-- event add dialog -->
-    <div id="addDialog" style=" margin: 50px;" title="Add Class">
-        <div class="row form-group">
-            <label class="col-sm-4">Time:</label>
-            <div class="alignLeft "><span id="eventTime"></span></div>
-        </div>
 
-        <div class="row form-group">
-            <label class="col-sm-4 ">Module:</label>
-            <select class="form-control dialog-input" id="moduleList"></select>
-        </div>
+    <!-- add class modal -->
+    <div class="modal fade" id="add_class_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="add_class_form" role="form" class="form-horizontal">
 
-        <div class="row form-group">
-            <label class="col-sm-4 ">Type:</label>
-            <label class="radio-inline"><input type="radio" id="type" name="type" value="lab" checked>Lab</label>
-            <label class="radio-inline"><input type="radio" id="type" name="type" value="lecture">Lecture</label>
-        </div>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add Class</h4>
+                    </div>
 
-        <div class="row form-group">
-            <label class="col-sm-4">Number of tutors:</label>
-            <input class="form-control dialog-input " type="number" min="0" id="tutorNumber" value="0" required>
+                    <div class="modal-body">
+                        <div class="row form-group">
+                            <label class="col-sm-3 col-sm-offset-1">Time:</label>
+                            <div class="col-sm-4"><span id="add_time"></span></div>
+                        </div>
+
+                        <div class="row form-group">
+                            <label class="col-sm-3 col-sm-offset-1 ">Module:</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" id="add_moduleList"></select>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <label class="col-sm-3 col-sm-offset-1 ">Type:</label>
+                            <div class="col-sm-4">
+                                <label class="radio-inline"><input type="radio" name="type" value="lab" checked>Lab</label>
+                                <label class="radio-inline"><input type="radio" name="type" value="lecture">Lecture</label>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <label class="col-sm-3 col-sm-offset-1">Number of tutors:</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="number" min="0" id="add_tutorNumber" value="0" name="tutorNumber">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="add_class_button">Save</button>
+                    </div>
+
+                </form>
+            </div>
         </div>
     </div>
 
-    <!-- event edit dialog -->
-    <div id="editDialog" style=" margin: 50px;" title="Edit Class">
-        <div class="row form-group">
-            <input type="hidden" id="editEventId" />
-            <label class="col-sm-4">Time:</label>
-            <div class="alignLeft "><span id="editEventTime"></span></div>
-        </div>
+    <!-- edit class modal -->
+    <div class="modal fade" id="edit_class_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="edit_class_form" role="form" class="form-horizontal">
 
-        <div class="row form-group">
-            <label class="col-sm-4 ">Module:</label>
-            <select class="form-control dialog-input" id="editModuleList"></select>
-        </div>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Edit Class</h4>
+                    </div>
 
-        <div class="row form-group">
-            <label class="col-sm-4 ">Type:</label>
-            <label class="radio-inline"><input type="radio" id="type" name="editType" value="lab" checked>Lab</label>
-            <label class="radio-inline"><input type="radio" id="type" name="editType" value="lecture">Lecture</label>
-        </div>
+                    <div class="modal-body">
+                        <div class="row form-group">
+                            <input type="hidden" id="edit_classId" />
+                            <label class="col-sm-3 col-sm-offset-1">Time:</label>
+                            <div class="col-sm-4"><span id="edit_time"></span></div>
+                        </div>
 
-        <div class="row form-group">
-            <label class="col-sm-4">Number of tutors:</label>
-            <input class="form-control dialog-input " type="number" min="0" id="editTutorNumber" value="0" required>
+                        <div class="row form-group">
+                            <label class="col-sm-3 col-sm-offset-1 ">Module:</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" id="edit_moduleList"></select>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <label class="col-sm-3 col-sm-offset-1 ">Type:</label>
+                            <div class="col-sm-4">
+                                <label class="radio-inline"><input type="radio" name="type" value="lab" checked>Lab</label>
+                                <label class="radio-inline"><input type="radio" name="type" value="lecture">Lecture</label>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <label class="col-sm-3 col-sm-offset-1">Number of tutors:</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="number" min="0" id="edit_tutorNumber" value="0" name="tutorNumber">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>                                           
+                        <button type="button" class="btn btn-danger" id="delete_class_button">Delete</button>
+                        <button type="submit" class="btn btn-primary" id="edit_class_button">Update</button>
+                    </div>
+
+                </form>
+            </div>
         </div>
     </div>
-
 
 </div>
 

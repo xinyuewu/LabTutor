@@ -23,7 +23,7 @@ namespace LabTutor
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                      "~/Content/bootstrap-multiselect.css",
-                     "~/Content/jquery.dataTables.min.css",
+                     "~/Content/jquery.dataTables.css",
                       "~/Content/jquery.qtip.min.css",
                       "~/Content/font-awesome.css",
                       "~/Content/waitMe.css",

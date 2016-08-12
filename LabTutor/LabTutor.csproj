@@ -203,7 +203,7 @@
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\Image\soc.png" />
     <Content Include="Content\Image\uod.png" />
-    <Content Include="Content\jquery.dataTables.min.css" />
+    <Content Include="Content\jquery.dataTables.css" />
     <Content Include="Content\jquery.qtip.min.css" />
     <Content Include="Content\waitMe.css" />
     <Content Include="favicon.ico" />
@@ -215,7 +215,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\CustomJS\Allocate_Edit.js" />
     <Content Include="Scripts\CustomJS\Lecturer_Index.js" />
-    <Content Include="Scripts\CustomJS\Lecturer_Read.js" />
+    <Content Include="Scripts\CustomJS\Lecturer_Crud.js" />
     <Content Include="Scripts\CustomJS\Timetable_Edit.js" />
     <Content Include="Scripts\CustomJS\Allocate_Index.js" />
     <Content Include="Scripts\fullcalendar\fullcalendar.js" />
@@ -360,7 +360,7 @@
     <Content Include="Views\Timetable\Edit.cshtml" />
     <Content Include="Views\Allocate\Edit.cshtml" />
     <Content Include="Views\Lecturer\Index.cshtml" />
-    <Content Include="Views\Lecturer\Read.cshtml" />
+    <Content Include="Views\Lecturer\Crud.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

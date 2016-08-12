@@ -9,17 +9,13 @@
 
     initValidator();
 
-    $('.modal-dialog').draggable({
-        //  handle: ".modal-header"
-    });
-
     initCalendar();
     $('#calendar').addClass("noCursorPointer"); 
 
 });
 
-//var urlPrefix = "/2015-msc/xinyuewu";
-var urlPrefix = "";
+var urlPrefix = "/2015-msc/xinyuewu";
+//var urlPrefix = "";
 
 function tabChange(semester) {
     $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation')
@@ -187,9 +183,37 @@ function initValidator() {
             preference: {
                 validators: {
                     notEmpty: {
-                        message: 'Please enter the weight for preferences!'
+                        message: 'Please enter the weight for preferences'
                     },
                     integer: {                     
+                        message: 'Please enter an integer'
+                    },
+                    greaterThan: {
+                        value: 1,
+                        message: 'Please enter an integer more than 1'
+                    }
+                }
+            },
+            one_year_approach: {
+                validators: {
+                    notEmpty: {
+                        message: 'Please enter the weight for "one year approach"'
+                    },
+                    integer: {
+                        message: 'Please enter an integer'
+                    },
+                    greaterThan: {
+                        value: 1,
+                        message: 'Please enter an integer more than 1'
+                    }
+                }
+            },
+            individual_student: {
+                validators: {
+                    notEmpty: {
+                        message: 'Please enter the weight for "individual student"'
+                    },
+                    integer: {
                         message: 'Please enter an integer'
                     },
                     greaterThan: {
@@ -203,26 +227,28 @@ function initValidator() {
 
 }
 
-$("#save_weight").click(function (e) {
+$('#weight_form').submit(function (e) {
     e.preventDefault();
 
-    $.ajax({
-        url: urlPrefix + '/Allocate/saveWeight',
-        data: {
-            'prefWeight': $("#prefWeight").val(),
-            'yearWeight': $("#yearWeight").val(),
-            'stuWeight': $("#stuWeight").val()
-        },
-        type: 'POST',
-        traditional: true,
-        success: function (data) {
-            window.location.href = urlPrefix + "/Allocate/Index";
-        },
-        error: function (data) {
-            console.log('save weight error!');
-        }
-    });
+    if ($('#weight_form').data("bootstrapValidator").isValid()) {
 
+        $.ajax({
+            url: urlPrefix + '/Allocate/saveWeight',
+            data: {
+                'prefWeight': $("#prefWeight").val(),
+                'yearWeight': $("#yearWeight").val(),
+                'stuWeight': $("#stuWeight").val()
+            },
+            type: 'POST',
+            traditional: true,
+            success: function (data) {
+                window.location.href = urlPrefix + "/Allocate/Index";
+            },
+            error: function (data) {
+                console.log('save weight error!');
+            }
+        });
+    }
 })
 
 $("#create_allocation").click(function () {

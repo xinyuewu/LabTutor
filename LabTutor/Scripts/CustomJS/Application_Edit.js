@@ -3,7 +3,7 @@
     getNImaxHour();
     initCalendar();
     initFormValidator();
-    
+
 });
 
 $('#optional').qtip({
@@ -16,8 +16,9 @@ $('#optional').qtip({
     }
 })
 
-//var urlPrefix = "/2015-msc/xinyuewu";
-var urlPrefix = "";
+var urlPrefix = "/2015-msc/xinyuewu";
+//var urlPrefix = "";
+
 function getNImaxHour() {
     $.ajax({
         url: urlPrefix + '/Application/getNImaxHour',
@@ -29,13 +30,13 @@ function getNImaxHour() {
             if (json) {
                 $("#ni").val(json.ni);
                 $("#maxHour").val(json.maxHour);
-            }           
+            }
         },
         error: function (json) {
             console.log("getNImaxHour error");
         },
         complete: function (data) {
-        
+
             $('#application-form').bootstrapValidator('validate');
         }
 
@@ -51,7 +52,7 @@ function initFormValidator() {
             valid: 'glyphicon glyphicon-ok',
             invalid: 'glyphicon glyphicon-remove',
             validating: 'glyphicon glyphicon-refresh'
-        },       
+        },
         fields: {
             NI: {
                 validators: {
@@ -102,6 +103,31 @@ function initCalendar() {
 }
 
 function tabChange(semester) {
+    $.ajax({
+        url: urlPrefix + "/Application/Update",
+        type: "POST",
+        traditional: true,
+        data: {
+            'likedList': likedList.splice(0, likedList.length),
+            'dislikedList': dislikedList.splice(0, dislikedList.length),
+            'neutralList': neutralList.splice(0, neutralList.length),
+            'studentId': $("#studentId").val(),
+            'ni': $("#ni").val(),
+            'maxHour': $("#maxHour").val()
+        },
+        success: function () {
+            if (semester == 1) {
+                $('#semester_two').slideDown('slow').delay(1500).slideUp('slow');
+            }
+            else if (semester == 2) {
+                console.log(semester);
+                $('#semester_one').slideDown('slow').delay(1500).slideUp('slow');
+            }          
+        },
+        error: function () {
+            console.log("/Application/Update error")
+        }
+    })
     $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Application/getPreference/')
     $('#calendar').fullCalendar('addEventSource', {
         url: urlPrefix + '/Application/getPreference/',
@@ -124,7 +150,7 @@ function eventClick(Event) {
         $(this).css('border-color', '#86b300');
         Event.preference = 'liked';
         likedList.push(Event.id);
-     //   alert("liked:" + likedList + " disliked:" + dislikedList + " neutral:" + neutralList);
+        //   alert("liked:" + likedList + " disliked:" + dislikedList + " neutral:" + neutralList);
         if (neutralList.indexOf(Event.id) != -1) {
             delete neutralList.splice([neutralList.indexOf(Event.id)], 1);
         }
@@ -134,7 +160,7 @@ function eventClick(Event) {
         $(this).css('border-color', '#ff9933');
         Event.preference = 'disliked';
         dislikedList.push(Event.id);
-     //   alert("liked:" + likedList + " disliked:" + dislikedList + " neutral:" + neutralList);
+        //   alert("liked:" + likedList + " disliked:" + dislikedList + " neutral:" + neutralList);
         if (likedList.indexOf(Event.id) != -1) {
             delete likedList.splice([likedList.indexOf(Event.id)], 1);
         }
@@ -144,7 +170,7 @@ function eventClick(Event) {
         $(this).css('border-color', '#3a87ad');
         Event.preference = 'neutral';
         neutralList.push(Event.id);
-      //  alert("liked:" + likedList + " disliked:" + dislikedList + " neutral:" + neutralList);
+        //  alert("liked:" + likedList + " disliked:" + dislikedList + " neutral:" + neutralList);
         if (dislikedList.indexOf(Event.id) != -1) {
             delete dislikedList.splice([dislikedList.indexOf(Event.id)], 1);
         }
@@ -158,7 +184,6 @@ $("#save_button").click(function (e) {
         url: urlPrefix + "/Application/Update",
         type: "POST",
         traditional: true,
-        dataType: 'json',
         data: {
             'likedList': likedList,
             'dislikedList': dislikedList,
@@ -170,8 +195,9 @@ $("#save_button").click(function (e) {
         success: function () {
             window.location.href = urlPrefix + "/Application/Index";
         },
-        error: function (){
-            window.location.href = urlPrefix + "/Application/Index";
+        error: function () {
+            //window.location.href = urlPrefix + "/Application/Index";
+            console.log("/Application/Update error")
         },
         complete: function (xhr) {
             console.log(xhr.status)

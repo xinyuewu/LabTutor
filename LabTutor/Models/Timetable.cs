@@ -48,7 +48,8 @@ namespace LabTutor.Models
                             type = item.type,
                             tutorNumber = item.tutorNumber,
                             moduleId = item.moduleId,
-                            textColor = (item.type == "lab") ? "" :"#000000"
+                            borderColor = (item.type == "lab") ? "#86b300" : "",
+                            backgroundColor = (item.type == "lab") ? "#86b300" : ""
                         });
                 }
                 return eventList;

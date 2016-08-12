@@ -24,27 +24,34 @@ namespace LabTutor.Controllers
             using (xinyuedbEntities db = new xinyuedbEntities())
             {
                 var usr = db.Users.Where(u => u.email == email).FirstOrDefault();
-                bool validPassword = PasswordHash.ValidatePassword(password, usr.password);
-                if (validPassword)
+                if (usr != null)
                 {
-                    Session["userId"] = usr.userId.ToString();
-                    if (usr.accountType.Equals("coordinator"))
+                    bool validPassword = PasswordHash.ValidatePassword(password, usr.password);
+                    if (validPassword)
                     {
-                        Session["name"] = "Coordinator";
-                    }
-                    else if (usr.accountType.Equals("student"))
-                    {
-                        Session["name"] = db.Students.Where(s => s.userId == usr.userId).FirstOrDefault().lName;
+                        Session["userId"] = usr.userId.ToString();
+                        if (usr.accountType.Equals("coordinator"))
+                        {
+                            Session["name"] = "Coordinator";
+                        }
+                        else if (usr.accountType.Equals("student"))
+                        {
+                            Session["name"] = db.Students.Where(s => s.userId == usr.userId).FirstOrDefault().lName;
+                        }
+                        else
+                        {
+                            var lecturer = db.Lecturers.Where(l => l.userId == usr.userId).FirstOrDefault();
+                            Session["name"] = lecturer.lName;
+                            Session["userId"] = lecturer.lecturerId.ToString();
+                        }
+
+                        Session["account"] = usr.accountType.ToString();
+                        return Json(new { success = true, account = usr.accountType.ToString() }, JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
-                        var lecturer = db.Lecturers.Where(l => l.userId == usr.userId).FirstOrDefault();
-                        Session["name"] = lecturer.lName;
-                        Session["userId"] = lecturer.lecturerId.ToString();
+                        return Json(new { success = false }, JsonRequestBehavior.AllowGet);
                     }
-
-                    Session["account"] = usr.accountType.ToString();
-                    return Json(new { success = true, account = usr.accountType.ToString() }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
@@ -88,7 +95,7 @@ namespace LabTutor.Controllers
 
                     Session["account"] = "student";
                     Session["userId"] = user.userId.ToString();
-                    Session["email"] = email.ToString();
+                    Session["name"] = first_name;
                     return Json(new { success = true }, JsonRequestBehavior.AllowGet);
                 }
 

@@ -1,14 +1,19 @@
 ﻿var startTime;
 var endTime;
-//var urlPrefix = "/2015-msc/xinyuewu";
-var urlPrefix = "";
+var urlPrefix = "/2015-msc/xinyuewu";
+//var urlPrefix = "";
 
 $(document).ready(function () {
 
     $('#defaultTab').tab('show')
     getModules(1, 1);
+    initCalendar();
+    initValidator();
+});
 
-    //initialize the calendar
+
+function initCalendar() {
+   
     $('#calendar').fullCalendar({
 
         weekends: false,
@@ -22,7 +27,7 @@ $(document).ready(function () {
         theme: true,
         allDaySlot: false,
         events: {
-            url: urlPrefix + '/Timetable/getClasses/',
+            url: urlPrefix + '/Timetable/getClasses',
             data: {
                 year: 1,
                 semester: 1
@@ -30,39 +35,31 @@ $(document).ready(function () {
         },
         selectable: true,
         selectHelper: true,
-        select: selectDate,
+        select: addClass,
         editable: true,
         droppable: true,
-        eventDrop: updateEventTime,
-        eventResize: updateEventTime,
-        eventClick: editEvent
+        eventDrop: updateClass,
+        eventResize: updateClass,
+        eventClick: editClass
 
     });
+}
 
-});
 
 function tabChange(year, semester) {
-    $('#calendar').fullCalendar('removeEventSource', '/Timetable/getClasses/')
+    $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Timetable/getClasses')
     $('#calendar').fullCalendar('addEventSource', {
-        url: urlPrefix + '/Timetable/getClasses/',
+        url: urlPrefix + '/Timetable/getClasses',
         data: {
             year: year,
             semester: semester
         }
     })
-
-    $('#moduleList').empty();
-    $('#editModuleList').empty();
+    $('#add_moduleList').empty();
+    $('#edit_moduleList').empty();
     getModules(year, semester);
 };
 
-function selectDate(start, end) {
-
-    $('#addDialog').dialog('open');
-    $("#eventTime").text("" + start.format("dddd HH:mm") + " ~ " + end.format("HH:mm"));
-    startTime = start;
-    endTime = end;
-}
 
 function getModules(year, semester) {
     $.ajax({
@@ -74,12 +71,12 @@ function getModules(year, semester) {
         },
         dataType: 'json',
         success: function (json) {
-            $('#moduleList').attr('enabled', 'true');
+            $('#add_moduleList').attr('enabled', 'true');
             $.each(json, function () {
-                $('#moduleList').append(
+                $('#add_moduleList').append(
                      $("<option></option>").text(this.title).val(this.moduleId)
                 );
-                $('#editModuleList').append(
+                $('#edit_moduleList').append(
                      $("<option></option>").text(this.title).val(this.moduleId)
                 );
             });
@@ -87,7 +84,7 @@ function getModules(year, semester) {
     });
 }
 
-function updateEventTime(Event) {
+function updateClass(Event) {
     $.ajax({
         type: 'POST',
         url: urlPrefix + "/Timetable/updateEventTime",
@@ -100,11 +97,42 @@ function updateEventTime(Event) {
     });
 };
 
-function editEvent(Event) {
+function addClass(start, end) {
 
-    $('#editEventId').val(Event.id);
-    $("#editEventTime").text("" + Event.start.format("dddd HH:mm") + " ~ " + Event.end.format("HH:mm"));
-    $("#editModuleList").val(Event.moduleId);
+    $("#add_time").text("" + start.format("dddd HH:mm") + " ~ " + end.format("HH:mm"));
+    startTime = start;
+    endTime = end;
+    $('#add_class_modal').modal('toggle');
+}
+
+$("#add_class_button").click(function (e) {
+    e.preventDefault();
+    $.ajax({
+        url: urlPrefix + "/Timetable/Add",
+        type: "POST",
+        traditional: true,
+        data: {
+            'startTime': startTime,
+            'endTime': endTime,
+            'moduleId': $('#add_moduleList').val(),
+            'type': $('input[name=type]:checked').val(),
+            'tutorNumber': $('#add_tutorNumber').val()
+        },
+        success: function () {
+            $('#add_class_modal').modal('toggle');
+            $('#calendar').fullCalendar('refetchEvents');
+        },
+        error: function () {
+            console.log("add class error");
+        }
+    })
+})
+
+function editClass(Event) {
+
+    $('#edit_classId').val(Event.id);
+    $("#edit_time").text("" + Event.start.format("dddd HH:mm") + " ~ " + Event.end.format("HH:mm"));
+    $("#edit_moduleList").val(Event.moduleId);
 
     $('input[value=' + Event.type + ']').prop("checked", true);
     $('input[value=lab]').click(function () {
@@ -113,85 +141,86 @@ function editEvent(Event) {
     $('input[value=lecture]').click(function () {
         $('input[value=lecture]').prop("checked", true);
     });
+    $("#edit_tutorNumber").val(Event.tutorNumber);
 
-    $("#editTutorNumber").val(Event.tutorNumber);
-    $('#editDialog').dialog('open');
+    $('#edit_class_modal').modal('toggle');
 }
 
-//add dialog
-$('#addDialog').dialog({
-    autoOpen: false,
-    width: 470,
-    buttons: {
-        "Add": function () {
-
-            $.ajax({
-                url: urlPrefix + "/Timetable/Add",
-                type: "POST",
-                traditional: true,
-                data: {
-                    'startTime': startTime,
-                    'endTime': endTime,
-                    'moduleId': $('#moduleList').val(),
-                    'type': $('input[name=type]:checked').val(),
-                    'tutorNumber': $('#tutorNumber').val()
-                },
-                success: function () {
-                    $('#addDialog').dialog("close");
-                    $('#calendar').fullCalendar('refetchEvents');
-                }
-            })
-
+$("#edit_class_button").click(function (e) {
+    e.preventDefault();
+    $.ajax({
+        url: urlPrefix + "/Timetable/Update",
+        type: "POST",
+        traditional: true,
+        data: {
+            'eventId': $("#edit_classId").val(),
+            'moduleId': $("#edit_moduleList").val(),
+            'type': $('input[name=type]:checked').val(),
+            'tutorNumber': $("#edit_tutorNumber").val()
         },
-
-        "Cancel": function () {
-            $('#addDialog').dialog('close');
+        success: function () {
+            $('#calendar').fullCalendar('refetchEvents');
+            $('#edit_class_modal').modal('toggle');
         }
+    })
+})
+
+$("#delete_class_button").click(function (e) {
+    if (confirm("do you really want to delete this event?")) {
+
+        $.ajax({
+            url: urlPrefix + "/Timetable/Delete",
+            type: "POST",
+            traditional: true,
+            data: {
+                'eventId': $("#edit_classId").val()
+            },
+            success: function () {
+                $('#calendar').fullCalendar('removeEvents', $("#edit_classId").val());
+                $('#edit_class_modal').modal('toggle');
+            }
+        })
+
     }
-});
+})
 
-$('#editDialog').dialog({
-    autoOpen: false,
-    width: 470,
-    buttons: {
-        "update": function () {
+function initValidator() {
 
-            $.ajax({
-                url: urlPrefix + "/Timetable/Update",
-                type: "POST",
-                traditional: true,
-                data: {
-                    'eventId': $("#editEventId").val(),
-                    'moduleId': $("#editModuleList").val(),
-                    'type': $('input[name=type]:checked').val(),
-                    'tutorNumber': $("#editTutorNumber").val()
-                },
-                success: function () {
-                    $('#calendar').fullCalendar('refetchEvents');
-                    $('#editDialog').dialog("close");
-                }
-            })
-
-        },
-
-        "delete": function () {
-            if (confirm("do you really want to delete this event?")) {
-
-                $.ajax({
-                    url: urlPrefix + "/Timetable/Delete",
-                    type: "POST",
-                    traditional: true,
-                    data: {
-                        'eventId': $("#editEventId").val()
+    $('#add_class_form').bootstrapValidator({
+        fields: {
+            tutorNumber: {
+                validators: {
+                    notEmpty: {
+                        message: 'Please indicate how many tutors are needed for this class'
                     },
-                    success: function () {
-                        $('#editDialog').dialog("close");
-                        $('#calendar').fullCalendar('removeEvents', $("#editEventId").val());
+                    integer: {
+                        message: 'Please enter an integer'
+                    },
+                    greaterThan: {
+                        value: 0,
+                        message: 'Please enter an integer more than 0'
                     }
-                })
-
+                }
             }
         }
+    });
+    $('#edit_class_form').bootstrapValidator({
+        fields: {
+            tutorNumber: {
+                validators: {
+                    notEmpty: {
+                        message: 'Please indicate how many tutors are needed for this class'
+                    },
+                    integer: {
+                        message: 'Please enter an integer'
+                    },
+                    greaterThan: {
+                        value: 0,
+                        message: 'Please enter an integer more than 0'
+                    }
+                }
+            }
+        }
+    });
 
-    }
-});
+}

@@ -3,8 +3,8 @@
     initCalendar();
 });
 
-//var urlPrefix = "/2015-msc/xinyuewu";
-var urlPrefix = "";
+var urlPrefix = "/2015-msc/xinyuewu";
+//var urlPrefix = "";
 
 function tabChange(semester) {
     $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation')
@@ -42,28 +42,6 @@ function initCalendar() {
             var tutors = "";
             $.each(event.tutorName, function () {
                 tutors += "<span id='#tutor_" + this.studentId + "'>" + this.name + "</span>, ";
-
-
-                //$('#tutor_394').click(function () {
-                //    alert(this.studentId);
-                //});
-
-                //$('#tutor_'+this.studentId).qtip({
-                //    content: {
-                //        title: this.name,
-                //        text: "Degree: " + this.degree
-                //            + "<br/>Year: " + this.year
-                //            + "<br/>Max Hours: " + this.maxHour
-                //            + "<br/>Working Hours(S1): " + this.workingHour1
-                //            + "<br/>Working Hours(S2): " + this.workingHour2
-                //    },
-                //    position: {
-                //        my: 'top left',
-                //        at: 'bottom center'
-                //    }
-                //});
-
-
             });
             element.find('.fc-content').append("<tutorName>" + tutors.slice(0, -2) + "</tutorName>");
         }
@@ -165,8 +143,6 @@ function clickEvent(Event) {
                 });
             }
         }
-
-
     });
 
     $('#adjustAllocationModal').modal('toggle');
@@ -190,12 +166,13 @@ $("#save_multiselectlist").click(function (e) {
                 'classId': $("classId").val()
             },
             type: 'POST',
+           //dataType: 'json',
             traditional: true,
             success: function (data) {
                 window.location.href = urlPrefix + "/Allocate/Edit";
             },
             error: function (data) {
-                console.log('error!');
+                console.log('/Allocate/saveStudentsForMultiselectList error!');
             }
         });
     }
