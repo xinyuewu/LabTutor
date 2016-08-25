@@ -16,8 +16,8 @@
 
     <!-- semester tabs -->
     <ul class="nav nav-tabs" style="margin-bottom: 15px;">
-        <li class="active cursorPointer" data-toggle="tab" onclick="tabChange(1)"><a>Semester 1 </a></li>
-        <li class="cursorPointer" data-toggle="tab" onclick="tabChange(2)"><a>Semester 2 </a></li>
+        <li class="active cursorPointer" data-toggle="tab" onclick="allocate_index_tabChange(1)"><a>Semester 1 </a></li>
+        <li class="cursorPointer" data-toggle="tab" onclick="allocate_index_tabChange(2)"><a>Semester 2 </a></li>
     </ul>
 
     <!-- calendar -->
@@ -69,9 +69,9 @@
                     {
                         @:<tr class="danger cursorPointer" data-toggle="modal" data-target="#studentDetailModal" onclick="passStudentId(@item.studentId)">
                             }
-                            else
-                            {
-                            @:<tr id="tutor_@item.studentId" class="cursorPointer" data-toggle="modal" data-target="#studentDetailModal" onclick="passStudentId(@item.studentId)">
+                    else
+                    {
+                        @:<tr id="tutor_@item.studentId" class="cursorPointer" data-toggle="modal" data-target="#studentDetailModal" onclick="passStudentId(@item.studentId)">
                             }
 
                             <td>@(rowNo += 1)</td>
@@ -81,125 +81,126 @@
                             <td>@item.maxHour</td>
                             <td>@item.workingHour1</td>
                             <td>@item.workingHour2</td>
+                        @:</tr>
+                     }
+            </tbody>
+        </table>
+    </div>
 
-                            @:</tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+    <!-- student detail Modal -->
+    <div class="modal fade" id="studentDetailModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
 
-        <!-- student detail Modal -->
-                    <div class="modal fade" id="studentDetailModal" role="dialog">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Modal Header</h4>
-                                </div>
-
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label>Degree: </label>
-                                                <degree></degree>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Year: </label>
-                                                <year></year>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Max Working Hour: </label>
-                                                <maxhour></maxhour>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label>Matriculation Number: </label>
-                                                <matricnumber></matricnumber>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>NI Number: </label>
-                                                <ni></ni>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Payment Rate: </label>
-                                                <paymentrate></paymentrate>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-12 row form-group" id="liked">
-                                            <label class="col-sm-4">Favoured modules: </label>
-                                            <liked class="col-sm-8" style="white-space:pre-wrap"></liked>
-                                        </div>
-                                        <div class="col-sm-12 row form-group" id="disliked">
-                                            <label class="col-sm-4">Unfavoured modules: </label>
-                                            <disliked class="col-sm-8" style="white-space:pre-wrap"></disliked>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <table class="table table-hover table-responsive modalTable">
-                                            <thead>
-                                                <tr>
-                                                    <th>Year</th>
-                                                    <th>Degree</th>
-                                                    <th>Module</th>
-                                                    <th>Semester</th>
-                                                    <th>Time</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-
-        <!-- adjust allocation weight Modal -->
-                    <div class="modal fade" id="adjustWeightModal" role="dialog">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <form role="form" class="form-horizontal" id="weight_form" data-toggle="validator">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        <h4 class="modal-title">Adjust Weight in Allocation Algorithm</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="form-group row">
-                                            <label class="col-sm-offset-1 col-sm-4 col-form-label">Preference: </label>
-                                            <div class="col-sm-6">
-                                                <input name="preference" type="number" min="1" class="form-control" id="prefWeight" placeholder="Preference Weight" required>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-offset-1 col-sm-4 col-form-label">One-Year-Approach: </label>
-                                            <div class="col-sm-6">
-                                                <input name="one_year_approach" type="number" min="1" class="form-control" id="yearWeight" placeholder="One-Year-Approach Weight" required>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-offset-1 col-sm-4 col-form-label">Individual Student: </label>
-                                            <div class="col-sm-6">
-                                                <input name="individual_student" type="number" min="1" class="form-control" id="stuWeight" placeholder="Individual Student Weight" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        <button type="submit" class="btn btn-default" id="save_weight">Save</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
                 </div>
 
-                @section Scripts {
-                    <script src="~/Scripts/CustomJS/Allocate_Index.js"></script>
-                }
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Degree: </label>
+                                <degree></degree>
+                            </div>
+                            <div class="form-group">
+                                <label>Year: </label>
+                                <year></year>
+                            </div>
+                            <div class="form-group">
+                                <label>Max Working Hour: </label>
+                                <maxhour></maxhour>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Matriculation Number: </label>
+                                <matricnumber></matricnumber>
+                            </div>
+                            <div class="form-group">
+                                <label>NI Number: </label>
+                                <ni></ni>
+                            </div>
+                            <div class="form-group">
+                                <label>Payment Rate: </label>
+                                <paymentrate></paymentrate>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 row form-group" id="liked">
+                            <label class="col-sm-4">Favoured modules: </label>
+                            <liked class="col-sm-8" style="white-space:pre-wrap"></liked>
+                        </div>
+                        <div class="col-sm-12 row form-group" id="disliked">
+                            <label class="col-sm-4">Unfavoured modules: </label>
+                            <disliked class="col-sm-8" style="white-space:pre-wrap"></disliked>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <table class="table table-hover table-responsive modalTable">
+                            <thead>
+                                <tr>
+                                    <th>Year</th>
+                                    <th>Degree</th>
+                                    <th>Module</th>
+                                    <th>Semester</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- adjust allocation weight Modal -->
+    <div class="modal fade" id="adjustWeightModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form role="form" class="form-horizontal" id="weight_form" data-toggle="validator">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Adjust Weight in Allocation Algorithm</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-offset-1 col-sm-4 col-form-label">Preference: </label>
+                            <div class="col-sm-6">
+                                <input name="preference" type="number" min="1" class="form-control" id="prefWeight" placeholder="Preference Weight" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-offset-1 col-sm-4 col-form-label">One-Year-Approach: </label>
+                            <div class="col-sm-6">
+                                <input name="one_year_approach" type="number" min="1" class="form-control" id="yearWeight" placeholder="One-Year-Approach Weight" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-offset-1 col-sm-4 col-form-label">Individual Student: </label>
+                            <div class="col-sm-6">
+                                <input name="individual_student" type="number" min="1" class="form-control" id="stuWeight" placeholder="Individual Student Weight" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-default" id="save_weight">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+@section Scripts {
+    <script>
+        scriptEvents.Allocate_Index();
+    </script>
+}

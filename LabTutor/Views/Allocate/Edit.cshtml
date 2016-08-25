@@ -10,8 +10,8 @@
 
     <!-- semester tabs -->
     <ul class="nav nav-tabs" style="margin-bottom: 15px;">
-        <li class="active cursorPointer" data-toggle="tab" onclick="tabChange(1)"><a>Semester 1 </a></li>
-        <li class="cursorPointer" data-toggle="tab" onclick="tabChange(2)"><a>Semester 2 </a></li>
+        <li class="active cursorPointer" data-toggle="tab" onclick="allocate_edit_tabChange(1)"><a>Semester 1 </a></li>
+        <li class="cursorPointer" data-toggle="tab" onclick="allocate_edit_tabChange(2)"><a>Semester 2 </a></li>
     </ul>
 
     <!-- calendar -->
@@ -65,13 +65,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">                           
+                        <div class="form-group">
                             <label class="col-sm-3"><tutornumber>2</tutornumber> tutors needed: </label>
                             <div class="col-sm-8">
-                                <select class="form-control" name="tutors" multiple="multiple" id="multiselect">                                   
-                                </select>
+                                <select class="form-control" name="tutors" multiple="multiple" id="multiselect"></select>
                             </div>
-                        </div>                      
+                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -87,5 +86,8 @@
 </div>
 
 @section Scripts {
-    <script src="~/Scripts/CustomJS/Allocate_Edit.js"></script>
+    <script>
+        scriptEvents.Allocate_Edit();
+    </script>
+
 }

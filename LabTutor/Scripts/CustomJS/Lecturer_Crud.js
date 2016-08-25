@@ -1,5 +1,5 @@
-﻿var urlPrefix = "/2015-msc/xinyuewu";
-//var urlPrefix = "";
+﻿//var urlPrefix = "/2015-msc/xinyuewu";
+var urlPrefix = "";
 
 $(document).ready(function () {
 
@@ -117,7 +117,8 @@ $('#edit_lecturer_form').submit(function (e) {
 $('#multiselect_modules').multiselect({
     maxHeight: 200,
     enableFiltering: true,
-    filterBehavior: 'value',
+    filterBehavior: 'text',
+    enableCaseInsensitiveFiltering: true,
     buttonWidth: '320px',
     buttonText: function (options, select) {
         if (options.length === 0) {
@@ -145,7 +146,8 @@ $('#multiselect_modules').multiselect({
 $('#edit_multiselect_modules').multiselect({
     maxHeight: 200,
     enableFiltering: true,
-    filterBehavior: 'value',
+    filterBehavior: 'text',
+    enableCaseInsensitiveFiltering: true,
     buttonWidth: '320px',
     buttonText: function (options, select) {
         if (options.length === 0) {

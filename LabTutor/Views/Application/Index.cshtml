@@ -40,7 +40,7 @@
                 <tr>
                     <td class="tableLabel"><strong>National Insurance Number</strong></td>
                     <td>@Html.DisplayFor(model => model.student.NI)</td>
-                    <td class="tableLabel"><strong>Max Working Hour</strong></td>
+                    <td class="tableLabel"><strong>Maximum Working Hours</strong></td>
                     <td>@Html.DisplayFor(model => model.student.maxHour)</td>
                 </tr>
             </tbody>
@@ -49,8 +49,12 @@
 </div>
 
 <div>
-    <h4 class="unpublished" style="font-size: 17px; padding:15px 0">The timetable below shows the lab classes that you are currently eligible to be a tutor for. By default you will be eligible for all modules that you have already taken in previous years. Please click "Edit Application" below to modify your preferences.</h4>
-    <h4 class="published" style="font-size: 17px; padding:15px 0">The timetable below highlights the lab classes that you are allocated to in ORGANGE.  Please double check the time of the lab classes that you will tutor on the official timetable or make direct contact with the lecturers through provided emails.</h4>
+    <h4 class="unpublished" style="font-size: 17px; padding:15px 0">
+        The timetable below shows the classes that you may be taking this year, and lab classes that you are currently eligible to be a tutor for. By default you will be eligible for all modules that you have already taken in previous years as part of your degree program. Please click "<u>Edit Application</u>" below to modify your preferences.
+    </h4>
+    <h4 class="published" style="font-size: 17px; padding:15px 0">
+        The timetable below highlights the lab classes that you are allocated to in ORGANGE.  Please double check the time of the lab classes that you will tutor on the official timetable or make direct contact with the lecturers through provided emails.
+    </h4>
 </div>
 <!-- Semester Tabs -->
 <ul class="nav nav-tabs published" style="margin-bottom: 15px;">
@@ -125,8 +129,8 @@
                     </div>
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <label class="col-sm-3">Lecturer(s): </label>
-                            <lecturers style="white-space:pre-wrap"></lecturers>
+                            <label class="col-sm-2">Lecturer(s): </label>
+                            <lecturers class="col-sm-10 col-xs-12" style="white-space:pre-wrap"></lecturers>
                         </div>
                     </div>
                 </div>
@@ -165,5 +169,7 @@
 </div>
 
 @section Scripts {
-    <script src="~/Scripts/CustomJS/Application_Index.js"></script>
+    <script>
+        scriptEvents.Application_Index();
+    </script>
 }

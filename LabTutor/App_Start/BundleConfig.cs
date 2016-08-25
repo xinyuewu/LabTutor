@@ -42,6 +42,7 @@ namespace LabTutor
                       "~/Scripts/jquery.qtip.min.js",
                       "~/Scripts/jquery.dataTables.min.js",  
                       "~/Scripts/CustomJS/site.js",
+                      "~/Scripts/CustomJS/siteEvent.js",
                       "~/Scripts/fullcalendar/jquery-ui-1.11.1.js",
                       "~/Scripts/fullcalendar/moment.min.js",
                       "~/Scripts/fullcalendar/jquery-ui.custom.min.js",

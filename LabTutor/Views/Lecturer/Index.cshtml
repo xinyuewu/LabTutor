@@ -8,8 +8,8 @@
 <h2 class="pageTitle">Allocation</h2>
 
 <ul class="nav nav-tabs published" style="margin-bottom: 15px;" hidden>
-    <li class="active cursorPointer" data-toggle="tab" onclick="tabChange(1)"><a>Semester 1 </a></li>
-    <li class="cursorPointer" data-toggle="tab" onclick="tabChange(2)"><a>Semester 2 </a></li>
+    <li class="active cursorPointer" data-toggle="tab" onclick="lecturer_index_tabChange(1)"><a>Semester 1 </a></li>
+    <li class="cursorPointer" data-toggle="tab" onclick="lecturer_index_tabChange(2)"><a>Semester 2 </a></li>
 </ul>
 
 <div id='calendar'></div>
@@ -117,5 +117,7 @@
 </div>
 
 @section Scripts {
-    <script src="~/Scripts/CustomJS/Lecturer_Index.js"></script>
+    <script>
+        scriptEvents.Lecturer_Index();
+    </script>
 }

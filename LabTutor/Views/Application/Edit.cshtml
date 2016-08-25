@@ -50,8 +50,8 @@
     </p>
 
     <ul class="nav nav-tabs" style="margin-bottom: 15px;">
-        <li class="active cursorPointer" data-toggle="tab" onclick="tabChange(1)"><a>Semester 1 </a></li>
-        <li class="cursorPointer" data-toggle="tab" onclick="tabChange(2)"><a>Semester 2 </a></li>
+        <li class="active cursorPointer" data-toggle="tab" id="edit_preference_sememster1"><a>Semester 1 </a></li>
+        <li class="cursorPointer" data-toggle="tab" id="edit_preference_sememster2"><a>Semester 2 </a></li>
     </ul>
 
     <div id='calendar'></div>
@@ -93,6 +93,8 @@
 
 
 @section Scripts {
-    <script src="~/Scripts/CustomJS/Application_Edit.js"></script>
+    <script>
+        scriptEvents.Application_Edit();
+    </script>
 }
 

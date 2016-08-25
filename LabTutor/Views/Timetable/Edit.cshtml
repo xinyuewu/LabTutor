@@ -16,32 +16,32 @@
         <li class="dropdown active">
             <a class="dropdown-toggle cursorPointer" data-toggle="dropdown">Year 1 <span class="caret"></span></a>
             <ul class="dropdown-menu">
-                <li><a id="defaultTab" onclick="tabChange(1, 1)" data-toggle="tab" href="#semester1">Semester 1</a></li>
-                <li><a onclick="tabChange(1, 2)" data-toggle="tab" href="#semester2">Semester 2</a></li>
+                <li><a id="defaultTab" onclick="timetable_edit_tabChange(1, 1)" data-toggle="tab" href="#semester1">Semester 1</a></li>
+                <li><a onclick="timetable_edit_tabChange(1, 2)" data-toggle="tab" href="#semester2">Semester 2</a></li>
             </ul>
         </li>
 
         <li class="dropdown">
             <a class="dropdown-toggle cursorPointer" data-toggle="dropdown">Year 2 <span class="caret"></span></a>
             <ul class="dropdown-menu">
-                <li><a onclick="tabChange(2, 1)" data-toggle="tab" href="#semester1">Semester 1</a></li>
-                <li><a onclick="tabChange(2, 2)" data-toggle="tab" href="#semester2">Semester 2</a></li>
+                <li><a onclick="timetable_edit_tabChange(2, 1)" data-toggle="tab" href="#semester1">Semester 1</a></li>
+                <li><a onclick="timetable_edit_tabChange(2, 2)" data-toggle="tab" href="#semester2">Semester 2</a></li>
             </ul>
         </li>
 
         <li class="dropdown">
             <a class="dropdown-toggle cursorPointer" data-toggle="dropdown">Year 3 <span class="caret"></span></a>
             <ul class="dropdown-menu">
-                <li><a onclick="tabChange(3, 1)" data-toggle="tab" href="#semester1">Semester 1</a></li>
-                <li><a onclick="tabChange(3, 2)" data-toggle="tab" href="#semester2">Semester 2</a></li>
+                <li><a onclick="timetable_edit_tabChange(3, 1)" data-toggle="tab" href="#semester1">Semester 1</a></li>
+                <li><a onclick="timetable_edit_tabChange(3, 2)" data-toggle="tab" href="#semester2">Semester 2</a></li>
             </ul>
         </li>
 
         <li class="dropdown">
             <a class="dropdown-toggle cursorPointer" data-toggle="dropdown">Year 4 <span class="caret"></span></a>
             <ul class="dropdown-menu">
-                <li><a onclick="tabChange(4, 1)" data-toggle="tab" href="#semester1">Semester 1</a></li>
-                <li><a onclick="tabChange(4, 2)" data-toggle="tab" href="#semester2">Semester 2</a></li>
+                <li><a onclick="timetable_edit_tabChange(4, 1)" data-toggle="tab" href="#semester1">Semester 1</a></li>
+                <li><a onclick="timetable_edit_tabChange(4, 2)" data-toggle="tab" href="#semester2">Semester 2</a></li>
             </ul>
         </li>
     </ul>
@@ -176,8 +176,9 @@
 </div>
 
 @section Scripts {
-    <script src="~/Scripts/CustomJS/Timetable_Edit.js"></script>
-
+    <script>
+        scriptEvents.Timetable_Edit();
+    </script>
 }
 
 

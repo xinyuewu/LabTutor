@@ -16,8 +16,8 @@ $('#optional').qtip({
     }
 })
 
-var urlPrefix = "/2015-msc/xinyuewu";
-//var urlPrefix = "";
+//var urlPrefix = "/2015-msc/xinyuewu";
+var urlPrefix = "";
 
 function getNImaxHour() {
     $.ajax({

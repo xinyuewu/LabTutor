@@ -1,7 +1,7 @@
 ﻿var startTime;
 var endTime;
-var urlPrefix = "/2015-msc/xinyuewu";
-//var urlPrefix = "";
+//var urlPrefix = "/2015-msc/xinyuewu";
+var urlPrefix = "";
 
 $(document).ready(function () {
 

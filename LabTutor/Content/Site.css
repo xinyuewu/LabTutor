@@ -77,10 +77,12 @@ input[type=checkbox] {
 
     #login-modal .modal-header li:first-child a {
         border-top-left-radius: 20px;
+        border-top-right-radius: 0;
     }
 
     #login-modal .modal-header li:last-child a {
         border-top-right-radius: 20px;
+        border-top-left-radius: 0;
     }
 
 #login-modal .modal-body {
@@ -160,30 +162,30 @@ tutorName {
     text-align: center;
 }
 
-    .color_box span {
-        display: block;
-        float: left;
-        height: 16px;
-        width: 30px;
-        margin-right: 10px;
-        border: 1px solid #999;
-    }
+.color_box span {
+    display: block;
+    float: left;
+    height: 16px;
+    width: 30px;
+    margin-right: 10px;
+    border: 1px solid #999;
+}
 
-    .color_box .blue {
-        background: #3a87ad;
-    }
+.color_box .blue {
+    background: #3a87ad;
+}
 
-    .color_box .orange {
-        background: #ff9933;
-    }
+.color_box .orange {
+    background: #ff9933;
+}
 
-    .color_box .green {
-        background: #86b300;
-    }
+.color_box .green {
+    background: #86b300;
+}
 
-    .color_box .grey {
-        background: #8c8c8c;
-    }
+.color_box .grey {
+    background: #8c8c8c;
+}
 /*#endregion Legend*/
 
 
@@ -243,6 +245,48 @@ thead {
     }
 /*#endregion error page*/
 
-.timeClash{
+.timeClash {
     color: red;
+}
+
+
+
+/* MEDIA CODE */
+@media (max-width: 768px) {
+    .modal:before {
+        height: 100px;
+    }
+
+    .nav.nav-tabs.nav-justified li {
+        width: 50%;
+        float: left;
+    }
+        .nav.nav-tabs.nav-justified li a{
+        border: 1px solid #ddd;
+    }
+        .nav.nav-tabs.nav-justified li.active a{
+            border: 1px solid transparent;
+    }
+
+    #basicInfo td {
+        width: 50%;
+        float: left;
+        height: 40px;
+        border: 1px solid #f7f7f7;
+    }
+
+    #basicInfo tr:nth-child(odd) {
+        min-width: 200px;
+    }
+
+}
+
+@media (max-width: 469px) {
+    #basicInfo td {
+        width: 100%;
+        float: left;
+        height: 40px;
+        border: 1px solid #f7f7f7;
+        min-width: 200px;
+    }
 }

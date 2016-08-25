@@ -9,13 +9,14 @@
 <div class="unpublished" hidden style="font-size: 17px;">
     <p>Please <a class="cursorPointer js-register-link" data-toggle="modal" data-target="#login-modal">register</a> to apply or <a class="cursorPointer js-login-link" data-toggle="modal" data-target="#login-modal">log in</a> to modify your application. </p>
     <p>The allocation will be published on <strong>07/09/2016</strong>. Please note the date and check the website then!</p>
+    <p>We would like to hear your thoughts about this website, please fill out the <a href="https://docs.google.com/forms/d/e/1FAIpQLSfHA1SBvNQUzqWbAhMMrcnkiJ6sg-jn3USJwKaamvO3TEefgA/viewform" target="_blank"><strong>feedback questionnaire</strong></a>. Thank you!</p>
     <p><i class="fa fa-info-circle"></i> Chrome and FireFox are recommended for your better user experience through the website.</p>
 </div>
 
 
 <ul class="nav nav-tabs published" style="margin-bottom: 15px;" hidden>
-    <li class="active cursorPointer" data-toggle="tab" onclick="tabChange(1)"><a>Semester 1 </a></li>
-    <li class="cursorPointer" data-toggle="tab" onclick="tabChange(2)"><a>Semester 2 </a></li>
+    <li class="active cursorPointer" data-toggle="tab" onclick="home_index_tabChange(1)"><a>Semester 1 </a></li>
+    <li class="cursorPointer" data-toggle="tab" onclick="home_index_tabChange(2)"><a>Semester 2 </a></li>
 </ul>
 
 <div id='calendar'></div>
@@ -28,5 +29,7 @@
 </div>
 
 @section Scripts {
-    <script src="~/Scripts/CustomJS/Home_Index.js"></script>
+    <script>
+        scriptEvents.Home_Index();
+    </script>
 }

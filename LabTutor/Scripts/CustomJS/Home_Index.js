@@ -5,8 +5,8 @@
     $('#calendar').addClass("noCursorPointer");
 });
 
-var urlPrefix = "/2015-msc/xinyuewu";
-//var urlPrefix = "";
+//var urlPrefix = "/2015-msc/xinyuewu";
+var urlPrefix = "";
 
 function getPublishState() {
     $.ajax({

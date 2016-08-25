@@ -3,8 +3,8 @@
     initCalendar();
 });
 
-var urlPrefix = "/2015-msc/xinyuewu";
-//var urlPrefix = "";
+//var urlPrefix = "/2015-msc/xinyuewu";
+var urlPrefix = "";
 
 function tabChange(semester) {
     $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation')
@@ -86,7 +86,8 @@ function clickEvent(Event) {
     $('#multiselect').multiselect({
         maxHeight: 200,
         enableFiltering: true,
-        filterBehavior: 'value',
+        filterBehavior: 'text',
+        enableCaseInsensitiveFiltering: true,
         buttonText: function (options, select) {
             var retrievedObject = localStorage.getItem('tutorNumber');
             if (options.length === 0) {
