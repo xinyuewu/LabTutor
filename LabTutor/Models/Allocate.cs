@@ -905,7 +905,7 @@ namespace LabTutor.Models
                         degree = student.degree,
                         year = student.year,
                         NI = student.NI,
-                        paymentRate = student.paymentRate,
+                        email = student.User.email,
                         maxHour = student.maxHour,
                         workingHour1 = student.workingHour1,
                         workingHour2 = student.workingHour2,

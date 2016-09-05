@@ -1,5 +1,5 @@
-﻿var urlPrefix = "/2015-msc/xinyuewu";
-//var urlPrefix = "";
+﻿//var urlPrefix = "/2015-msc/xinyuewu";
+var urlPrefix = "";
 
 
 var scriptEvents = {
@@ -72,6 +72,23 @@ var scriptEvents = {
                     });
                     element.find('.fc-content').append("<tutorName>" + tutors.slice(0, -2) + "</tutorName>");
 
+                    if (tutors === "") {
+                        tutors = "None";
+                    } else {
+                        tutors = tutors.slice(0, -2);
+                    }
+
+
+                    element.qtip({
+                        content: {
+                            title: event.title,
+                            text: "Tutors allocated: " + tutors
+                        },
+                        position: {
+                            my: 'top left',
+                            at: 'bottom center'
+                        }
+                    });
                 }
 
             });
@@ -87,14 +104,43 @@ var scriptEvents = {
             e.preventDefault();
         })
 
-        $('#login-form').submit(function (event) {
+        //$('#login-form').submit(function (event) {
+        //$('#logginButton').click(function (e) {
+        //    event.preventDefault();
+        //    if ($('#login-form').data("bootstrapValidator").isValid()) {
+        //        alert("haha");
+        //        $.ajax({
+        //            url: urlPrefix + '/Account/Login',
+        //            type: 'Post',
+        //            //dataType: 'json',
+        //            data: $(this).serialize(),
+        //            success: function (json) {
+        //                if (json.success) {
+        //                    window.location.href = urlPrefix + "/Account/LoggedIn";
+        //                }
+        //                else {
+        //                    $('#login_error').slideDown({ opacity: "show" }, "slow");
+        //                    $('#login-form').bootstrapValidator('disableSubmitButtons', false);
+        //                }
+        //            },
+        //            error: function () {
+        //                console.log("login error!")
+        //            }
+        //        });
+        //    }
+        //    else {
+        //        $('#login-form').bootstrapValidator('disableSubmitButtons', true);
+        //    }
+        //});
+        $('#logginButton').click(function (event) {
             event.preventDefault();
+            $('#login-form').bootstrapValidator('validate');
             if ($('#login-form').data("bootstrapValidator").isValid()) {
                 $.ajax({
                     url: urlPrefix + '/Account/Login',
                     type: 'Post',
                     //dataType: 'json',
-                    data: $(this).serialize(),
+                    data: $('#login-form').serialize(),
                     success: function (json) {
                         if (json.success) {
                             window.location.href = urlPrefix + "/Account/LoggedIn";
@@ -105,6 +151,7 @@ var scriptEvents = {
                         }
                     },
                     error: function () {
+                        console.log("Login called in error");
                         console.log("login error!")
                     }
                 });
@@ -114,14 +161,42 @@ var scriptEvents = {
             }
         });
 
-        $('#register-form').submit(function (event) {
+        //$('#register-form').submit(function (event) {
+        //$('#registerButton').click(function (event) {
+        //    event.preventDefault();
+        //    if ($('#register-form').data("bootstrapValidator").isValid()) {
+        //        $.ajax({
+        //            url: urlPrefix + '/Account/Register',
+        //            type: 'Post',
+        //            //dataType: 'json',
+        //            data: $(this).serialize(),
+        //            success: function (json) {
+        //                if (json.success) {
+        //                    window.location.href = urlPrefix + "/Account/LoggedIn";
+        //                }
+        //                else {
+        //                    $('#register_error').slideDown({ opacity: "show" }, "slow");
+        //                    $('#register-form').bootstrapValidator('disableSubmitButtons', false);
+        //                }
+        //            },
+        //            error: function () {
+        //                console.log("register error!")
+        //            }
+        //        });
+        //    }
+        //    else {
+        //        $('#register-form').bootstrapValidator('disableSubmitButtons', true);
+        //    }
+        //});
+        $('#registerButton').click(function (event) {
             event.preventDefault();
+            $('#register-form').bootstrapValidator('validate');
             if ($('#register-form').data("bootstrapValidator").isValid()) {
                 $.ajax({
                     url: urlPrefix + '/Account/Register',
                     type: 'Post',
                     //dataType: 'json',
-                    data: $(this).serialize(),
+                    data: $('#register-form').serialize(),
                     success: function (json) {
                         if (json.success) {
                             window.location.href = urlPrefix + "/Account/LoggedIn";
@@ -150,6 +225,7 @@ var scriptEvents = {
                     invalid: 'glyphicon glyphicon-remove',
                     validating: 'glyphicon glyphicon-refresh'
                 },
+                submitButtons: 'button[type="submit"]',
                 fields: {
                     email: {
                         validators: {
@@ -181,6 +257,7 @@ var scriptEvents = {
                 feedbackIcons: {
                     validating: 'glyphicon glyphicon-refresh'
                 },
+                submitButtons: 'button[type="submit"]',
                 fields: {
                     email: {
                         validators: {
@@ -342,6 +419,17 @@ var scriptEvents = {
                     $.each(event.lecturers, function () {
                         lecturers += this.name + ", ";
                     });
+                    var tutorsInQtip = "";
+                    $.each(event.tutorName, function () {
+                        tutorsInQtip += this.name + ", ";
+                    });
+                    if (tutorsInQtip === ""){
+                        tutorsInQtip = "None";
+                    }else{
+                        tutorsInQtip = tutorsInQtip.slice(0, -2);
+                    }
+                    
+
                     element.qtip({
                         content: {
                             title: event.title,
@@ -350,6 +438,7 @@ var scriptEvents = {
                                 + "<br/>Degree: " + event.degree
                                 + "<br/>Lecturer(s): " + lecturers.slice(0, -2)
                                 + "<br/>Number of tutors needed: " + event.tutorNumber
+                                + "<br/>Tutors allocated: " + tutorsInQtip
                         },
                         position: {
                             my: 'top left',
@@ -1406,7 +1495,7 @@ var scriptEvents = {
             $.ajax({
                 url: urlPrefix + '/Application/getNImaxHour',
                 dataType: 'json',
-                type: "GET",
+                type: "POST",
                 traditional: true,
                 data: { studentId: $("#studentId").val() },
                 success: function (json) {

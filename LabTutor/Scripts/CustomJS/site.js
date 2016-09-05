@@ -1,5 +1,5 @@
-﻿var urlPrefix = "/2015-msc/xinyuewu";
-//var urlPrefix = "";
+﻿//var urlPrefix = "/2015-msc/xinyuewu";
+var urlPrefix = "";
 
 $(document).ready(function () {
     $('[title!=""]').qtip({
@@ -47,7 +47,7 @@ function getWeightModal() {
 function passStudentId(id) {
     $.ajax({
         url: urlPrefix + '/Allocate/getStudentInfo',
-        type: 'Get',
+        type: 'POST',
         data: {
             studentId: id
         },
@@ -65,7 +65,7 @@ function getStudentModal(json) {
     $("year").text(json.year);
     $("ni").text(json.NI);
     $("maxhour").text(json.maxHour);
-    $("paymentrate").text(json.paymentRate);
+    $("email").text(json.email);
 
     $.each(json.preferences, function () {
 
