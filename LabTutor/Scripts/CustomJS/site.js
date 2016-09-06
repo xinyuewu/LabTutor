@@ -1,5 +1,5 @@
-﻿//var urlPrefix = "/2015-msc/xinyuewu";
-var urlPrefix = "";
+﻿var urlPrefix = "/2015-msc/xinyuewu";
+//var urlPrefix = "";
 
 $(document).ready(function () {
     $('[title!=""]').qtip({
@@ -98,8 +98,11 @@ function getStudentModal(json) {
     $("#studentDetailModal tbody").html(tbl_body);
 }
 
+
+var edit_allocation_semester;
 //Allocate_Edit
 function allocate_edit_tabChange(semester) {
+    edit_allocation_semester = semester;
     $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation')
     $('#calendar').fullCalendar('addEventSource', {
         url: urlPrefix + '/Allocate/getAllocation',
@@ -109,6 +112,44 @@ function allocate_edit_tabChange(semester) {
         }
     })
 };
+$("#save_multiselectlist").click(function (e) {
+    e.preventDefault();
+    var options = $('#multiselect option:selected');
+
+    //if (options.length > 0) {
+
+    var selected_students = new Array();
+    options.each(function (i, selected) {
+        selected_students.push($(selected).val());
+    });
+
+    $.ajax({
+        url: urlPrefix + '/Allocate/saveStudentsForMultiselectList',
+        data: {
+            'selected_students': selected_students,
+            'classId': $("classId").val()
+        },
+        type: 'POST',
+        //dataType: 'json',
+        traditional: true,
+        success: function (data) {
+            $('#edit_tutors_modal').modal('toggle');
+            $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation')
+            $('#calendar').fullCalendar('addEventSource', {
+                url: urlPrefix + '/Allocate/getAllocation',
+                data: {
+                    studentId: -1,
+                    semester: edit_allocation_semester
+                }
+            })
+            //window.location.href = urlPrefix + "/Allocate/Edit";
+        },
+        error: function (data) {
+            console.log('/Allocate/saveStudentsForMultiselectList error!');
+        }
+    });
+    //}
+})
 
 //Application_Index
 function preferenceTabChange(semester) {

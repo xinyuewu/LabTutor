@@ -663,26 +663,29 @@ namespace LabTutor.Models
                 db.Allocations.RemoveRange(allocations);
 
                 //store new allocations
-                foreach (var stu in selected_students)
+                if (selected_students != null)
                 {
-                    int studentId = Int32.Parse(stu);
-
-                    Allocation allo = new Allocation();
-                    allo.classId = classId;
-                    allo.studentId = studentId;
-                    db.Allocations.Add(allo);
-
-                    var newstudent = db.Students.Where(s => s.studentId == studentId).FirstOrDefault();
-                    if (lab.Module.semester == 1)
+                    foreach (var stu in selected_students)
                     {
-                        newstudent.workingHour1 += classTime;
-                    }
-                    else
-                    {
-                        newstudent.workingHour2 += classTime;
-                    }
+                        int studentId = Int32.Parse(stu);
 
+                        Allocation allo = new Allocation();
+                        allo.classId = classId;
+                        allo.studentId = studentId;
+                        db.Allocations.Add(allo);
+
+                        var newstudent = db.Students.Where(s => s.studentId == studentId).FirstOrDefault();
+                        if (lab.Module.semester == 1)
+                        {
+                            newstudent.workingHour1 += classTime;
+                        }
+                        else
+                        {
+                            newstudent.workingHour2 += classTime;
+                        }
+                    }
                 }
+                
                 db.SaveChanges();
             }
         }

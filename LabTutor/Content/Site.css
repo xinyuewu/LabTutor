@@ -290,3 +290,8 @@ thead {
         min-width: 200px;
     }
 }
+
+.disabledLink{
+    pointer-events:none;
+    cursor:default;
+}

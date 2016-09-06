@@ -1,5 +1,5 @@
-﻿//var urlPrefix = "/2015-msc/xinyuewu";
-var urlPrefix = "";
+﻿var urlPrefix = "/2015-msc/xinyuewu";
+//var urlPrefix = "";
 
 
 var scriptEvents = {
@@ -9,7 +9,6 @@ var scriptEvents = {
     },
 
     Home_Index: function () {
-
         getPublishState();
         initValidator();
         $('#calendar').addClass("noCursorPointer");
@@ -24,6 +23,12 @@ var scriptEvents = {
                         // $("#registerLink").hide();
                         $(".published").show();
                         initCalendar();
+                        //$('#login-modal-tabs').tabs({
+                        //    disabled: [0,1]
+                        //});
+                        //$('#login-modal-tabs').tabs().find('ui-tabs-nav a').unbind('click.tabs');
+                        //$('#login-modal-tabs').tabs("option", "disabled", [1,2]);
+                        $('#js-register-tab').addClass("disabledLink");
                     }
                     else {
                         $(".unpublished").show();
@@ -689,7 +694,7 @@ var scriptEvents = {
         }
 
         function clickEvent(Event) {
-            $("#adjustAllocationModal .modal-title").text(Event.title);
+            $("#edit_tutors_modal .modal-title").text(Event.title);
             $("classId").val(Event.id);
             $("year").text(Event.year);
             $("degree").text(Event.degree);
@@ -785,38 +790,46 @@ var scriptEvents = {
                 }
             });
 
-            $('#adjustAllocationModal').modal('toggle');
+            $('#edit_tutors_modal').modal('toggle');
         }
 
-        $("#save_multiselectlist").click(function (e) {
-            e.preventDefault();
-            var options = $('#multiselect option:selected');
+        //$("#save_multiselectlist").click(function (e) {
+        //    e.preventDefault();
+        //    var options = $('#multiselect option:selected');
 
-            if (options.length > 0) {
+        //    //if (options.length > 0) {
 
-                var selected_students = new Array();
-                options.each(function (i, selected) {
-                    selected_students.push($(selected).val());
-                });
+        //        var selected_students = new Array();
+        //        options.each(function (i, selected) {
+        //            selected_students.push($(selected).val());
+        //        });
 
-                $.ajax({
-                    url: urlPrefix + '/Allocate/saveStudentsForMultiselectList',
-                    data: {
-                        'selected_students': selected_students,
-                        'classId': $("classId").val()
-                    },
-                    type: 'POST',
-                    //dataType: 'json',
-                    traditional: true,
-                    success: function (data) {
-                        window.location.href = urlPrefix + "/Allocate/Edit";
-                    },
-                    error: function (data) {
-                        console.log('/Allocate/saveStudentsForMultiselectList error!');
-                    }
-                });
-            }
-        })
+        //        $.ajax({
+        //            url: urlPrefix + '/Allocate/saveStudentsForMultiselectList',
+        //            data: {
+        //                'selected_students': selected_students,
+        //                'classId': $("classId").val()
+        //            },
+        //            type: 'POST',
+        //            //dataType: 'json',
+        //            traditional: true,
+        //            success: function (data) {
+        //                $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation')
+        //                $('#calendar').fullCalendar('addEventSource', {
+        //                    url: urlPrefix + '/Allocate/getAllocation',
+        //                    data: {
+        //                        studentId: -1,
+        //                        semester: semester
+        //                    }
+        //                })
+        //                //window.location.href = urlPrefix + "/Allocate/Edit";
+        //            },
+        //            error: function (data) {
+        //                console.log('/Allocate/saveStudentsForMultiselectList error!');
+        //            }
+        //        });
+        //    //}
+        //})
 
     },
 
