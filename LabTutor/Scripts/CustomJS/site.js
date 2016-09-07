@@ -1,5 +1,5 @@
-﻿var urlPrefix = "/2015-msc/xinyuewu";
-//var urlPrefix = "";
+﻿//var urlPrefix = "/2015-msc/xinyuewu";
+var urlPrefix = "";
 
 $(document).ready(function () {
     $('[title!=""]').qtip({
@@ -216,7 +216,7 @@ function home_index_tabChange(semester) {
     $('#calendar').fullCalendar('addEventSource', {
         url: urlPrefix + '/Allocate/getAllocation',
         data: {
-            studentId: -1,
+            studentId: -2,
             semester: semester
         }
     })

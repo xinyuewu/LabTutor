@@ -1,5 +1,5 @@
-﻿var urlPrefix = "/2015-msc/xinyuewu";
-//var urlPrefix = "";
+﻿//var urlPrefix = "/2015-msc/xinyuewu";
+var urlPrefix = "";
 
 
 var scriptEvents = {
@@ -65,7 +65,7 @@ var scriptEvents = {
                 events: {
                     url: urlPrefix + '/Allocate/getAllocation',
                     data: {
-                        studentId: -1,
+                        studentId: -2,
                         semester: 1
                     },
                 },
