@@ -50,8 +50,12 @@ namespace LabTutor.Models
 
         public void createAllocation()
         {
-            allocateAlgorithm1();//allocate for sememster 1 
-            allocateAlgorithm2();//allocate for sememster 2 
+            xinyuedbEntities db = new xinyuedbEntities();
+            if (db.Students.Any() && db.Classes.Where(x => x.type == "lab").Any())
+            {
+                allocateAlgorithm1();//allocate for sememster 1 
+                allocateAlgorithm2();//allocate for sememster 2 
+            }
         }
 
         public void allocateAlgorithm1()
@@ -451,21 +455,21 @@ namespace LabTutor.Models
                     }
 
                     eventList.Add(new
-                        {
-                            id = lab.classId,
-                            title = lab.Module.name,
-                            start = lab.startTime.ToString("yyyy-MM-ddTHH:mm:ss"),
-                            end = lab.endTime.ToString("yyyy-MM-ddTHH:mm:ss"),
-                            type = lab.type,
-                            tutorNumber = lab.tutorNumber,
-                            moduleId = lab.moduleId,
-                            year = lab.Module.year,
-                            degree = lab.Module.degree,
-                            tutorName = tutorName,
-                            lecturers = lecturers,
-                            borderColor = color,
-                            backgroundColor = color
-                        });
+                    {
+                        id = lab.classId,
+                        title = lab.Module.name,
+                        start = lab.startTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        end = lab.endTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        type = lab.type,
+                        tutorNumber = lab.tutorNumber,
+                        moduleId = lab.moduleId,
+                        year = lab.Module.year,
+                        degree = lab.Module.degree,
+                        tutorName = tutorName,
+                        lecturers = lecturers,
+                        borderColor = color,
+                        backgroundColor = color
+                    });
                 }
                 return eventList;
             }
@@ -558,7 +562,7 @@ namespace LabTutor.Models
                             }
                         }
                     }
-                    
+
                     //check time clash
                     bool timeClash = false;
                     if (checkTimeClash(classId, stu.studentId))
@@ -685,7 +689,7 @@ namespace LabTutor.Models
                         }
                     }
                 }
-                
+
                 db.SaveChanges();
             }
         }
@@ -827,6 +831,7 @@ namespace LabTutor.Models
                 db.Students.RemoveRange(db.Students);
                 db.Preferences.RemoveRange(db.Preferences);
                 db.Allocations.RemoveRange(db.Allocations);
+                db.Users.RemoveRange(db.Users.Where(x => x.accountType == "student"));
                 var config = db.Configs.Where(c => c.name.Equals("published")).FirstOrDefault();
                 config.value = 0;
 
@@ -902,19 +907,19 @@ namespace LabTutor.Models
 
 
                 studentInfo = (new
-                    {
-                        name = student.fName + " " + student.lName,
-                        matricNumber = student.matricNumber,
-                        degree = student.degree,
-                        year = student.year,
-                        NI = student.NI,
-                        email = student.User.email,
-                        maxHour = student.maxHour,
-                        workingHour1 = student.workingHour1,
-                        workingHour2 = student.workingHour2,
-                        allocatedLabs = allocatedLabs,
-                        preferences = preferences
-                    });
+                {
+                    name = student.fName + " " + student.lName,
+                    matricNumber = student.matricNumber,
+                    degree = student.degree,
+                    year = student.year,
+                    NI = student.NI,
+                    email = student.User.email,
+                    maxHour = student.maxHour,
+                    workingHour1 = student.workingHour1,
+                    workingHour2 = student.workingHour2,
+                    allocatedLabs = allocatedLabs,
+                    preferences = preferences
+                });
 
                 return studentInfo;
             }
@@ -924,7 +929,7 @@ namespace LabTutor.Models
         {
             using (xinyuedbEntities db = new xinyuedbEntities())
             {
-                var config = db.Configs.Where(c => c.name.Equals("published")).FirstOrDefault();
+                var config = db.Configs.FirstOrDefault(c => c.name.Equals("published"));
                 bool published = config.value != 0;
                 return published;
             }

@@ -45,7 +45,8 @@
         <button class="btn btn-default col-sm-2 pull-right" id="publish_button" onclick="location.href='@Url.Action("changePublishState", "Allocate")'">Publish Allocation</button>
 
         @*<button class="btn btn-default col-sm-2 unpublished" onclick="location.href='@Url.Action("populateDatabase", "Allocate")'">Populate Datebase</button>*@
-    </div>
+        <button class="btn btn-default col-sm-2 unpublished" data-toggle="modal" data-target="#wipeStudentDataModal" onclick="wipeStudentData('@Url.Action("clearStudentData", "Allocate")')">Remove Students</button>
+   </div>
 
 
     <!-- Table (All Students) -->
@@ -196,11 +197,38 @@
         </div>
     </div>
 
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="wipeStudentDataModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Wipe Students Data</h4>
+            </div>
+            <div class="modal-body">
+                <p>The current allocation schema, all existing students along with their preferences will be removed from the database and can not be recovered.</p>
+                <p>Are you sure you wish to perform this action?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="wipeStudentData">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 </div>
 
 @section Scripts {
     <script>
         scriptEvents.Allocate_Index();
+
+
+        function wipeStudentData(url) {
+            $('#wipeStudentData').click(function () {
+                window.location = url;
+            });
+        }
     </script>
 }

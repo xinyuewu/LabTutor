@@ -173,53 +173,17 @@ function allocationTabChange(semester) {
     })
 };
 
-//Application_Edit
-//function application_edit_tabChange(semester) {
-//    $.ajax({
-//        url: urlPrefix + "/Application/Update",
-//        type: "POST",
-//        traditional: true,
-//        data: {
-//            'likedList': likedList.splice(0, likedList.length),
-//            'dislikedList': dislikedList.splice(0, dislikedList.length),
-//            'neutralList': neutralList.splice(0, neutralList.length),
-//            'studentId': $("#studentId").val(),
-//            'ni': $("#ni").val(),
-//            'maxHour': $("#maxHour").val()
-//        },
-//        success: function () {
-//            if (semester == 1) {
-//                $('#semester_two').slideDown('slow').delay(1500).slideUp('slow');
-//            }
-//            else if (semester == 2) {
-//                console.log(semester);
-//                $('#semester_one').slideDown('slow').delay(1500).slideUp('slow');
-//            }
-//        },
-//        error: function () {
-//            console.log("/Application/Update error")
-//        }
-//    })
-//    $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Application/getPreference/')
-//    $('#calendar').fullCalendar('addEventSource', {
-//        url: urlPrefix + '/Application/getPreference/',
-//        data: {
-//            studentId: $("#studentId").val(),
-//            semester: semester
-//        }
-//    })
-//};
-
 //Home_Index
 function home_index_tabChange(semester) {
     $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation')
-    $('#calendar').fullCalendar('addEventSource', {
-        url: urlPrefix + '/Allocate/getAllocation',
-        data: {
-            studentId: -2,
-            semester: semester
-        }
-    })
+    $('#calendar').fullCalendar('addEventSource',
+        {
+            url: urlPrefix + '/Allocate/getAllocation',
+            data: {
+                studentId: -2,
+                semester: semester
+            }
+        });
 };
 
 //Timetable_Edit

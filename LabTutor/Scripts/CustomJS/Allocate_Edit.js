@@ -7,15 +7,16 @@
 var urlPrefix = "";
 
 function tabChange(semester) {
-    $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation')
-    $('#calendar').fullCalendar('addEventSource', {
-        url: urlPrefix + '/Allocate/getAllocation',
-        data: {
-            studentId: -1,
-            semester: semester
-        }
-    })
-};
+    $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation');
+    $('#calendar').fullCalendar('addEventSource',
+        {
+            url: urlPrefix + '/Allocate/getAllocation',
+            data: {
+                studentId: -1,
+                semester: semester
+            }
+        });
+}
 
 function initCalendar() {
     $('#calendar').fullCalendar({
@@ -35,7 +36,7 @@ function initCalendar() {
             data: {
                 studentId: -1,
                 semester: 1
-            },
+            }
         },
         eventClick: clickEvent,
         eventRender: function (event, element) {
@@ -62,7 +63,7 @@ function clickEvent(Event) {
         type: 'Get',
         dataType: 'json',
         data: {
-            classId: Event.id,
+            classId: Event.id
         },
         success: function (json) {
             $('#multiselect').multiselect('dataprovider', json);
@@ -128,14 +129,14 @@ function clickEvent(Event) {
                 });
             }
             else {
-                var retrievedObject = JSON.parse(localStorage.getItem('hoursExceededList'));
+                retrievedObject = JSON.parse(localStorage.getItem('hoursExceededList'));
 
                 // Enable all checkboxes.
                 $('#multiselect option').each(function () {
                     var input = $('input[value="' + $(this).val() + '"]');
                     input.prop('disabled', false);
                     $.each(retrievedObject, function () {
-                        if (this.value == input.attr('value')) {
+                        if (this.value === input.attr('value')) {
                             input.prop('disabled', true);
                             input.parent('li').addClass('disabled');
                         }
@@ -149,14 +150,14 @@ function clickEvent(Event) {
     $('#adjustAllocationModal').modal('toggle');
 }
 
-$("#save_multiselectlist").click(function (e) {
+$("#save_multiselectlist").click(function(e) {
     e.preventDefault();
     var options = $('#multiselect option:selected');
 
     if (options.length > 0) {
 
         var selected_students = new Array();
-        options.each(function (i, selected) {
+        options.each(function(i, selected) {
             selected_students.push($(selected).val());
         });
 
@@ -167,14 +168,14 @@ $("#save_multiselectlist").click(function (e) {
                 'classId': $("classId").val()
             },
             type: 'POST',
-           //dataType: 'json',
+            //dataType: 'json',
             traditional: true,
-            success: function (data) {
+            success: function(data) {
                 window.location.href = urlPrefix + "/Allocate/Edit";
             },
-            error: function (data) {
+            error: function(data) {
                 console.log('/Allocate/saveStudentsForMultiselectList error!');
             }
         });
     }
-})
+});

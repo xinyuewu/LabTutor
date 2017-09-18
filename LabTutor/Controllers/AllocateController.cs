@@ -111,5 +111,12 @@ namespace LabTutor.Controllers
             return RedirectToAction("Index");
         }
 
+        [CoordinatorFilter]
+        public ActionResult clearStudentData()
+        {
+            Allocate allo = new Allocate();
+            allo.clearStudentData();
+            return RedirectToAction("Index");
+        }
     }
 }

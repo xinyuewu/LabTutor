@@ -36,18 +36,7 @@ var scriptEvents = {
                 }
             });
         }
-
-        //function tabChange(semester) {
-        //    $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation')
-        //    $('#calendar').fullCalendar('addEventSource', {
-        //        url: urlPrefix + '/Allocate/getAllocation',
-        //        data: {
-        //            studentId: -1,
-        //            semester: semester
-        //        }
-        //    })
-        //};
-
+        
         function initCalendar() {
 
             $('#calendar').fullCalendar({
@@ -99,44 +88,16 @@ var scriptEvents = {
             });
         }
 
-        $(".js-register-link").click(function (e) {
+        $(".js-register-link").click(function(e) {
             $("#js-register-tab").click();
             e.preventDefault();
-        })
+        });
 
-        $(".js-login-link").click(function (e) {
+        $(".js-login-link").click(function(e) {
             $("#js-login-tab").click();
             e.preventDefault();
-        })
-
-        //$('#login-form').submit(function (event) {
-        //$('#logginButton').click(function (e) {
-        //    event.preventDefault();
-        //    if ($('#login-form').data("bootstrapValidator").isValid()) {
-        //        alert("haha");
-        //        $.ajax({
-        //            url: urlPrefix + '/Account/Login',
-        //            type: 'Post',
-        //            //dataType: 'json',
-        //            data: $(this).serialize(),
-        //            success: function (json) {
-        //                if (json.success) {
-        //                    window.location.href = urlPrefix + "/Account/LoggedIn";
-        //                }
-        //                else {
-        //                    $('#login_error').slideDown({ opacity: "show" }, "slow");
-        //                    $('#login-form').bootstrapValidator('disableSubmitButtons', false);
-        //                }
-        //            },
-        //            error: function () {
-        //                console.log("login error!")
-        //            }
-        //        });
-        //    }
-        //    else {
-        //        $('#login-form').bootstrapValidator('disableSubmitButtons', true);
-        //    }
-        //});
+        });
+        
         $('#logginButton').click(function (event) {
             event.preventDefault();
             $('#login-form').bootstrapValidator('validate');
@@ -157,7 +118,6 @@ var scriptEvents = {
                     },
                     error: function () {
                         console.log("Login called in error");
-                        console.log("login error!")
                     }
                 });
             }
@@ -166,33 +126,6 @@ var scriptEvents = {
             }
         });
 
-        //$('#register-form').submit(function (event) {
-        //$('#registerButton').click(function (event) {
-        //    event.preventDefault();
-        //    if ($('#register-form').data("bootstrapValidator").isValid()) {
-        //        $.ajax({
-        //            url: urlPrefix + '/Account/Register',
-        //            type: 'Post',
-        //            //dataType: 'json',
-        //            data: $(this).serialize(),
-        //            success: function (json) {
-        //                if (json.success) {
-        //                    window.location.href = urlPrefix + "/Account/LoggedIn";
-        //                }
-        //                else {
-        //                    $('#register_error').slideDown({ opacity: "show" }, "slow");
-        //                    $('#register-form').bootstrapValidator('disableSubmitButtons', false);
-        //                }
-        //            },
-        //            error: function () {
-        //                console.log("register error!")
-        //            }
-        //        });
-        //    }
-        //    else {
-        //        $('#register-form').bootstrapValidator('disableSubmitButtons', true);
-        //    }
-        //});
         $('#registerButton').click(function (event) {
             event.preventDefault();
             $('#register-form').bootstrapValidator('validate');
@@ -212,7 +145,7 @@ var scriptEvents = {
                         }
                     },
                     error: function () {
-                        console.log("register error!")
+                        console.log("register error!");
                     }
                 });
             }
@@ -338,13 +271,13 @@ var scriptEvents = {
 
         }
 
-        $('#other_degree').click(function () {
+        $('#other_degree').click(function() {
             $('#level_dropdownlist').hide();
             $("#level_select").val(5);
-        })
-        $('.ACorCS').click(function () {
+        });
+        $('.ACorCS').click(function() {
             $('#level_dropdownlist').show();
-        })
+        });
 
     },
 
@@ -362,6 +295,7 @@ var scriptEvents = {
         initCalendar();
         $('#calendar').addClass("noCursorPointer");
 
+        
         //function tabChange(semester) {
         //    $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation')
         //    $('#calendar').fullCalendar('addEventSource', {
@@ -428,22 +362,22 @@ var scriptEvents = {
                     $.each(event.tutorName, function () {
                         tutorsInQtip += this.name + ", ";
                     });
-                    if (tutorsInQtip === ""){
+                    if (tutorsInQtip === "") {
                         tutorsInQtip = "None";
-                    }else{
+                    } else {
                         tutorsInQtip = tutorsInQtip.slice(0, -2);
                     }
-                    
+
 
                     element.qtip({
                         content: {
                             title: event.title,
                             text: "Time: " + event.start.format("dddd HH:mm") + " ~ " + event.end.format("HH:mm")
-                                + "<br/>Year: " + event.year
-                                + "<br/>Degree: " + event.degree
-                                + "<br/>Lecturer(s): " + lecturers.slice(0, -2)
-                                + "<br/>Number of tutors needed: " + event.tutorNumber
-                                + "<br/>Tutors allocated: " + tutorsInQtip
+                            + "<br/>Year: " + event.year
+                            + "<br/>Degree: " + event.degree
+                            + "<br/>Lecturer(s): " + lecturers.slice(0, -2)
+                            + "<br/>Number of tutors needed: " + event.tutorNumber
+                            + "<br/>Tutors allocated: " + tutorsInQtip
                         },
                         position: {
                             my: 'top left',
@@ -903,10 +837,10 @@ var scriptEvents = {
                     $('#add_moduleList').attr('enabled', 'true');
                     $.each(json, function () {
                         $('#add_moduleList').append(
-                             $("<option></option>").text(this.title).val(this.moduleId)
+                            $("<option></option>").text(this.title).val(this.moduleId)
                         );
                         $('#edit_moduleList').append(
-                             $("<option></option>").text(this.title).val(this.moduleId)
+                            $("<option></option>").text(this.title).val(this.moduleId)
                         );
                     });
                 },
@@ -1602,7 +1536,7 @@ var scriptEvents = {
                     'maxHour': $("#maxHour").val()
                 },
                 success: function () {
-                        $('#semester_two').slideDown('slow').delay(1500).slideUp('slow');
+                    $('#semester_two').slideDown('slow').delay(1500).slideUp('slow');
                 },
                 error: function () {
                     console.log("/Application/Update error")
@@ -1617,7 +1551,7 @@ var scriptEvents = {
                 }
             })
         });
-         
+
         $("#edit_preference_sememster2").click(function () {
             $.ajax({
                 url: urlPrefix + "/Application/Update",
@@ -1918,6 +1852,73 @@ var scriptEvents = {
             }
         });
 
-    }
+    },
 
+    Module_Crud: function () {
+
+        $('#myTable').DataTable({
+            "iDisplayLength": -1,
+            "lengthChange": true
+        });
+
+        initValidator();
+
+        $('.edit_module').click(function (e) {
+            $.ajax({
+                url: e.currentTarget.dataset["url"],
+                type: 'Get',
+                dataType: 'json',
+                success: function (data) {
+                    var module = JSON.parse(data);
+                    $("#edit_moduleId").val(module.moduleId);
+                    $("#edit_name").val(module.name);
+                    $("#edit_year").val(module.year);
+                    $("#edit_degree").val(module.degree);
+                    $("#edit_semester").val(module.semester);
+                }
+            });
+        });
+        
+        $(".delete_module").click(function (delEl) {
+            $("#deleteModuleModal #yes-button").click(function (e) {
+                window.location.href = delEl.currentTarget.dataset["url"];
+            });
+        });
+        
+        function initValidator() {
+            
+            $('#add_module_form').bootstrapValidator({
+                fields: {
+                    name: {
+                        validators: {
+                            stringLength: {
+                                min: 1,
+                                message: 'Please enter at least 1 character'
+                            },
+                            notEmpty: {
+                                message: 'Please enter the module\'s name'
+                            }
+                        }
+                    }
+                }
+            });
+
+            $('#edit_module_form').bootstrapValidator({
+                fields: {
+                    name: {
+                        validators: {
+                            stringLength: {
+                                min: 1,
+                                message: 'Please enter at least 1 character'
+                            },
+                            notEmpty: {
+                                message: 'Please enter the module\'s name'
+                            }
+                        }
+                    }
+                }
+            });
+
+        }
+    }
 }

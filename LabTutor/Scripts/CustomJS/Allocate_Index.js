@@ -18,7 +18,7 @@
 var urlPrefix = "";
 
 function tabChange(semester) {
-    $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation')
+    $('#calendar').fullCalendar('removeEventSource', urlPrefix + '/Allocate/getAllocation');
     $('#calendar').fullCalendar('addEventSource', {
         url: urlPrefix + '/Allocate/getAllocation',
         data: {
